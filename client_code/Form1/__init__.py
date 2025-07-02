@@ -18,22 +18,16 @@ class Form1(Form1Template):
 
     try:
       response = anvil.http.request(
-        url=f"http://127.0.0.1:8000/parts?prefix={prefix}",
+        url=f"http://127.0.0.1:8000/parts?prefix={prefix}&desc={desc}",
         method="GET",
         json=True
       )
-      print(f"Raw response from server: {response}")
-
-      filtered = [
-        part for part in response
-        if desc.lower() in (part.get("description") or "").lower()
-      ]
-      self.repeating_panel_1.items = filtered
-      self.label_status.text = f"✅ {len(filtered)} parts found"
-      
+      self.repeating_panel_1.items = response
+      self.label_status.text = f"✅ {len(response)} parts found"
     except Exception as e:
       self.label_status.text = f"❌ Error: {e}"
       self.repeating_panel_1.items = []
+
 
   def show_detail(self, part, **event_args):
     open_form("PartDetail", part=part)

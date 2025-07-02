@@ -16,11 +16,11 @@ components:
     type: Button
   - layout_properties: {grid_position: 'NVQTHS,SWXHQM'}
     name: text_box_part_no
-    properties: {text: 'Part No:'}
+    properties: {placeholder: Partial Part No e.g. 141- or ALPL, text: ''}
     type: TextBox
   - layout_properties: {grid_position: 'QXJZMW,DWALKI'}
     name: text_box_desc
-    properties: {text: 'Description:'}
+    properties: {placeholder: Partial Description e.g. Housing, text: ''}
     type: TextBox
   layout_properties: {slot: default}
   name: content_panel
