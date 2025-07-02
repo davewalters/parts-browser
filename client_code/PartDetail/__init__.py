@@ -1,6 +1,7 @@
 from anvil import *
 
-class PartDetail(Form):
+from ._anvil_designer import PartDetailTemplate
+class PartDetail(PartDetailTemplate):
   def __init__(self, part=None, **properties):
     self.init_components(**properties)
     self.label_id.text = part.get("_id", "")
