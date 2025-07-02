@@ -1,0 +1,42 @@
+components:
+- components:
+  - layout_properties: {grid_position: 'OTTKCV,ADAPGE'}
+    name: label_1
+    properties: {text: label_id}
+    type: Label
+  - layout_properties: {grid_position: 'TGQPRM,RPDPAR'}
+    name: label_2
+    properties: {text: label_rev}
+    type: Label
+  - layout_properties: {grid_position: 'WQXQDN,IQTOOX'}
+    name: label_3
+    properties: {text: label_desc}
+    type: Label
+  - layout_properties: {grid_position: 'WSKKHG,XVKHNT'}
+    name: label_4
+    properties: {text: label_status}
+    type: Label
+  - layout_properties: {grid_position: 'ZQJDOL,AVZXWK'}
+    name: label_5
+    properties: {text: label_vendor}
+    type: Label
+  - layout_properties: {grid_position: 'AQMIHM,KOFZGA'}
+    name: button_1
+    properties: {text: button_back}
+    type: Button
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: headline_1
+  properties: {role: headline, text: Details}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
