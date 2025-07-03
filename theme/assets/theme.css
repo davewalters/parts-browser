@@ -797,4 +797,8 @@ textarea.anvil-component[disabled] {
 /* Shadow values taken from 
 https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-material-design-elevations
 */
+.anvil-role-scrolling-panel {
+  max-height: 60vh;     /* or set a pixel value like 500px */
+  overflow-y: auto;
+}
 

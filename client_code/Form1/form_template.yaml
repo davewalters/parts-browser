@@ -1,27 +1,79 @@
 components:
 - components:
-  - layout_properties: {grid_position: 'QDEEXL,XLTKNE'}
-    name: label_status
-    properties: {text: 'status:'}
-    type: Label
-  - data_bindings:
-    - {code: 'self.item['''']', property: items, writeback: false}
-    layout_properties: {full_width_row: true, grid_position: 'GEYRPS,OGXPDC'}
-    name: repeating_panel_1
-    properties: {item_template: Form1.ItemTemplate1}
-    type: RepeatingPanel
-  - layout_properties: {grid_position: 'KGNJUG,YEBGZI'}
-    name: button_1
-    properties: {text: button_1}
-    type: Button
-  - layout_properties: {grid_position: 'NVQTHS,SWXHQM'}
-    name: text_box_part_no
-    properties: {placeholder: Partial Part No e.g. 141- or ALPL, text: ''}
-    type: TextBox
-  - layout_properties: {grid_position: 'QXJZMW,DWALKI'}
-    name: text_box_desc
-    properties: {placeholder: Partial Description e.g. Housing, text: ''}
-    type: TextBox
+  - components:
+    - components:
+      - layout_properties: {col_xs: 0, row: ANFIOO, width_xs: 3}
+        name: text_box_part_no
+        properties: {placeholder: Partial Part No e.g. 141- or ALPL, text: ''}
+        type: TextBox
+      - layout_properties: {col_xs: 4, row: ANFIOO, width_xs: 5}
+        name: text_box_desc
+        properties: {placeholder: Partial Description e.g. Housing, text: ''}
+        type: TextBox
+      - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 3}
+        name: label_count
+        properties: {text: 'status:'}
+        type: Label
+      layout_properties: {grid_position: 'EBBRPC,USAONS'}
+      name: grid_panel_1
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {column: id}
+        name: label_id
+        properties: {text: Part No}
+        type: Label
+      - layout_properties: {column: rev}
+        name: label_rev
+        properties: {text: Rev}
+        type: Label
+      - layout_properties: {column: desc}
+        name: label_desc
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_status
+        properties: {text: Status}
+        type: Label
+      - layout_properties: {column: vendor}
+        name: label_vendor
+        properties: {text: Vendor}
+        type: Label
+      - layout_properties: {column: cost_date}
+        name: label_cost_date
+        properties: {text: Date Costed}
+        type: Label
+      - layout_properties: {column: cost_nz}
+        name: label_cost_nz
+        properties: {text: Cost_$NZ}
+        type: Label
+      - layout_properties: {column: button_view}
+        name: button_view
+        properties: {}
+        type: Label
+      layout_properties: {full_width_row: true, grid_position: 'EKIJXN,KHMVDO'}
+      name: data_row_panel_1
+      properties: {align: center, auto_display_data: true, background: 'theme:Gray 300', bold: true}
+      type: DataRowPanel
+    layout_properties: {full_width_row: true, grid_position: 'BGZZJP,NSXVLS'}
+    name: column_panel_1
+    properties: {}
+    type: ColumnPanel
+  - components:
+    - data_bindings:
+      - {code: 'self.item['''']', property: items, writeback: false}
+      layout_properties: {full_width_row: true, grid_position: 'NZZUDN,VGBBZR'}
+      name: repeating_panel_1
+      properties: {item_template: Form1.ItemTemplate1}
+      type: RepeatingPanel
+    - layout_properties: {grid_position: 'JYPMFW,IMJHON'}
+      name: button_1
+      properties: {text: button_1}
+      type: Button
+    layout_properties: {full_width_row: true, grid_position: 'VZTIYL,VEQJIX'}
+    name: column_panel_2
+    properties: {}
+    type: ColumnPanel
   layout_properties: {slot: default}
   name: content_panel
   properties: {}

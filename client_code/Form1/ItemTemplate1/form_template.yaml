@@ -20,13 +20,23 @@ components:
     name: label_vendor
     properties: {}
     type: Label
-  - layout_properties: {column: details}
-    name: button_view
-    properties: {text: Details}
-    type: Button
+  - layout_properties: {column: cost_date}
+    name: label_cost_date
+    properties: {}
+    type: Label
+  - layout_properties: {column: cost_nz}
+    name: label_cost_nz
+    properties: {}
+    type: Label
   layout_properties: {full_width_row: true, grid_position: 'RJXCNZ,OPFLMU'}
   name: data_row_panel_1
   properties: {}
   type: DataRowPanel
-container: {type: ColumnPanel}
+- layout_properties: {grid_position: 'RJXCNZ,UOJXNT'}
+  name: button_view
+  properties: {text: Details}
+  type: Button
+container:
+  properties: {col_widths: '{"OPFLMU":55,"UOJXNT":5}'}
+  type: ColumnPanel
 is_package: true
