@@ -8,7 +8,7 @@ class Form1(Form1Template):
     self.repeating_panel_1.role = "scrolling-panel"
     self.text_box_part_no.col_width = 4   # About 1/3 of the width
     self.text_box_desc.col_width = 5      # Slightly wider
-    self.label_status.col_width = 3       # Remaining space
+    self.label_count.col_width = 3       # Remaining space
     self.repeating_panel_1.items = []
     self.text_box_part_no.set_event_handler('change', self.update_filter)
     self.text_box_desc.set_event_handler('change', self.update_filter)
@@ -27,9 +27,9 @@ class Form1(Form1Template):
         json=True
       )
       self.repeating_panel_1.items = response
-      self.label_status.text = f"✅ {len(response)} parts found"
+      self.label_count.text = f"✅ {len(response)} parts found"
     except Exception as e:
-      self.label_status.text = f"❌ Error: {e}"
+      self.label_count.text = f"❌ Error: {e}"
       self.repeating_panel_1.items = []
 
 
