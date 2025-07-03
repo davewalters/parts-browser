@@ -13,3 +13,4 @@ class ItemTemplate1(ItemTemplate1Template):
 
   def button_view_click(self, **event_args):
     self.parent.raise_event("x-show-detail", part=self.item)
+
