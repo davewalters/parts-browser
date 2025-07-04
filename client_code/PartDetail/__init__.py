@@ -14,16 +14,22 @@ class PartDetail(PartDetailTemplate):
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
 
+    # Populate dropdown options
+    self.drop_down_status.items = ["active", "obsolete"]
+    self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
+    self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
+    self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
+    
     if self.part:
       self.text_box_id.text = part.get("_id", "")
       self.text_box_rev.text = part.get("revision", "")
       self.text_box_desc.text = part.get("description", "")
-      self.text_box_status.text = part.get("status", "")
+      self.drop_down_status.selected_value = part.get("status", "active")
       self.text_box_vendor.text = part.get("default_vendor", "")
-      self.text_box_type.text = part.get("type", "")
-      self.text_box_process.text = part.get("process", "")
+      self.drop_down_type.selected_value = part.get("type", "part")
+      self.drop_down_process.selected_value = part.get("process", "-")
       self.text_box_material.text = part.get("material_spec", "")
-      self.text_box_unit.text = part.get("unit", "")
+      self.drop_down_unit.selected_value = part.get("unit", "each")
 
       latest = part.get("latest_cost", {})
       self.text_box_cost.text = str(latest.get("cost_nz", ""))
@@ -53,12 +59,12 @@ class PartDetail(PartDetailTemplate):
         "_id": self.text_box_id.text,
         "description": self.text_box_desc.text,
         "revision": self.text_box_rev.text,
-        "status": self.text_box_status.text,
+        "status": self.drop_down_status.selected_value,
         "default_vendor": self.text_box_vendor.text,
-        "type": self.text_box_type.text,
-        "process": self.text_box_process.text,
+        "type": self.drop_down_type.selected_value,
+        "process": self.drop_down_process.selected_value,
         "material_spec": self.text_box_material.text,
-        "unit": self.text_box_unit.text,
+        "unit": self.drop_down_unit.selected_value,
         "latest_cost": latest_cost,
         "vendor_part_numbers": [
           {

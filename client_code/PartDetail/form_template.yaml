@@ -23,10 +23,10 @@ components:
         name: label_status
         properties: {font_size: 16, text: 'Status:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 3}
-        name: text_box_status
-        properties: {placeholder: active}
-        type: TextBox
+      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 7}
+        name: drop_down_status
+        properties: {}
+        type: DropDown
       layout_properties: {col_xs: 5, row: NHQTRB, width_xs: 3}
       name: grid_panel_3
       properties: {}
@@ -45,14 +45,27 @@ components:
       properties: {}
       type: GridPanel
     - components:
+      - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 2}
+        name: label_desc
+        properties: {font_size: 16, text: 'Description:'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: VTLTHM, width_xs: 9}
+        name: text_box_desc
+        properties: {placeholder: description}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 10}
+      name: grid_panel_5
+      properties: {}
+      type: GridPanel
+    - components:
       - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
         name: label_type
         properties: {font_size: 16, text: 'Type:'}
         type: Label
       - layout_properties: {col_xs: 4, row: QQKKUG, width_xs: 5}
-        name: text_box_type
-        properties: {placeholder: type}
-        type: TextBox
+        name: drop_down_type
+        properties: {}
+        type: DropDown
       layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 5}
       name: grid_panel_6
       properties: {}
@@ -63,24 +76,11 @@ components:
         properties: {font_size: 16, text: 'Unit of Issue:'}
         type: Label
       - layout_properties: {col_xs: 3, row: KBWQNR, width_xs: 4}
-        name: text_box_unit
-        properties: {placeholder: unit of issue}
-        type: TextBox
+        name: drop_down_unit
+        properties: {}
+        type: DropDown
       layout_properties: {col_xs: 5, row: JJKFRA, width_xs: 5}
       name: grid_panel_10
-      properties: {}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 2}
-        name: label_desc
-        properties: {font_size: 16, text: 'Description:'}
-        type: Label
-      - layout_properties: {col_xs: 2, row: VTLTHM, width_xs: 9}
-        name: text_box_desc
-        properties: {placeholder: description}
-        type: TextBox
-      layout_properties: {col_xs: 0, row: GDVWGX, width_xs: 10}
-      name: grid_panel_5
       properties: {}
       type: GridPanel
     - components:
@@ -88,10 +88,10 @@ components:
         name: label_process
         properties: {font_size: 16, text: 'Process:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: CJEIBO, width_xs: 6}
-        name: text_box_process
-        properties: {placeholder: process}
-        type: TextBox
+      - layout_properties: {col_xs: 4, row: CJEIBO, width_xs: 5}
+        name: drop_down_process
+        properties: {}
+        type: DropDown
       layout_properties: {col_xs: 0, row: OQGALU, width_xs: 5}
       name: grid_panel_8
       properties: {}
