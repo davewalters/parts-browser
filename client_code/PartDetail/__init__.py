@@ -3,6 +3,7 @@ from anvil import *
 import anvil.http
 from ._anvil_designer import PartDetailTemplate
 from math import isnan
+import json
 
 class PartDetail(PartDetailTemplate):
   def __init__(self, part=None, new=False, **properties):
@@ -89,14 +90,21 @@ class PartDetail(PartDetailTemplate):
         url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
         method = "PUT"
 
-      print("📤 Sending to FastAPI:", new_data)
+      json_string = json.dumps(new_data)
+    
+      #print("📤 Sending to FastAPI:", new_data)
+      #print("📤 Payload repr:", json_string)
+    
       anvil.http.request(
         url=url,
         method=method,
-        json=new_data or {}
+        data=json_string,
+        headers={"Content-Type": "application/json"}
       )
+    
       Notification("✅ Part saved.", style="success").show()
       open_form("Form1")
+    
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
 

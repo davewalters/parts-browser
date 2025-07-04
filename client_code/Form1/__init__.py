@@ -34,7 +34,7 @@ class Form1(Form1Template):
 
 
   def show_detail(self, part, **event_args):
-    print("📦 show_detail triggered with part:", part.get("_id"))
+    #print("📦 show_detail triggered with part:", part.get("_id"))
     open_form("PartDetail", part=part)
 
 
