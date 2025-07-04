@@ -1,29 +1,172 @@
 components:
 - components:
-  - layout_properties: {grid_position: 'OTTKCV,ADAPGE'}
-    name: label_id
-    properties: {text: 'Part No:'}
-    type: Label
-  - layout_properties: {grid_position: 'TGQPRM,RPDPAR'}
-    name: label_rev
-    properties: {text: 'Revision:'}
-    type: Label
-  - layout_properties: {grid_position: 'WQXQDN,IQTOOX'}
-    name: label_desc
-    properties: {text: Description}
-    type: Label
-  - layout_properties: {grid_position: 'WSKKHG,XVKHNT'}
-    name: label_status
-    properties: {text: 'Status:'}
-    type: Label
-  - layout_properties: {grid_position: 'ZQJDOL,AVZXWK'}
-    name: label_vendor
-    properties: {text: 'Vendor:'}
-    type: Label
-  - layout_properties: {grid_position: 'AQMIHM,KOFZGA'}
-    name: button_back
-    properties: {text: button_back}
-    type: Button
+  - components:
+    - layout_properties: {col_xs: 0, row: OYIIQQ, width_xs: 5}
+      name: label_title
+      properties: {}
+      type: Label
+    - components:
+      - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
+        name: label_id
+        properties: {font_size: 16, text: 'Part No.:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: DKFPPM, width_xs: 5}
+        name: text_box_id
+        properties: {placeholder: part_no}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 5}
+      name: grid_panel_2
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: FOQJWC, width_xs: 5}
+        name: label_status
+        properties: {font_size: 16, text: 'Status:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 3}
+        name: text_box_status
+        properties: {placeholder: active}
+        type: TextBox
+      layout_properties: {col_xs: 5, row: NHQTRB, width_xs: 3}
+      name: grid_panel_3
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: LNUGXX, width_xs: 3}
+        name: label_rev
+        properties: {font_size: 16, text: 'Revision:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: LNUGXX, width_xs: 3}
+        name: text_box_rev
+        properties: {placeholder: rev}
+        type: TextBox
+      layout_properties: {col_xs: 8, row: NHQTRB, width_xs: 2}
+      name: grid_panel_4
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
+        name: label_type
+        properties: {font_size: 16, text: 'Type:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: QQKKUG, width_xs: 5}
+        name: text_box_type
+        properties: {placeholder: type}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 5}
+      name: grid_panel_6
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: KBWQNR, width_xs: 3}
+        name: label_unit
+        properties: {font_size: 16, text: 'Unit of Issue:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: KBWQNR, width_xs: 4}
+        name: text_box_unit
+        properties: {placeholder: unit of issue}
+        type: TextBox
+      layout_properties: {col_xs: 5, row: JJKFRA, width_xs: 5}
+      name: grid_panel_10
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 2}
+        name: label_desc
+        properties: {font_size: 16, text: 'Description:'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: VTLTHM, width_xs: 9}
+        name: text_box_desc
+        properties: {placeholder: description}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: GDVWGX, width_xs: 10}
+      name: grid_panel_5
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: CJEIBO, width_xs: 2}
+        name: label_process
+        properties: {font_size: 16, text: 'Process:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: CJEIBO, width_xs: 6}
+        name: text_box_process
+        properties: {placeholder: process}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: OQGALU, width_xs: 5}
+      name: grid_panel_8
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: PGFLKV, width_xs: 3}
+        name: label_material
+        properties: {font_size: 16, text: 'Material:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: PGFLKV, width_xs: 7}
+        name: text_box_material
+        properties: {placeholder: material}
+        type: TextBox
+      layout_properties: {col_xs: 5, row: OQGALU, width_xs: 5}
+      name: grid_panel_9
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: SCVJHT, width_xs: 2}
+        name: label_vendor
+        properties: {font_size: 16, text: 'Active Vendor:'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: SCVJHT, width_xs: 9}
+        name: text_box_vendor
+        properties: {placeholder: vendor}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: XCXJMA, width_xs: 10}
+      name: grid_panel_7
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: MYBKSM, width_xs: 3}
+        name: label_cost
+        properties: {font_size: 16, text: 'Cost ($NZ):'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: MYBKSM, width_xs: 6}
+        name: text_box_cost
+        properties: {placeholder: cost_$NZ}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: LUSFGC, width_xs: 5}
+      name: grid_panel_11
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 0, row: UAPIKI, width_xs: 3}
+        name: label_cost_date
+        properties: {font_size: 16, text: 'Date Costed:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: UAPIKI, width_xs: 7}
+        name: text_box_cost_date
+        properties: {placeholder: date costed}
+        type: TextBox
+      layout_properties: {col_xs: 5, row: LUSFGC, width_xs: 5}
+      name: grid_panel_12
+      properties: {}
+      type: GridPanel
+    - components:
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 2}
+        name: button_back
+        properties: {text: back}
+        type: Button
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 2}
+        name: button_save
+        properties: {text: save}
+        type: Button
+      layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
+      name: grid_panel_13
+      properties: {}
+      type: GridPanel
+    layout_properties: {full_width_row: true, grid_position: 'BOQNDB,UKLKDI'}
+    name: grid_panel_1
+    properties: {}
+    type: GridPanel
   layout_properties: {slot: default}
   name: content_panel
   properties: {}
@@ -34,7 +177,7 @@ components:
   type: FlowPanel
 - layout_properties: {slot: title}
   name: headline_1
-  properties: {role: headline, text: Details}
+  properties: {role: headline, text: Part Details}
   type: Label
 container:
   properties: {html: '@theme:standard-page.html'}

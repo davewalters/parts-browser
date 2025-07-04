@@ -26,5 +26,7 @@ class ItemTemplate1(ItemTemplate1Template):
 
 
   def button_view_click(self, **event_args):
+    print("👀 button_view clicked")
     self.parent.raise_event("x-show-detail", part=self.item)
+
 
