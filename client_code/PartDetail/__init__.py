@@ -4,13 +4,6 @@ import anvil.http
 from ._anvil_designer import PartDetailTemplate
 from math import isnan
 
-def clean_value(value):
-  if value is None:
-    return ""
-  if isinstance(value, float) and math.isnan(value):
-    return ""
-  return value
-
 class PartDetail(PartDetailTemplate):
   def __init__(self, part=None, new=False, **properties):
     self.init_components(**properties)
@@ -35,6 +28,28 @@ class PartDetail(PartDetailTemplate):
       self.text_box_cost_date.text = str(cost.get("cost_date") or "")
 
     self.text_box_id.enabled = new  # Lock ID if editing
+
+  def clean_value(self, value):
+    if value is None:
+      return ""
+    if isinstance(value, float) and math.isnan(value):
+      return ""
+    return value
+
+  def clean_vendor_part_numbers(self, vendor_parts):
+    cleaned = []
+    for vp in vendor_parts:
+      if not isinstance(vp, dict):
+        continue
+      cleaned.append({
+        "vendor_id": self.clean_value(vp.get("vendor_id")),
+        "vendor_part_no": self.clean_value(vp.get("vendor_part_no")),
+        "vendor_currency": self.clean_value(vp.get("vendor_currency")),
+        "vendor_price": vp.get("vendor_price") or 0.0,
+        "cost_$NZ": vp.get("cost_$NZ") or 0.0,
+        "cost_date": self.clean_value(vp.get("cost_date")) or "1970-01-01"
+      })
+    return cleaned
   
   def button_save_click(self, **event_args):
     # Construct latest_cost dictionary with safe defaults
@@ -42,20 +57,28 @@ class PartDetail(PartDetailTemplate):
       "cost_nz": 0.0,
       "cost_date": "1970-01-01"  # Default epoch date
     }
-    latest_cost["cost_date"] = self.text_box_cost_date.text or "1970-01-01"
-    
+
+    if self.text_box_cost.text:
+      try:
+        latest_cost["cost_nz"] = float(self.text_box_cost.text)
+      except ValueError:
+        pass
+
+    if self.text_box_cost_date.text:
+      latest_cost["cost_date"] = self.text_box_cost_date.text or "1970-01-01"
+
     new_data = {
       "_id": self.text_box_id.text,
-      "description": clean_value(self.text_box_desc.text),
-      "revision": clean_value(self.text_box_rev.text),
-      "status": clean_value(self.text_box_status.text),
-      "default_vendor": clean_value(self.text_box_vendor.text),
-      "type": clean_value(self.text_box_type.text),
-      "process": clean_value(self.text_box_process.text),
-      "material_spec": clean_value(self.text_box_material.text),
-      "unit": clean_value(self.text_box_unit.text),
+      "description": self.clean_value(self.text_box_desc.text),
+      "revision": self.clean_value(self.text_box_rev.text),
+      "status": self.clean_value(self.text_box_status.text),
+      "default_vendor": self.clean_value(self.text_box_vendor.text),
+      "type": self.clean_value(self.text_box_type.text),
+      "process": self.clean_value(self.text_box_process.text),
+      "material_spec": self.clean_value(self.text_box_material.text),
+      "unit": self.clean_value(self.text_box_unit.text),
       "latest_cost": latest_cost,
-      "vendor_part_numbers": self.part.get("vendor_part_numbers", [])
+      "vendor_part_numbers": self.clean_vendor_part_numbers(self.part.get("vendor_part_numbers", []))
     }
 
     try:
@@ -65,8 +88,8 @@ class PartDetail(PartDetailTemplate):
       else:
         url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
         method = "PUT"
-      print("📤 Sending to FastAPI:", new_data)
 
+      print("📤 Sending to FastAPI:", new_data)
       anvil.http.request(
         url=url,
         method=method,
