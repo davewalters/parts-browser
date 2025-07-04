@@ -93,7 +93,7 @@ class PartDetail(PartDetailTemplate):
       anvil.http.request(
         url=url,
         method=method,
-        json=new_data
+        json=new_data or {}
       )
       Notification("✅ Part saved.", style="success").show()
       open_form("Form1")
