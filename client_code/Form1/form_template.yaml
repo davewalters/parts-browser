@@ -14,9 +14,10 @@ components:
         name: label_count
         properties: {text: 'count:'}
         type: Label
+      data_bindings: []
       layout_properties: {grid_position: 'EBBRPC,USAONS'}
       name: grid_panel_1
-      properties: {}
+      properties: {role: null}
       type: GridPanel
     - components:
       - layout_properties: {column: id}

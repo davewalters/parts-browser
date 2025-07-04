@@ -802,3 +802,11 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   overflow-y: auto;
 }
 
+.role-filter-border {
+  border: 1px solid #999;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: #f9f9f9;
+}
+
+
