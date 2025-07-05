@@ -152,17 +152,17 @@ components:
       - event_bindings: {click: button_back_click}
         layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 2}
         name: button_back
-        properties: {background: 'theme:Gray 300', font_size: 20, text: back}
+        properties: {background: '', font_size: 14, text: back}
         type: Button
       - event_bindings: {click: button_delete_click}
         layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 2}
         name: button_delete
-        properties: {background: 'theme:Secondary 700', role: raised, text: delete record}
+        properties: {background: '', font_size: 14, role: null, text: delete record}
         type: Button
       - event_bindings: {click: button_save_click}
         layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 2}
         name: button_save
-        properties: {background: 'theme:Gray 300', bold: false, font_size: 20, text: save}
+        properties: {background: '', bold: false, font_size: 14, text: save}
         type: Button
       layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
       name: grid_panel_13
