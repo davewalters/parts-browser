@@ -11,6 +11,7 @@ class PartDetail(PartDetailTemplate):
     self.init_components(**kwargs)
     self.part = part
     self.is_new = part is None
+    self.button_delete.visible = not self.is_new
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
 
@@ -44,6 +45,9 @@ class PartDetail(PartDetailTemplate):
       self.text_box_vendor.text = "DESIGNATWORK"
       self.text_box_cost.text = "0.00"
       self.text_box_cost_date.text = datetime.today().date().isoformat()  # e.g., "2025-06-30"
+
+    
+
 
   def button_save_click(self, **event_args):
     try:
@@ -120,3 +124,20 @@ class PartDetail(PartDetailTemplate):
 
   def button_back_click(self, **event_args):
     open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+
+  
+  def button_delete_click(self, **event_args):
+    part_id = self.text_box_id.text
+    confirmed = confirm(f"Are you sure you want to delete part '{part_id}'?")
+    if not confirmed:
+      return
+    try:
+      response = anvil.http.request(
+        url=f"http://127.0.0.1:8000/parts/{part_id}",
+        method="DELETE"
+      )
+      Notification("🗑️ Part deleted.", style="danger").show()
+      open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+    except Exception as e:
+      Notification(f"❌ Delete failed: {e}", style="danger").show()
+
