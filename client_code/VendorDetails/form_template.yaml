@@ -1,6 +1,10 @@
 components:
 - components:
   - components:
+    - layout_properties: {col_xs: 5, row: AGXZHZ, width_xs: 2}
+      name: label_id
+      properties: {align: center, italic: true}
+      type: Label
     - components:
       - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 3}
         name: label_vendor_id
@@ -93,11 +97,11 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 2}
+      - layout_properties: {col_xs: 0, row: LWTNGS, width_xs: 3}
         name: button_cancel
         properties: {text: cancel}
         type: Button
-      - layout_properties: {col_xs: 5, row: LWTNGS, width_xs: 3}
+      - layout_properties: {col_xs: 4, row: LWTNGS, width_xs: 3}
         name: button_delete_vendor
         properties: {text: delete vendor}
         type: Button

@@ -144,3 +144,6 @@ class PartDetail(PartDetailTemplate):
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
 
+  def button_vendor_list_click(self, **event_args):
+    open_form("VendorList", part=self.part)
+
