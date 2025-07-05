@@ -6,6 +6,7 @@ from ._anvil_designer import Form1Template
 class Form1(Form1Template):
   def __init__(self, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
+    self.button_new_part.role = "new-button"
 
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
