@@ -45,4 +45,11 @@ class Form1(Form1Template):
               prev_filter_part=self.text_box_part_no.text,
               prev_filter_desc=self.text_box_desc.text)
 
+  def button_new_part_click(self, **event_args):
+  # Create a new empty part
+    open_form("PartDetail",
+              part=None,
+              prev_filter_part=self.text_box_part_no.text,
+              prev_filter_desc=self.text_box_desc.text)
+
 

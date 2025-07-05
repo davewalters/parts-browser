@@ -34,6 +34,16 @@ class PartDetail(PartDetailTemplate):
       latest = part.get("latest_cost", {})
       self.text_box_cost.text = str(latest.get("cost_nz", ""))
       self.text_box_cost_date.text = latest.get("cost_date", "")
+    else:
+      # set sensible defaults for new part
+      self.text_box_id.text = ""
+      self.text_box_rev.text = "A"
+      self.drop_down_status.selected_value = "active"
+      self.drop_down_type.selected_value = "part"
+      self.drop_down_unit.selected_value = "each"
+      self.text_box_vendor.text = "DESIGNATWORK"
+      self.text_box_cost.text = "0.00"
+      self.text_box_cost_date.text = datetime.today().date().isoformat()  # e.g., "2025-06-30"
 
   def button_save_click(self, **event_args):
     try:
@@ -101,7 +111,11 @@ class PartDetail(PartDetailTemplate):
       open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
-      Notification(f"❌ Save failed: {e}", style="danger").show()
+    # If the error is due to duplicate _id
+      if "already exists" in str(e):
+        Notification("⚠️ Part ID already exists. Please choose a different ID.", style="warning").show()
+      else:
+        Notification(f"❌ Save failed: {e}", style="danger").show()
 
 
   def button_back_click(self, **event_args):

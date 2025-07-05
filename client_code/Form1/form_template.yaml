@@ -19,6 +19,12 @@ components:
       name: grid_panel_1
       properties: {role: null}
       type: GridPanel
+    - data_bindings: []
+      event_bindings: {click: button_new_part_click}
+      layout_properties: {grid_position: 'HSLJGQ,UGSQZS'}
+      name: button_new_part
+      properties: {background: 'theme:Secondary 500', text: New Part}
+      type: Button
     - components:
       - layout_properties: {column: id}
         name: label_id
@@ -67,10 +73,6 @@ components:
       name: repeating_panel_1
       properties: {item_template: Form1.ItemTemplate1}
       type: RepeatingPanel
-    - layout_properties: {grid_position: 'JYPMFW,IMJHON'}
-      name: button_1
-      properties: {text: button_1}
-      type: Button
     layout_properties: {full_width_row: true, grid_position: 'VZTIYL,VEQJIX'}
     name: column_panel_2
     properties: {}
