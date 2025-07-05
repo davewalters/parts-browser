@@ -6,6 +6,9 @@ unique_ids:
     Form1: IXLNCA7LCT7VLWEOM32U6H2RGPSNXLCY
     Form1.ItemTemplate1: '1751441552263637031671771.1324'
     PartDetail: '1751437185060751609738477.6289'
+    VendorDetails: '1751716728999798809628172.729'
+    VendorList: '1751714245022933959646165.2908'
+    VendorList.ItemTemplate3: '1751714363687956694938869.1277'
   modules: {}
   scripts: {}
   server_modules: {}

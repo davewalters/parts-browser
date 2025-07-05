@@ -1,0 +1,35 @@
+components:
+- layout_properties: {grid_position: 'IKIUQH,SQMAXU'}
+  name: label_vendor_id
+  properties: {text: vendor_id}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,JRCERN'}
+  name: label_vendor_part_no
+  properties: {text: vendor_part_no}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,YXRPGF'}
+  name: label_vendor_currency
+  properties: {text: vendor_currency}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,PPXTXN'}
+  name: label_vendor_price
+  properties: {text: vendor_price}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,IRXKLV'}
+  name: label_cost_NZD
+  properties: {text: cost_NZD}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,FSLPJB'}
+  name: label_cost_date
+  properties: {text: cost_date}
+  type: Label
+- layout_properties: {grid_position: 'IKIUQH,CUPMMX'}
+  name: button_view
+  properties: {text: details}
+  type: Button
+- layout_properties: {grid_position: 'IKIUQH,ORBPTG'}
+  name: radio_button_active_vendor
+  properties: {font_size: 14, text: active_vendor}
+  type: RadioButton
+container: {type: ColumnPanel}
+is_package: true

@@ -1,10 +1,6 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 0, row: OYIIQQ, width_xs: 5}
-      name: label_title
-      properties: {}
-      type: Label
     - components:
       - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
         name: label_id
