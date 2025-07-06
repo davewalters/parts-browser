@@ -3,7 +3,7 @@ components:
   - components:
     - layout_properties: {col_xs: 5, row: AGXZHZ, width_xs: 2}
       name: label_id
-      properties: {align: center, bold: true, font_size: 16, italic: true}
+      properties: {align: center, bold: true, font_size: 16, italic: false}
       type: Label
     - components:
       - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 3}

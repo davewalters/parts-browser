@@ -10,6 +10,8 @@ from .. import VendorList
 class VendorDetails(VendorDetailsTemplate):
   def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
+    self.text_box_vendor_price.set_event_handler("change", self.text_box_vendor_price_change)
+    self.drop_down_vendor_currency.set_event_handler("change", self.drop_down_currency_change)
     self.part = part
     self.prev_filter_part = filter_part
     self.prev_filter_desc = filter_desc
@@ -60,7 +62,7 @@ class VendorDetails(VendorDetailsTemplate):
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
     self.update_cost_nz()
 
-  def text_box_price_change(self, **event_args):
+  def text_box_vendor_price_change(self, **event_args):
     self.update_cost_nz()
 
   def button_save_click(self, **event_args):
