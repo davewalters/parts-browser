@@ -8,9 +8,12 @@ from .. import VendorDetails
 class ItemTemplate3(ItemTemplate3Template):
   def __init__(self, **properties):
     self.init_components(**properties)
-    self.label_vendor_id.text = self.item.get("vendor_id", "")
+    self.radio_button_active_vendor.group_name = "vendor_active_group"
+    self.label_vendor_id.text = self.item.get("vendor_company_name", "")
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "")
+    self.label_vendor_price.column = "vendor_price"
+    self.label_vendor_price.text = str(self.item.get("vendor_price", ""))
     self.label_cost_NZD.text = str(self.item.get("cost_$NZ", ""))
     self.label_cost_date.text = self.item.get("cost_date", "")
 
@@ -18,8 +21,8 @@ class ItemTemplate3(ItemTemplate3Template):
     color = "#000" if is_active else "#aaa"  # grey out inactive
     
     for lbl in [self.label_vendor_id, self.label_vendor_part_no,
-                self.label_vendor_currency, self.label_cost_NZD,
-                self.label_cost_date]:
+                self.label_vendor_currency, self.label_vendor_price, 
+                self.label_cost_NZD, self.label_cost_date]:
       lbl.foreground = color
 
     self.radio_button_active_vendor.selected = is_active

@@ -88,7 +88,10 @@ class VendorDetails(VendorDetailsTemplate):
       "vendor_price": float(self.text_box_vendor_price.text),
       "cost_date": self.text_box_cost_date.text
     })
-
+    # Update default_vendor if this vendor is not already the default
+    if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
+      self.part["default_vendor"] = self.vendor_data["vendor_id"]
+      
     # Recalculate NZ cost
     rate = self.get_exchange_rate(self.vendor_data["vendor_currency"])
     self.vendor_data["cost_$NZ"] = round(self.vendor_data["vendor_price"] * rate, 2)
@@ -102,7 +105,8 @@ class VendorDetails(VendorDetailsTemplate):
         break
     if not updated:
       self.part["vendor_part_numbers"].append(self.vendor_data)
-
+    
+    self.part["default_vendor"] = self.vendor_data["vendor_id"]
     # Persist entire part document
     try:
       url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"

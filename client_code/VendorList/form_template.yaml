@@ -30,7 +30,7 @@ components:
         name: label_vendor_id
         properties: {bold: true, text: Vendor ID}
         type: Label
-      - layout_properties: {column: active_vendor}
+      - layout_properties: {column: vendor_part_no}
         name: label_vendor_part_no
         properties: {bold: true, text: Vendor Part No.}
         type: Label
@@ -54,6 +54,10 @@ components:
         name: label_radio_button_active_vendor
         properties: {}
         type: Label
+      - layout_properties: {column: vendor_price}
+        name: label_vendor_price
+        properties: {bold: true, text: Vendor Price}
+        type: Label
       layout_properties: {full_width_row: false, grid_position: 'SYDIJO,MSUFWJ'}
       name: data_row_panel_1
       properties: {background: 'theme:Gray 300'}
@@ -62,7 +66,7 @@ components:
     name: column_panel_1
     properties: {}
     type: ColumnPanel
-  - layout_properties: {full_width_row: true, grid_position: 'OVAMBK,IEVIDW'}
+  - layout_properties: {full_width_row: false, grid_position: 'OVAMBK,IEVIDW'}
     name: repeating_panel_1
     properties: {item_template: VendorList.ItemTemplate3}
     type: RepeatingPanel
