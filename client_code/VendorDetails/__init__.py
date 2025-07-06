@@ -5,6 +5,7 @@ from ._anvil_designer import VendorDetailsTemplate
 import anvil.http
 import json
 from datetime import datetime
+from .. import VendorList
 
 class VendorDetails(VendorDetailsTemplate):
   def __init__(self, part, vendor_data=None, **kwargs):
@@ -29,7 +30,7 @@ class VendorDetails(VendorDetailsTemplate):
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
     self.text_box_cost_date.text = self.vendor_data["cost_date"]
-    self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_currency.selected_value)}"
+    self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
 
     self.update_cost_nz()
 
@@ -56,6 +57,7 @@ class VendorDetails(VendorDetailsTemplate):
     self.update_cost_nz()
 
   def button_save_click(self, **event_args):
+    # Save current form values into vendor_data
     self.vendor_data.update({
       "vendor_id": self.text_box_vendor_id.text,
       "vendor_part_no": self.text_box_vendor_part_no.text,
@@ -63,18 +65,41 @@ class VendorDetails(VendorDetailsTemplate):
       "vendor_price": float(self.text_box_vendor_price.text),
       "cost_date": self.text_box_cost_date.text
     })
-    self.vendor_data["cost_$NZ"] = round(self.vendor_data["vendor_price"] * self.get_exchange_rate(self.vendor_data["vendor_currency"]), 2)
 
-    self.part.setdefault("vendor_part_numbers", []).append(self.vendor_data)
-    anvil.http.request(
-      url=f"http://127.0.0.1:8000/parts/{self.part['_id']}",
-      method="PUT",
-      data=json.dumps(self.part),
-      headers={"Content-Type": "application/json"}
-    )
-    Notification("✅ Vendor saved.", style="success").show()
+    # Recalculate NZ cost
+    rate = self.get_exchange_rate(self.vendor_data["vendor_currency"])
+    self.vendor_data["cost_$NZ"] = round(self.vendor_data["vendor_price"] * rate, 2)
+
+    # Check if vendor exists (by vendor_id), update or append
+    updated = False
+    for idx, vendor in enumerate(self.part["vendor_part_numbers"]):
+      if vendor["vendor_id"] == self.vendor_data["vendor_id"]:
+        self.part["vendor_part_numbers"][idx] = self.vendor_data
+        updated = True
+        break
+    if not updated:
+      self.part["vendor_part_numbers"].append(self.vendor_data)
+
+    # Persist entire part document
+    try:
+      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      anvil.http.request(
+        url=url,
+        method="PUT",
+        data=json.dumps(self.part),
+        headers={"Content-Type": "application/json"}
+      )
+      Notification("✅ Vendor details saved.", style="success").show()
+    except Exception as e:
+      Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
+
+    # Return to vendor list
     open_form("VendorList", part=self.part)
 
   def button_cancel_click(self, **event_args):
-    open_form("VendorList", part=self.part)
+    open_form("VendorList",
+              part=self.part,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc)
+
 

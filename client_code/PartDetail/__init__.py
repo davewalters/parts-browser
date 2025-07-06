@@ -147,5 +147,8 @@ class PartDetail(PartDetailTemplate):
       Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    open_form("VendorList", part=self.part)
+    open_form("VendorList", 
+              part=self.part,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc)
 

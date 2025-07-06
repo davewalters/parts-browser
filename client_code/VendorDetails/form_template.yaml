@@ -3,7 +3,7 @@ components:
   - components:
     - layout_properties: {col_xs: 5, row: AGXZHZ, width_xs: 2}
       name: label_id
-      properties: {align: center, italic: true}
+      properties: {align: center, bold: true, font_size: 16, italic: true}
       type: Label
     - components:
       - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 3}
@@ -97,7 +97,8 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: LWTNGS, width_xs: 3}
+      - event_bindings: {click: button_cancel_click}
+        layout_properties: {col_xs: 0, row: LWTNGS, width_xs: 3}
         name: button_cancel
         properties: {text: cancel}
         type: Button
@@ -105,7 +106,8 @@ components:
         name: button_delete_vendor
         properties: {text: delete vendor}
         type: Button
-      - layout_properties: {col_xs: 9, row: LWTNGS, width_xs: 3}
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 9, row: LWTNGS, width_xs: 3}
         name: button_save
         properties: {text: save}
         type: Button

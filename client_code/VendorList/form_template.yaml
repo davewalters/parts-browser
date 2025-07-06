@@ -3,17 +3,27 @@ components:
   - components:
     - components:
       - layout_properties: {col_xs: 4, row: LDLHQO, width_xs: 4}
-        name: label_part_id
+        name: label_id
         properties: {align: center, bold: true, font_size: 16}
         type: Label
       layout_properties: {grid_position: 'VGCKFD,YFIGGA'}
       name: grid_panel_1
       properties: {}
       type: GridPanel
-    - layout_properties: {grid_position: 'OITMXB,GFYXDG'}
-      name: button_new_vendor
-      properties: {text: Add Vendor}
-      type: Button
+    - components:
+      - layout_properties: {col_xs: 4, row: ZDBMSI, width_xs: 2}
+        name: button_new_vendor
+        properties: {text: Add Vendor}
+        type: Button
+      - event_bindings: {click: button_cancel_click}
+        layout_properties: {col_xs: 6, row: ZDBMSI, width_xs: 2}
+        name: button_cancel
+        properties: {text: cancel}
+        type: Button
+      layout_properties: {grid_position: 'ODUWTA,AJDESG'}
+      name: grid_panel_2
+      properties: {}
+      type: GridPanel
     - components:
       - layout_properties: {column: vendor_id}
         name: label_vendor_id

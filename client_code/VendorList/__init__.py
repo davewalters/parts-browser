@@ -8,21 +8,49 @@ from .. import VendorDetails
 from .. import PartDetail
 
 class VendorList(VendorListTemplate):
-  def __init__(self, part, **kwargs):
+  def __init__(self, part, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.part = part
-    self.repeating_panel_1.items = self.part.get("vendor_part_numbers", [])
-    self.label_part_id.text = self.part.get("_id", "")
+    self.prev_filter_part = filter_part
+    self.prev_filter_desc = filter_desc
+    self.label_id.text = part.get("_id", "")
+    default_vendor = part.get("default_vendor")
+    for vendor in self.part.get("vendor_part_numbers", []):
+      vendor["is_active"] = vendor.get("vendor_id") == default_vendor
 
-  def button_back_click(self, **event_args):
-    open_form("PartDetail")
+    self.repeating_panel_1.items = self.part["vendor_part_numbers"]
+    self.repeating_panel_1.set_event_handler("x-set-default-vendor", self.set_active_vendor)
+    self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor)
+
+  def button_cancel_click(self, **event_args):
+    open_form("PartDetail",
+              part=self.part,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc)
+
 
   def button_new_vendor_click(self, **event_args):
-    open_form("VendorDetails", part_id=self.part_id, vendor=None)
+    open_form("VendorDetails", part=self.part, vendor_data=None)
 
-  def set_active_vendor(self, selected_vendor_id):
-    for vendor in self.vendor_data:
-      vendor["is_active"] = vendor["vendor_id"] == selected_vendor_id
+  def set_active_vendor(self, vendor_id, **event_args):
+    for vendor in self.part.get("vendor_part_numbers", []):
+      vendor["is_active"] = vendor.get("vendor_id") == vendor_id
 
-    self.repeating_panel_1.items = self.vendor_data
-    Notification(f"✅ Set '{selected_vendor_id}' as default vendor.", style="success").show()
+    self.part["default_vendor"] = vendor_id
+    self.repeating_panel_1.items = self.part["vendor_part_numbers"]
+
+    try:
+      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      anvil.http.request(
+        url=url,
+        method="PUT",
+        data=json.dumps(self.part),
+        headers={"Content-Type": "application/json"}
+      )
+      Notification(f"✅ '{vendor_id}' set as default vendor.", style="success").show()
+    except Exception as e:
+      Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
+
+  def edit_vendor(self, vendor_data, **event_args):
+    open_form("VendorDetails", part=self.part, vendor_data=vendor_data)
+
