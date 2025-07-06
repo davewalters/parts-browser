@@ -37,9 +37,10 @@ class PartDetail(PartDetailTemplate):
       self.text_box_material.text = part.get("material_spec", "")
       self.drop_down_unit.selected_value = part.get("unit", "each")
 
-      latest = part.get("latest_cost", {})
-      self.text_box_cost.text = str(latest.get("cost_nz", ""))
-      self.text_box_cost_date.text = latest.get("cost_date", "")
+      # Use active vendor to populate latest cost
+      active_vendor = next((v for v in part.get("vendor_part_numbers", []) if v.get("vendor_id") == part.get("default_vendor")), {})
+      self.text_box_cost.text = str(active_vendor.get("cost_$NZ", ""))
+      self.text_box_cost_date.text = active_vendor.get("cost_date", "")
     else:
       # set sensible defaults for new part
       self.text_box_id.text = ""
@@ -50,9 +51,6 @@ class PartDetail(PartDetailTemplate):
       self.text_box_vendor.text = "DESIGNATWORK"
       self.text_box_cost.text = "0.00"
       self.text_box_cost_date.text = datetime.today().date().isoformat()  # e.g., "2025-06-30"
-
-    
-
 
   def button_save_click(self, **event_args):
     try:
@@ -85,16 +83,7 @@ class PartDetail(PartDetailTemplate):
         "material_spec": self.text_box_material.text,
         "unit": self.drop_down_unit.selected_value,
         "latest_cost": latest_cost,
-        "vendor_part_numbers": [
-          {
-            "vendor_id": self.text_box_vendor.text or "-",
-            "vendor_part_no": "-",
-            "vendor_currency": "-",
-            "vendor_price": 0.0,
-            "cost_$NZ": latest_cost["cost_nz"],
-            "cost_date": latest_cost["cost_date"]
-          }
-        ]
+        "vendor_part_numbers": self.part.get("vendor_part_numbers", [])
       }
 
       if self.is_new:
@@ -105,7 +94,6 @@ class PartDetail(PartDetailTemplate):
         method = "PUT"
 
       json_string = json.dumps(new_data)
-
       #print("📤 Sending to FastAPI:", new_data)
       #print("📤 Payload repr:", json_string)
 
@@ -126,11 +114,9 @@ class PartDetail(PartDetailTemplate):
       else:
         Notification(f"❌ Save failed: {e}", style="danger").show()
 
-
   def button_back_click(self, **event_args):
     open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
-  
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
     confirmed = confirm(f"Are you sure you want to delete part '{part_id}'?")
@@ -149,6 +135,6 @@ class PartDetail(PartDetailTemplate):
   def button_vendor_list_click(self, **event_args):
     open_form("VendorList", 
               part=self.part,
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc)
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 

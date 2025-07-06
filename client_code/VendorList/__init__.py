@@ -30,7 +30,11 @@ class VendorList(VendorListTemplate):
 
 
   def button_new_vendor_click(self, **event_args):
-    open_form("VendorDetails", part=self.part, vendor_data=None)
+    open_form("VendorDetails",
+              part=self.part,
+              vendor_data=None,
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 
   def set_active_vendor(self, vendor_id, **event_args):
     for vendor in self.part.get("vendor_part_numbers", []):
@@ -52,5 +56,9 @@ class VendorList(VendorListTemplate):
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
   def edit_vendor(self, vendor_data, **event_args):
-    open_form("VendorDetails", part=self.part, vendor_data=vendor_data)
+    open_form("VendorDetails",
+              part=self.part,
+              vendor_data=vendor_data,
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 

@@ -8,9 +8,11 @@ from datetime import datetime
 from .. import VendorList
 
 class VendorDetails(VendorDetailsTemplate):
-  def __init__(self, part, vendor_data=None, **kwargs):
+  def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.part = part
+    self.prev_filter_part = filter_part
+    self.prev_filter_desc = filter_desc
     self.vendor_data = vendor_data or {
       "vendor_id": "",
       "vendor_part_no": "",
@@ -44,8 +46,13 @@ class VendorDetails(VendorDetailsTemplate):
       price = float(self.text_box_vendor_price.text)
       rate = self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)
       cost_nz = round(price * rate, 2)
+  
+      # Update local vendor_data fields
       self.vendor_data["cost_$NZ"] = cost_nz
+      self.vendor_data["cost_date"] = datetime.today().date().isoformat()
+  
       self.label_cost_nz.text = f"≈ ${cost_nz:.2f} NZD"
+      self.text_box_cost_date.text = self.vendor_data["cost_date"]
     except:
       self.label_cost_nz.text = "Invalid price"
 
@@ -94,12 +101,15 @@ class VendorDetails(VendorDetailsTemplate):
       Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
 
     # Return to vendor list
-    open_form("VendorList", part=self.part)
+    open_form("VendorList",
+              part=self.part,
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 
   def button_cancel_click(self, **event_args):
     open_form("VendorList",
               part=self.part,
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc)
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 
 
