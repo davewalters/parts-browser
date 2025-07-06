@@ -42,6 +42,10 @@ class VendorDetails(VendorDetailsTemplate):
       "cost_date": datetime.today().date().isoformat()
     }
 
+    # Hide delete button if this vendor is currently the default
+    is_active = self.vendor_data.get("vendor_id") == self.part.get("default_vendor", "")
+    self.button_delete_vendor.visible = not is_active
+
     self.drop_down_vendor_currency.items = ["NZD", "USD", "AU", "EUR", "STG", "SGD"]
 
     self.label_id.text = part.get("_id", "")
@@ -136,6 +140,38 @@ class VendorDetails(VendorDetailsTemplate):
               filter_desc=self.prev_filter_desc)
 
   def button_delete_vendor_click(self, **event_args):
-    pass
+    vendor_id = self.vendor_data.get("vendor_id", "")
+    if not vendor_id:
+      Notification("⚠️ No vendor selected for deletion.", style="warning").show()
+      return
+  
+    confirm_delete = confirm(f"Are you sure you want to delete vendor '{vendor_id}' from this part?")
+    if not confirm_delete:
+      return
+  
+    # Remove vendor from the part's vendor list
+    self.part["vendor_part_numbers"] = [
+      v for v in self.part.get("vendor_part_numbers", [])
+      if v.get("vendor_id") != vendor_id
+    ]
+  
+    # Save updated part document
+    try:
+      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      anvil.http.request(
+        url=url,
+        method="PUT",
+        data=json.dumps(self.part),
+        headers={"Content-Type": "application/json"}
+      )
+      Notification(f"🗑️ Vendor '{vendor_id}' deleted.", style="success").show()
+    except Exception as e:
+      Notification(f"❌ Failed to delete vendor: {e}", style="danger").show()
+  
+    # Return to vendor list
+    open_form("VendorList",
+              part=self.part,
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc)
 
 
