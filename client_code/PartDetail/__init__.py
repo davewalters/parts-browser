@@ -13,6 +13,7 @@ class PartDetail(PartDetailTemplate):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
+    self.button_vendor_list.role = "mydefault-button"
     self.button_delete.role = "delete-button"
     self.part = part
     self.is_new = part is None

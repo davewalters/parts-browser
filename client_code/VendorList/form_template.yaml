@@ -19,7 +19,7 @@ components:
       - event_bindings: {click: button_cancel_click}
         layout_properties: {col_xs: 6, row: ZDBMSI, width_xs: 2}
         name: button_cancel
-        properties: {text: cancel}
+        properties: {text: back}
         type: Button
       layout_properties: {grid_position: 'ODUWTA,AJDESG'}
       name: grid_panel_2
@@ -36,11 +36,11 @@ components:
         type: Label
       - layout_properties: {column: vendor_currency}
         name: label_vendor_currency
-        properties: {bold: true, text: Currency}
+        properties: {align: center, bold: true, text: Currency}
         type: Label
       - layout_properties: {column: cost_NZD}
         name: label_cost_NZD
-        properties: {bold: true, text: Cost NZD}
+        properties: {align: center, bold: true, text: Cost NZD}
         type: Label
       - layout_properties: {column: cost_date}
         name: label_cost_date
@@ -54,11 +54,7 @@ components:
         name: label_radio_button_active_vendor
         properties: {}
         type: Label
-      - layout_properties: {column: vendor_price}
-        name: label_vendor_price
-        properties: {bold: true, text: Vendor Price}
-        type: Label
-      layout_properties: {full_width_row: false, grid_position: 'SYDIJO,MSUFWJ'}
+      layout_properties: {full_width_row: true, grid_position: 'SYDIJO,MSUFWJ'}
       name: data_row_panel_1
       properties: {background: 'theme:Gray 300'}
       type: DataRowPanel

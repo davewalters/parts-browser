@@ -10,6 +10,9 @@ from .. import VendorList
 class VendorDetails(VendorDetailsTemplate):
   def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
+    self.button_save.role = "save-button"
+    self.button_cancel.role = "mydefault-button"
+    self.button_delete_vendor.role = "delete-button"
     self.text_box_vendor_price.set_event_handler("change", self.text_box_vendor_price_change)
     self.drop_down_vendor_currency.set_event_handler("change", self.drop_down_currency_change)
     self.part = part
@@ -131,5 +134,8 @@ class VendorDetails(VendorDetailsTemplate):
               part=self.part,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)
+
+  def button_delete_vendor_click(self, **event_args):
+    pass
 
 

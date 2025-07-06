@@ -12,7 +12,6 @@ class ItemTemplate3(ItemTemplate3Template):
     self.label_vendor_id.text = self.item.get("vendor_company_name", "")
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "")
-    self.label_vendor_price.column = "vendor_price"
     self.label_vendor_price.text = str(self.item.get("vendor_price", ""))
     self.label_cost_NZD.text = str(self.item.get("cost_$NZ", ""))
     self.label_cost_date.text = self.item.get("cost_date", "")

@@ -10,6 +10,8 @@ from .. import PartDetail
 class VendorList(VendorListTemplate):
   def __init__(self, part, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
+    self.button_new_vendor.role = "save-button"
+    self.button_cancel.role = "mydefault-button"
     self.part = part
     self.vendor_lookup = self.get_vendor_lookup()
     self.prev_filter_part = filter_part
