@@ -802,11 +802,25 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   overflow-y: auto;
 }
 
-.anvil-role-filter-border {
+.anvil-role-gridpanel-border {
   border: 1px solid #999;
   border-radius: 6px;
   padding: 8px;
   background-color: #f9f9f9;
+}
+
+.anvil-role-label-border {
+  border: 1px solid #999;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: #f9f9f9;
+}
+
+.anvil-role-button-border {
+  border: 1px solid #999;
+  border-radius: 6px;
+  padding: 4px;
+  background-color: #adb5bd;
 }
 
 .anvil-role-mydefault-button button {

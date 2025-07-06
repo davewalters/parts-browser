@@ -11,7 +11,7 @@ class Form1(Form1Template):
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
 
-    self.grid_panel_1.role = "filter-border"
+    self.grid_panel_1.role = "gridpanel-border"
     self.repeating_panel_1.role = "scrolling-panel"
     self.text_box_part_no.col_width = 4
     self.text_box_desc.col_width = 5

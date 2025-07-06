@@ -146,22 +146,22 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 1, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 1}
         name: button_back
         properties: {background: '', font_size: 14, text: back}
         type: Button
       - event_bindings: {click: button_delete_click}
-        layout_properties: {col_xs: 3, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 4, row: YXOXYU, width_xs: 2}
         name: button_delete
         properties: {background: '', font_size: 14, role: null, text: delete record}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 1}
         name: button_save
         properties: {background: '', bold: false, font_size: 14, text: save}
         type: Button
       - event_bindings: {click: button_vendor_list_click}
-        layout_properties: {col_xs: 9, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 2}
         name: button_vendor_list
         properties: {text: Vendors}
         type: Button

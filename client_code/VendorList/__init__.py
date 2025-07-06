@@ -17,7 +17,8 @@ class VendorList(VendorListTemplate):
     self.prev_filter_part = filter_part
     self.prev_filter_desc = filter_desc
     self.label_id.text = part.get("_id", "")
-    self.label_id.role = "filter-border"
+    self.label_id.role = "label-border"
+    #self.grid_panel_2.role = "button-border"
     default_vendor = self.part.get("default_vendor", "")
     self.vendor_data = []
     

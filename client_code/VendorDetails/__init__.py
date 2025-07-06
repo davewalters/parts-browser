@@ -49,7 +49,7 @@ class VendorDetails(VendorDetailsTemplate):
     self.drop_down_vendor_currency.items = ["NZD", "USD", "AU", "EUR", "STG", "SGD"]
 
     self.label_id.text = part.get("_id", "")
-    self.label_id.role = "filter-border"
+    self.label_id.role = "label-border"
     self.drop_down_vendor_id.selected_value = self.vendor_data["vendor_id"]
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]

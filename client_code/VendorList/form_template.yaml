@@ -23,7 +23,7 @@ components:
         type: Button
       layout_properties: {grid_position: 'ODUWTA,AJDESG'}
       name: grid_panel_2
-      properties: {}
+      properties: {spacing_above: none, spacing_below: none}
       type: GridPanel
     - components:
       - layout_properties: {column: vendor_id}

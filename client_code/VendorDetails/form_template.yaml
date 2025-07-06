@@ -98,7 +98,7 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_cancel_click}
-        layout_properties: {col_xs: 0, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 2, row: LWTNGS, width_xs: 3}
         name: button_cancel
         properties: {text: cancel}
         type: Button
@@ -108,7 +108,7 @@ components:
         properties: {text: delete vendor}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 9, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 7, row: LWTNGS, width_xs: 3}
         name: button_save
         properties: {text: save}
         type: Button
@@ -116,7 +116,7 @@ components:
       name: grid_panel_9
       properties: {}
       type: GridPanel
-    layout_properties: {full_width_row: true, grid_position: 'FEGYPJ,UKNBQD'}
+    layout_properties: {full_width_row: false, grid_position: 'FEGYPJ,UKNBQD'}
     name: grid_panel_1
     properties: {}
     type: GridPanel
