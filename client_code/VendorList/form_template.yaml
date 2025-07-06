@@ -11,7 +11,8 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 4, row: ZDBMSI, width_xs: 2}
+      - event_bindings: {click: button_new_vendor_click}
+        layout_properties: {col_xs: 4, row: ZDBMSI, width_xs: 2}
         name: button_new_vendor
         properties: {text: Add Vendor}
         type: Button

@@ -15,6 +15,21 @@ class VendorDetails(VendorDetailsTemplate):
     self.part = part
     self.prev_filter_part = filter_part
     self.prev_filter_desc = filter_desc
+    try:
+      vendor_response = anvil.http.request(
+      url="http://127.0.0.1:8000/vendors",
+      method="GET",
+      json=True
+      )
+      # Each dropdown item is a (label, value) tuple
+      self.drop_down_vendor_id.items = [
+        (vendor.get("company_name", vendor["_id"]), vendor["_id"])
+        for vendor in vendor_response
+      ]
+    except Exception as e:
+      Notification(f"⚠️ Could not load vendor list: {e}", style="warning").show()
+      self.drop_down_vendor_id.items = []
+
     self.vendor_data = vendor_data or {
       "vendor_id": "",
       "vendor_part_no": "",
@@ -24,12 +39,11 @@ class VendorDetails(VendorDetailsTemplate):
       "cost_date": datetime.today().date().isoformat()
     }
 
-    # Set dropdown choices here
     self.drop_down_vendor_currency.items = ["NZD", "USD", "AU", "EUR", "STG", "SGD"]
 
-    # Populate fields
     self.label_id.text = part.get("_id", "")
-    self.text_box_vendor_id.text = self.vendor_data["vendor_id"]
+    self.label_id.role = "filter-border"
+    self.drop_down_vendor_id.selected_value = self.vendor_data["vendor_id"]
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
@@ -68,7 +82,7 @@ class VendorDetails(VendorDetailsTemplate):
   def button_save_click(self, **event_args):
     # Save current form values into vendor_data
     self.vendor_data.update({
-      "vendor_id": self.text_box_vendor_id.text,
+      "vendor_id": self.drop_down_vendor_id.selected_value,
       "vendor_part_no": self.text_box_vendor_part_no.text,
       "vendor_currency": self.drop_down_vendor_currency.selected_value,
       "vendor_price": float(self.text_box_vendor_price.text),

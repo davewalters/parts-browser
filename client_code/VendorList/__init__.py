@@ -14,6 +14,7 @@ class VendorList(VendorListTemplate):
     self.prev_filter_part = filter_part
     self.prev_filter_desc = filter_desc
     self.label_id.text = part.get("_id", "")
+    self.label_id.role = "filter-border"
     default_vendor = part.get("default_vendor")
     for vendor in self.part.get("vendor_part_numbers", []):
       vendor["is_active"] = vendor.get("vendor_id") == default_vendor

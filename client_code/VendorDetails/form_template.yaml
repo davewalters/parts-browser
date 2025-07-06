@@ -6,14 +6,14 @@ components:
       properties: {align: center, bold: true, font_size: 16, italic: false}
       type: Label
     - components:
-      - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 3}
+      - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 2}
         name: label_vendor_id
-        properties: {font_size: 16, text: 'Vendor ID:'}
+        properties: {font_size: 16, text: 'Vendor:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: EPCFKE, width_xs: 8}
-        name: text_box_vendor_id
+      - layout_properties: {col_xs: 2, row: EPCFKE, width_xs: 9}
+        name: drop_down_vendor_id
         properties: {}
-        type: TextBox
+        type: DropDown
       layout_properties: {col_xs: 0, row: GMQKME, width_xs: 6}
       name: grid_panel_2
       properties: {}
