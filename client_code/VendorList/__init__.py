@@ -4,6 +4,8 @@ from anvil import *
 from ._anvil_designer import VendorListTemplate
 import anvil.http
 import json
+from .. import VendorDetails
+from .. import PartDetail
 
 class VendorList(VendorListTemplate):
   def __init__(self, part, **kwargs):

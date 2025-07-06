@@ -5,6 +5,8 @@ from ._anvil_designer import PartDetailTemplate
 import anvil.http
 import json
 from datetime import datetime
+from .. import VendorList
+
 
 class PartDetail(PartDetailTemplate):
   def __init__(self, part, prev_filter_part="", prev_filter_desc="", **kwargs):

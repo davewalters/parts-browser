@@ -39,13 +39,11 @@ components:
         name: label_button_view
         properties: {}
         type: Label
-      - layout_properties: {column: radio_button_active_vendor}
-        name: label_active_vendor
-        properties:
-          text: |2+
-
+      - layout_properties: {column: col_active}
+        name: label_radio_button_active_vendor
+        properties: {}
         type: Label
-      layout_properties: {full_width_row: true, grid_position: 'SYDIJO,MSUFWJ'}
+      layout_properties: {full_width_row: false, grid_position: 'SYDIJO,MSUFWJ'}
       name: data_row_panel_1
       properties: {background: 'theme:Gray 300'}
       type: DataRowPanel

@@ -20,7 +20,7 @@ class VendorDetails(VendorDetailsTemplate):
     }
 
     # Set dropdown choices here
-    self.drop_down_currency.items = ["NZD", "USD", "AU", "EUR", "STG", "SGD"]
+    self.drop_down_vendor_currency.items = ["NZD", "USD", "AU", "EUR", "STG", "SGD"]
 
     # Populate fields
     self.label_id.text = part.get("_id", "")
