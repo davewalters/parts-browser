@@ -9,6 +9,8 @@ class ItemTemplate3(ItemTemplate3Template):
   def __init__(self, **properties):
     self.init_components(**properties)
     self.radio_button_active_vendor.group_name = "vendor_active_group"
+    self.radio_button_active_vendor.set_event_handler("change", self.radio_button_active_vendor_change)
+
     self.label_vendor_id.text = self.item.get("vendor_company_name", "")
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "")
