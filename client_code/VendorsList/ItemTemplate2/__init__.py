@@ -10,9 +10,8 @@ class ItemTemplate2(ItemTemplate2Template):
     self.init_components(**properties)
 
     vendor = self.item
-    print(vendor)
-    self.label_vendor_id.text = vendor.get("vendor_id", "")
-    self.label_company_name.text = vendor.get("vendor_company_name", "")
+    self.label_vendor_id.text = vendor.get("_id", "")
+    self.label_company_name.text = vendor.get("company_name", "")
 
     address = vendor.get("address", {})
     self.label_address_line1.text = address.get("line1", "")

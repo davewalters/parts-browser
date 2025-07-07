@@ -25,7 +25,7 @@ components:
     name: button_view
     properties: {text: details}
     type: Button
-  layout_properties: {full_width_row: false, grid_position: 'IQVLHR,LMUZWE'}
+  layout_properties: {full_width_row: true, grid_position: 'IQVLHR,LMUZWE'}
   name: data_row_panel_1
   properties: {}
   type: DataRowPanel

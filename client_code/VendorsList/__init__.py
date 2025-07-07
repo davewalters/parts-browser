@@ -25,6 +25,8 @@ class VendorsList(VendorsListTemplate):
 
   def update_filter(self, **event_args):
     vendor_id = self.text_box_vendor_id.text.strip()
+    print("In update_filter: vendor_id is ")
+    print(vendor_id)
     company_name = self.text_box_company_name.text.strip()
   
     try:
@@ -35,17 +37,14 @@ class VendorsList(VendorsListTemplate):
       if company_name:
         params.append(f"company_name={company_name}")
       query_string = "&".join(params)
+      print(query_string)
   
-      url = "http://127.0.0.1:8000/vendors"
+      url = "http://127.0.0.1:8000/vendors/full"
       if query_string:
         url += f"?{query_string}"
   
       response = anvil.http.request(url=url, method="GET", json=True)
-      print("API response:", response)
-      print("Type of response:", type(response))
-
       self.repeating_panel_1.items = response
-      print(len(response))
       self.label_count.text = f"✅ {len(response)} vendors returned"
     except Exception as e:
       self.label_count.text = f"❌ Error: {e}"
