@@ -1,4 +1,4 @@
-# PartDetail Form - detail view and editing of a part
+# VendorRecord Form - record view, editing and deletion of a vendor record
 
 from anvil import *
 from ._anvil_designer import VendorRecordTemplate
@@ -15,7 +15,7 @@ class VendorRecord(VendorRecordTemplate):
     self.button_back.role = "mydefault-button"
     self.button_delete.role = "delete-button"
     self.vendor = vendor
-    self.is_new = vender is None
+    self.is_new = vendor is None
     self.button_delete.visible = not self.is_new
     self.prev_filter_vendor_id = prev_filter_vendor_id
     self.prev_filter_company_name = prev_filter_company_name
@@ -23,14 +23,13 @@ class VendorRecord(VendorRecordTemplate):
     # Populate dropdown options
     self.drop_down_status.items = ["active", "obsolete"]
 
-    vendor = self.item
-    address = vendor.get("address", {})
-    contact = vendor.get("contact", {})
+    address = self.vendor.get("address", {})
+    contact = self.vendor.get("contact", {})
 
     if self.vendor:
-      self.text_box_id.text = vendor.get("_id", "")
-      self.text_box_company_name.text = vendor.get("company_name", "")
-      self.drop_down_status.selected_value = vendor.get("status", "active")
+      self.text_box_id.text = self.vendor.get("_id", "")
+      self.text_box_company_name.text = self.vendor.get("company_name", "")
+      self.drop_down_status.selected_value = self.vendor.get("status", "active")
 
       self.text_box_address_line1.text = address.get("line1", "")
       self.text_box_address_line2.text = address.get("line2", "")
@@ -42,6 +41,9 @@ class VendorRecord(VendorRecordTemplate):
       self.text_box_contact_name.text = contact.get("name", "")
       self.text_box_phone.text = contact.get("phone", "")
       self.text_box_email.text = contact.get("phone", "")
+
+      self.text_area_categories.text = ", ".join(self.vendor.get("categories", [])) if self.vendor else ""
+
 
     else:
       # set sensible defaults for new vendor
@@ -68,58 +70,50 @@ class VendorRecord(VendorRecordTemplate):
       "_id": self.text_box_id.text,
       "status": self.drop_down_status.selected_value,
       "company_name": self.text_box_company_name.text,
-      new_address,
-      new_contact,
+      "address": new_address,
+      "contact": new_contact,
+      "categories": [c.strip() for c in self.text_area_categories.text.split(",") if c.strip()],
     }
 
-    if self.is_new:
-      url = "http://127.0.0.1:8000/parts"
-      method = "POST"
-    else:
-      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
-      method = "PUT"
-
-    json_string = json.dumps(new_data)
-    #print("📤 Sending to FastAPI:", new_data)
-    #print("📤 Payload repr:", json_string)
-
-    anvil.http.request(
-      url=url,
-      method=method,
-      data=json_string,
-      headers={"Content-Type": "application/json"}
-    )
-
-    Notification("✅ Part saved.", style="success").show()
-    open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
-
-    except Exception as e:
-      # If the error is due to duplicate _id
-      if "already exists" in str(e):
-        Notification("⚠️ Part ID already exists. Please choose a different ID.", style="warning").show()
+    try:
+      if self.is_new:
+        anvil.http.request(
+          url="http://127.0.0.1:8000/vendors",
+          method="POST",
+          json=new_data
+        )
+        Notification("✅ Vendor added.").show()
       else:
-        Notification(f"❌ Save failed: {e}", style="danger").show()
+        anvil.http.request(
+          url=f"http://127.0.0.1:8000/vendors/{new_data['_id']}",
+          method="PUT",
+          json=new_data
+        )
+        Notification("💾 Vendor updated.").show()
+      open_form("VendorRecords",
+                filter_vendor_id=self.prev_filter_vendor_id,
+                filter_company_name=self.prev_filter_company_name)
+    except Exception as e:
+      Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+    open_form("VendorRecords", 
+              filter_vendor_id=self.prev_filter_vendor_id,
+              filter_company_name=self.prev_filter_company_name)
 
   def button_delete_click(self, **event_args):
-    part_id = self.text_box_id.text
-    confirmed = confirm(f"Are you sure you want to delete part '{part_id}'?")
+    vendor_id = self.text_box_id.text
+    confirmed = confirm(f"Are you sure you want to delete vendor '{vendor_id}'?")
     if not confirmed:
       return
     try:
       response = anvil.http.request(
-        url=f"http://127.0.0.1:8000/parts/{part_id}",
+        url=f"http://127.0.0.1:8000/vendors/{vendor_id}",
         method="DELETE"
       )
-      Notification("🗑️ Part deleted.", style="danger").show()
-      open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      Notification("🗑️ Vendor deleted.", style="danger").show()
+      open_form("VendorRecords",
+                filter_vendor_id=self.prev_filter_vendor,
+                filter_company_name=self.prev_filter_company_name)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
-
-  def button_vendor_list_click(self, **event_args):
-    open_form("PartVendorRecords",
-              part=self.part,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)

@@ -1,9 +1,8 @@
-#V.ItemTemplate2 - handles individual vendor rows for VendorsList
+#V.ItemTemplate2 - handles individual vendor rows for VendorRecords
 
 from ._anvil_designer import ItemTemplate2Template
 from anvil import *
 from .. import VendorRecords
-#from .. import VendorsDetail
 
 class ItemTemplate2(ItemTemplate2Template):
   def __init__(self, **properties):
@@ -19,4 +18,4 @@ class ItemTemplate2(ItemTemplate2Template):
     self.label_city.text = address.get("city", "")
 
   def button_view_click(self, **event_args):
-    self.parent.raise_event("x-edit-vendor", vendor_data=self.item)
+    self.parent.raise_event("x-show-detail", vendor=self.item)

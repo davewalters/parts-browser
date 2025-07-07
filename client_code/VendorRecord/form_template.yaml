@@ -41,6 +41,19 @@ components:
       properties: {}
       type: GridPanel
     - components:
+      - layout_properties: {col_xs: 0, row: RKUGMY, width_xs: 2}
+        name: label_categories
+        properties: {font_size: 16, text: 'Categories:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: RKUGMY, width_xs: 9}
+        name: text_area_categories
+        properties: {height: 61, placeholder: 'categories,', text: ''}
+        type: TextArea
+      layout_properties: {col_xs: 0, row: JCUSTZ, width_xs: 5}
+      name: grid_panel_7
+      properties: {}
+      type: GridPanel
+    - components:
       - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
         name: label_address
         properties: {font_size: 16, text: 'Address:'}
@@ -92,17 +105,17 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 1}
+        layout_properties: {col_xs: 3, row: YXOXYU, width_xs: 2}
         name: button_back
         properties: {background: '', font_size: 14, text: back}
         type: Button
       - event_bindings: {click: button_delete_click}
-        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 2}
         name: button_delete
         properties: {background: '', font_size: 14, role: null, text: delete record}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 1}
+        layout_properties: {col_xs: 7, row: YXOXYU, width_xs: 2}
         name: button_save
         properties: {background: '', bold: false, font_size: 14, text: save}
         type: Button

@@ -25,8 +25,6 @@ class VendorRecords(VendorRecordsTemplate):
 
   def update_filter(self, **event_args):
     vendor_id = self.text_box_vendor_id.text.strip()
-    print("In update_filter: vendor_id is ")
-    print(vendor_id)
     company_name = self.text_box_company_name.text.strip()
   
     try:
