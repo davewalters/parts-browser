@@ -2,7 +2,8 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 3, row: OIDCLY, width_xs: 3}
+      - event_bindings: {click: button_part_records_click}
+        layout_properties: {col_xs: 3, row: OIDCLY, width_xs: 3}
         name: button_part_records
         properties: {text: Part Records}
         type: Button

@@ -8,10 +8,10 @@ components:
         name: button_new_part
         properties: {background: '', text: New Part}
         type: Button
-      - event_bindings: {click: button_vendors_list_click}
-        layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 2}
-        name: button_vendors_list
-        properties: {text: Vendors List}
+      - event_bindings: {click: button_vendor_records_click}
+        layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 3}
+        name: button_vendor_records
+        properties: {text: Vendor Records}
         type: Button
       layout_properties: {grid_position: 'GQXIEH,BBAFJP'}
       name: grid_panel_2
