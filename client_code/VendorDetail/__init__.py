@@ -1,13 +1,13 @@
 # VendorDetails Form - Create or edit a single vendor entry
 
 from anvil import *
-from ._anvil_designer import VendorDetailsTemplate
+from ._anvil_designer import VendorDetailTemplate
 import anvil.http
 import json
 from datetime import datetime
 from .. import VendorList
 
-class VendorDetails(VendorDetailsTemplate):
+class VendorDetail(VendorDetailTemplate):
   def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"

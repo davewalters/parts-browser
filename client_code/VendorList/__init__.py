@@ -4,7 +4,7 @@ from anvil import *
 from ._anvil_designer import VendorListTemplate
 import anvil.http
 import json
-from .. import VendorDetails
+from .. import VendorDetail
 from .. import PartDetail
 
 class VendorList(VendorListTemplate):
@@ -48,7 +48,7 @@ class VendorList(VendorListTemplate):
               prev_filter_desc=self.prev_filter_desc)
 
   def button_new_vendor_click(self, **event_args):
-    open_form("VendorDetails",
+    open_form("VendorDetail",
               part=self.part,
               vendor_data=None,
               filter_part=self.prev_filter_part,
@@ -75,7 +75,7 @@ class VendorList(VendorListTemplate):
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
   def edit_vendor(self, vendor_data, **event_args):
-    open_form("VendorDetails",
+    open_form("VendorDetail",
               part=self.part,
               vendor_data=vendor_data,
               filter_part=self.prev_filter_part,

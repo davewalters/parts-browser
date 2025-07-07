@@ -106,7 +106,7 @@ class PartDetail(PartDetailTemplate):
       )
 
       Notification("✅ Part saved.", style="success").show()
-      open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
     # If the error is due to duplicate _id
@@ -116,7 +116,7 @@ class PartDetail(PartDetailTemplate):
         Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+    open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -129,7 +129,7 @@ class PartDetail(PartDetailTemplate):
         method="DELETE"
       )
       Notification("🗑️ Part deleted.", style="danger").show()
-      open_form("Form1", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
 

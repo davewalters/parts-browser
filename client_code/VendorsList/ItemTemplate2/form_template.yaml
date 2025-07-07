@@ -1,0 +1,33 @@
+components:
+- components:
+  - layout_properties: {column: vendor_id}
+    name: label_vendor_id
+    properties: {text: vendor_id}
+    type: Label
+  - layout_properties: {column: company_name}
+    name: label_company_name
+    properties: {text: company_name}
+    type: Label
+  - layout_properties: {column: address_line1}
+    name: label_address_line1
+    properties: {text: address_line1}
+    type: Label
+  - layout_properties: {column: address_line2}
+    name: label_address_line2
+    properties: {text: address_line2}
+    type: Label
+  - layout_properties: {column: city}
+    name: label_city
+    properties: {text: city}
+    type: Label
+  - event_bindings: {click: button_view_click}
+    layout_properties: {column: button_view}
+    name: button_view
+    properties: {text: details}
+    type: Button
+  layout_properties: {full_width_row: false, grid_position: 'IQVLHR,LMUZWE'}
+  name: data_row_panel_1
+  properties: {}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true

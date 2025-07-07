@@ -1,12 +1,13 @@
 from anvil import *
 import anvil.http
 
-from ._anvil_designer import Form1Template
+from ._anvil_designer import PartsListTemplate
 
-class Form1(Form1Template):
+class PartsList(PartsListTemplate):
   def __init__(self, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_part.role = "new-button"
+    self.button_vendors_list.role = "mydefault-button"
 
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
@@ -52,5 +53,9 @@ class Form1(Form1Template):
               part=None,
               prev_filter_part=self.text_box_part_no.text,
               prev_filter_desc=self.text_box_desc.text)
+
+  def button_vendors_list_click(self, **event_args):
+    # Open VendorsList
+    open_form("VendorsList")
 
 
