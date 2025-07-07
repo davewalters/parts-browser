@@ -41,6 +41,9 @@ class VendorsList(VendorsListTemplate):
         url += f"?{query_string}"
   
       response = anvil.http.request(url=url, method="GET", json=True)
+      print("API response:", response)
+      print("Type of response:", type(response))
+
       self.repeating_panel_1.items = response
       print(len(response))
       self.label_count.text = f"✅ {len(response)} vendors returned"
