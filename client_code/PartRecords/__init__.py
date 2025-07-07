@@ -1,9 +1,9 @@
 from anvil import *
 import anvil.http
 
-from ._anvil_designer import PartsListTemplate
+from ._anvil_designer import PartRecordsTemplate
 
-class PartsList(PartsListTemplate):
+class PartRecords(PartRecordsTemplate):
   def __init__(self, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_part.role = "new-button"
@@ -42,20 +42,19 @@ class PartsList(PartsListTemplate):
 
   def show_detail(self, part, **event_args):
     # Use self.text_box_... directly
-    open_form("PartDetail",
+    open_form("PartRecord",
               part=part,
               prev_filter_part=self.text_box_part_no.text,
               prev_filter_desc=self.text_box_desc.text)
 
   def button_new_part_click(self, **event_args):
   # Create a new empty part
-    open_form("PartDetail",
+    open_form("PartRecord",
               part=None,
               prev_filter_part=self.text_box_part_no.text,
               prev_filter_desc=self.text_box_desc.text)
 
   def button_vendors_list_click(self, **event_args):
-    print("Opening Vendors List")
-    open_form("VendorsList")
+    open_form("VendorRecords")
 
 

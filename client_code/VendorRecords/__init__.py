@@ -1,9 +1,9 @@
 from anvil import *
 import anvil.http
 
-from ._anvil_designer import VendorsListTemplate
+from ._anvil_designer import VendorRecordsTemplate
 
-class VendorsList(VendorsListTemplate):
+class VendorRecords(VendorRecordsTemplate):
   def __init__(self, filter_vendor_id="", filter_company_name="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"

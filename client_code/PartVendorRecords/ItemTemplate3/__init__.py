@@ -2,8 +2,8 @@
 
 from anvil import *
 from ._anvil_designer import ItemTemplate3Template
-from .. import VendorList
-from .. import VendorDetail
+from .. import PartVendorRecords
+from .. import PartVendorRecord
 
 class ItemTemplate3(ItemTemplate3Template):
   def __init__(self, **properties):

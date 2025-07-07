@@ -2,7 +2,7 @@
 
 from ._anvil_designer import ItemTemplate2Template
 from anvil import *
-from .. import VendorsList
+from .. import VendorRecords
 #from .. import VendorsDetail
 
 class ItemTemplate2(ItemTemplate2Template):

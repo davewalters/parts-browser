@@ -1,13 +1,13 @@
 # VendorDetails Form - Create or edit a single vendor entry
 
 from anvil import *
-from ._anvil_designer import VendorDetailTemplate
+from ._anvil_designer import PartVendorRecordTemplate
 import anvil.http
 import json
 from datetime import datetime
-from .. import VendorList
+from .. import PartVendorRecords
 
-class VendorDetail(VendorDetailTemplate):
+class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
@@ -128,13 +128,13 @@ class VendorDetail(VendorDetailTemplate):
       Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
 
     # Return to vendor list
-    open_form("VendorList",
+    open_form("PartVendorRecords",
               part=self.part,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)
 
   def button_cancel_click(self, **event_args):
-    open_form("VendorList",
+    open_form("PartVendorRecords",
               part=self.part,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)
@@ -169,7 +169,7 @@ class VendorDetail(VendorDetailTemplate):
       Notification(f"❌ Failed to delete vendor: {e}", style="danger").show()
   
     # Return to vendor list
-    open_form("VendorList",
+    open_form("PartVendorRecords",
               part=self.part,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)

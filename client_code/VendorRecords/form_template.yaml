@@ -61,7 +61,7 @@ components:
   - components:
     - layout_properties: {full_width_row: true, grid_position: 'SWNBAJ,CGEXRB'}
       name: repeating_panel_1
-      properties: {item_template: VendorsList.ItemTemplate2}
+      properties: {item_template: VendorRecords.ItemTemplate2}
       type: RepeatingPanel
     layout_properties: {full_width_row: true, grid_position: 'VZTIYL,VEQJIX'}
     name: column_panel_2
@@ -77,7 +77,7 @@ components:
   type: FlowPanel
 - layout_properties: {slot: title}
   name: headline_1
-  properties: {role: headline, text: Vendors List}
+  properties: {role: headline, text: Vendor Records}
   type: Label
 container:
   properties: {html: '@theme:standard-page.html'}

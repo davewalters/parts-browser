@@ -1,14 +1,14 @@
 # PartDetail Form - detail view and editing of a part
 
 from anvil import *
-from ._anvil_designer import PartDetailTemplate
+from ._anvil_designer import PartRecordTemplate
 import anvil.http
 import json
 from datetime import datetime
-from .. import VendorList
+from .. import PartVendorRecords
 
 
-class PartDetail(PartDetailTemplate):
+class PartRecord(PartRecordTemplate):
   def __init__(self, part, prev_filter_part="", prev_filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
@@ -116,7 +116,7 @@ class PartDetail(PartDetailTemplate):
         Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+    open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -134,7 +134,7 @@ class PartDetail(PartDetailTemplate):
       Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    open_form("VendorList", 
+    open_form("PartVendorRecords", 
               part=self.part,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)

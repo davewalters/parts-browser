@@ -1,13 +1,13 @@
 # VendorList Form - List and manage vendors for a part
 
 from anvil import *
-from ._anvil_designer import VendorListTemplate
+from ._anvil_designer import PartVendorRecordsTemplate
 import anvil.http
 import json
-from .. import VendorDetail
-from .. import PartDetail
+from .. import PartVendorRecord
+from .. import PartRecord
 
-class VendorList(VendorListTemplate):
+class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part, filter_part="", filter_desc="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "save-button"
@@ -42,13 +42,13 @@ class VendorList(VendorListTemplate):
       return {}
 
   def button_cancel_click(self, **event_args):
-    open_form("PartDetail",
+    open_form("PartRecord",
               part=self.part,
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc)
 
   def button_new_vendor_click(self, **event_args):
-    open_form("VendorDetail",
+    open_form("PartVendorRecord",
               part=self.part,
               vendor_data=None,
               filter_part=self.prev_filter_part,
@@ -75,7 +75,7 @@ class VendorList(VendorListTemplate):
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
   def edit_vendor(self, vendor_data, **event_args):
-    open_form("VendorDetail",
+    open_form("PartVendorRecord",
               part=self.part,
               vendor_data=vendor_data,
               filter_part=self.prev_filter_part,
