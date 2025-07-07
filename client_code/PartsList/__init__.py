@@ -55,7 +55,7 @@ class PartsList(PartsListTemplate):
               prev_filter_desc=self.text_box_desc.text)
 
   def button_vendors_list_click(self, **event_args):
-    # Open VendorsList
+    print("Opening Vendors List")
     open_form("VendorsList")
 
 

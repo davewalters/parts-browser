@@ -8,7 +8,8 @@ components:
         name: button_new_part
         properties: {background: '', text: New Part}
         type: Button
-      - layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 2}
+      - event_bindings: {click: button_vendors_list_click}
+        layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 2}
         name: button_vendors_list
         properties: {text: Vendors List}
         type: Button

@@ -11,7 +11,7 @@ class ItemTemplate2(ItemTemplate2Template):
     self.init_components(**properties)
     self.label_vendor_id.text = self.item.get("vendor_id", "")
     self.label_company_name.text = self.item.get("vendor_company_name", "")
-    self.label_address_line1line1.text = self.item.get("address.line1", "")
+    self.label_address_line1.text = self.item.get("address.line1", "")
     self.label_address_line2.text = self.item.get("address.line2", "")
     self.label_city.text = str(self.item.get("address.city", ""))
 
