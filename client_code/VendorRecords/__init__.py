@@ -6,6 +6,7 @@ from ._anvil_designer import VendorRecordsTemplate
 class VendorRecords(VendorRecordsTemplate):
   def __init__(self, filter_vendor_id="", filter_company_name="", **kwargs):
     self.init_components(**kwargs)
+    self.button_part_records.role = "mydefault-button"
     self.button_new_vendor.role = "new-button"
 
     self.text_box_vendor_id.text = filter_vendor_id
@@ -59,4 +60,7 @@ class VendorRecords(VendorRecordsTemplate):
               vendor=None,
               prev_filter_vendor_id=self.text_box_vendor_id.text,
               prev_filter_company_name=self.text_box_company_name.text)
+
+  def button_part_records_click(self, **event_args):
+    open_form("PartRecords")
 

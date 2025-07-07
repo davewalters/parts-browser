@@ -23,10 +23,9 @@ class VendorRecord(VendorRecordTemplate):
     # Populate dropdown options
     self.drop_down_status.items = ["active", "obsolete"]
 
-    address = self.vendor.get("address", {})
-    contact = self.vendor.get("contact", {})
-
     if self.vendor:
+      address = self.vendor.get("address", {})
+      contact = self.vendor.get("contact", {})
       self.text_box_id.text = self.vendor.get("_id", "")
       self.text_box_company_name.text = self.vendor.get("company_name", "")
       self.drop_down_status.selected_value = self.vendor.get("status", "active")
@@ -44,7 +43,6 @@ class VendorRecord(VendorRecordTemplate):
 
       self.text_area_categories.text = ", ".join(self.vendor.get("categories", [])) if self.vendor else ""
 
-
     else:
       # set sensible defaults for new vendor
       self.drop_down_status.selected_value = "active"
@@ -52,42 +50,44 @@ class VendorRecord(VendorRecordTemplate):
 
   def button_save_click(self, **event_args):
     new_address = {
-      "line1": self.text_box_address_line1.text,
-      "line2": self.text_box_address_line2.text,
-      "city": self.text_box_city.text,
-      "state": self.text_box_state.text,
-      "postal_code": self.text_box_postal_code.text,
-      "country": self.text_box_country.text,
+      "line1": self.text_box_address_line1.text or "",
+      "line2": self.text_box_address_line2.text or "",
+      "city": self.text_box_city.text or "",
+      "state": self.text_box_state.text or "",
+      "postal_code": self.text_box_postal_code.text or "",
+      "country": self.text_box_country.text or "",
     }
 
     new_contact = {
-      "name": self.text_box_contact_name.text,
-      "phone": self.text_box_phone.text,
-      "email": self.text_box_email.text,
+      "name": self.text_box_contact_name.text or "",
+      "phone": self.text_box_phone.text or "",
+      "email": self.text_box_email.text or "",
     }
 
     new_data = {
       "_id": self.text_box_id.text,
-      "status": self.drop_down_status.selected_value,
-      "company_name": self.text_box_company_name.text,
+      "status": self.drop_down_status.selected_value or "active",
+      "company_name": self.text_box_company_name.text or "",
       "address": new_address,
       "contact": new_contact,
-      "categories": [c.strip() for c in self.text_area_categories.text.split(",") if c.strip()],
+      "categories": [c.strip() for c in self.text_area_categories.text.split(",") if c.strip()]
     }
-
+    
     try:
       if self.is_new:
         anvil.http.request(
           url="http://127.0.0.1:8000/vendors",
           method="POST",
-          json=new_data
+          data=json.dumps(new_data),
+          headers={"Content-Type": "application/json"}
         )
         Notification("✅ Vendor added.").show()
       else:
         anvil.http.request(
           url=f"http://127.0.0.1:8000/vendors/{new_data['_id']}",
           method="PUT",
-          json=new_data
+          data=json.dumps(new_data),
+          headers={"Content-Type": "application/json"}
         )
         Notification("💾 Vendor updated.").show()
       open_form("VendorRecords",
@@ -113,7 +113,7 @@ class VendorRecord(VendorRecordTemplate):
       )
       Notification("🗑️ Vendor deleted.", style="danger").show()
       open_form("VendorRecords",
-                filter_vendor_id=self.prev_filter_vendor,
+                filter_vendor_id=self.prev_filter_vendor_id,
                 filter_company_name=self.prev_filter_company_name)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
