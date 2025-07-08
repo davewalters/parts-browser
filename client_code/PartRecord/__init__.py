@@ -106,7 +106,7 @@ class PartRecord(PartRecordTemplate):
       )
 
       Notification("✅ Part saved.", style="success").show()
-      open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
     # If the error is due to duplicate _id
@@ -129,7 +129,7 @@ class PartRecord(PartRecordTemplate):
         method="DELETE"
       )
       Notification("🗑️ Part deleted.", style="danger").show()
-      open_form("PartsList", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
 
