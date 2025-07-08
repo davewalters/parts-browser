@@ -35,9 +35,9 @@ components:
 - event_bindings: {click: button_view_click}
   layout_properties: {grid_position: 'RJXCNZ,UOJXNT'}
   name: button_view
-  properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+  properties: {font_size: 16, icon: 'fa:arrow-right', text: ''}
   type: Button
 container:
-  properties: {col_widths: '{"OPFLMU":55,"UOJXNT":5}'}
+  properties: {col_spacing: small, col_widths: '{"OPFLMU":55,"UOJXNT":5}'}
   type: ColumnPanel
 is_package: true
