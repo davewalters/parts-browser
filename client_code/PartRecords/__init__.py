@@ -13,7 +13,7 @@ class PartRecords(PartRecordsTemplate):
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
 
-    self.grid_panel_1.role = "gridpanel-border"
+    #self.grid_panel_1.role = "gridpanel-border"
     self.repeating_panel_1.role = "scrolling-panel"
     self.text_box_part_no.col_width = 4
     self.text_box_desc.col_width = 5
@@ -39,9 +39,9 @@ class PartRecords(PartRecordsTemplate):
         json=True
       )
       self.repeating_panel_1.items = response
-      self.label_count.text = f"✅ {len(response)} parts returned"
+      self.label_count.text = f"{len(response)} parts returned"
     except Exception as e:
-      self.label_count.text = f"❌ Error: {e}"
+      self.label_count.text = f"Error: {e}"
       self.repeating_panel_1.items = []
 
   def show_detail(self, part, **event_args):

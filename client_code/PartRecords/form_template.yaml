@@ -4,75 +4,104 @@ components:
     - components:
       - data_bindings: []
         event_bindings: {click: button_new_part_click}
-        layout_properties: {col_xs: 3, row: BTIFCK, width_xs: 2}
+        layout_properties: {col_xs: 4, row: BTIFCK, width_xs: 2}
         name: button_new_part
-        properties: {background: '', text: New Part}
+        properties: {background: '', icon: 'fa:plus-circle', role: null, text: New Part}
         type: Button
       - event_bindings: {click: button_vendor_records_click}
         layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 3}
         name: button_vendor_records
-        properties: {text: Vendor Records}
+        properties:
+          icon: fa:user-circle
+          role: null
+          spacing:
+            margin: [null, null, '4', null]
+            padding: [null, '16', '8', '16']
+          text: Vendor Records
         type: Button
       layout_properties: {grid_position: 'GQXIEH,BBAFJP'}
       name: grid_panel_2
-      properties: {}
+      properties:
+        spacing:
+          margin: [null, null, '0', null]
+          padding: ['0', null, null, null]
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: ANFIOO, width_xs: 3}
+      - layout_properties: {col_xs: 3, row: ANFIOO, width_xs: 1}
+        name: label_filter
+        properties:
+          foreground: theme:Secondary 500
+          icon: fa:filter
+          icon_align: right_edge
+          spacing:
+            margin: ['6', null, '0', '0']
+            padding: [null, null, '8', null]
+        type: Label
+      - layout_properties: {col_xs: 4, row: ANFIOO, width_xs: 2}
         name: text_box_part_no
-        properties: {placeholder: Filter Part No e.g. 141- or ALPL, text: ''}
+        properties:
+          font_size: 12
+          margin: [null, null, '4', null]
+          placeholder: Part No e.g. 141- or ALPL
+          text: ''
         type: TextBox
-      - layout_properties: {col_xs: 4, row: ANFIOO, width_xs: 5}
+      - layout_properties: {col_xs: 6, row: ANFIOO, width_xs: 2}
         name: text_box_desc
-        properties: {placeholder: Filter Description e.g. Housing or Hou, text: ''}
+        properties: {font_size: 12, placeholder: Description e.g.  Hou, text: ''}
         type: TextBox
-      - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 3}
+      - layout_properties: {col_xs: 8, row: ANFIOO, width_xs: 2}
         name: label_count
-        properties: {text: 'row count:'}
+        properties: {font_size: 12, icon: 'fa:check-circle-o', text: 'row count:'}
         type: Label
       data_bindings: []
-      layout_properties: {grid_position: 'EBBRPC,USAONS'}
+      layout_properties: {grid_position: 'EBBRPC,USAONS', row_background: ''}
       name: grid_panel_1
-      properties: {role: null}
+      properties:
+        role: null
+        spacing:
+          margin: ['4', null, '4', null]
+          padding: ['4', null, null, null]
+        spacing_above: none
+        spacing_below: none
       type: GridPanel
     - components:
       - layout_properties: {column: id}
         name: label_id
-        properties: {align: left, text: Part No}
+        properties: {align: left, font_size: 12, text: Part No}
         type: Label
       - layout_properties: {column: rev}
         name: label_rev
-        properties: {align: left, text: Rev}
+        properties: {align: left, font_size: 12, text: Rev}
         type: Label
       - layout_properties: {column: desc}
         name: label_desc
-        properties: {align: left, text: Description}
+        properties: {align: left, font_size: 12, text: Description}
         type: Label
       - layout_properties: {column: status}
         name: label_status_header
-        properties: {align: left, text: Status}
+        properties: {align: left, font_size: 12, text: Status}
         type: Label
       - layout_properties: {column: vendor}
         name: label_vendor
-        properties: {align: left, text: Vendor}
+        properties: {align: left, font_size: 12, text: Vendor}
         type: Label
       - layout_properties: {column: cost_date}
         name: label_cost_date
-        properties: {align: left, text: Date Costed}
+        properties: {align: left, font_size: 12, text: Date Costed}
         type: Label
       - layout_properties: {column: cost_nz}
         name: label_cost_nz
-        properties: {align: left, text: Cost_$NZ}
+        properties: {align: left, font_size: 12, text: Cost_$NZ}
         type: Label
       - layout_properties: {column: button_view}
         name: button_view
-        properties: {}
+        properties: {font_size: 12}
         type: Label
       layout_properties: {full_width_row: true, grid_position: 'EKIJXN,KHMVDO'}
       name: data_row_panel_1
-      properties: {align: center, auto_display_data: true, background: 'theme:Gray 300', bold: true}
+      properties: {align: center, auto_display_data: true, background: 'theme:Gray 600', bold: false, foreground: 'theme:White'}
       type: DataRowPanel
-    layout_properties: {full_width_row: true, grid_position: 'BGZZJP,NSXVLS'}
+    layout_properties: {full_width_row: false, grid_position: 'BGZZJP,NSXVLS'}
     name: column_panel_1
     properties: {}
     type: ColumnPanel
@@ -83,7 +112,7 @@ components:
       name: repeating_panel_1
       properties: {item_template: PartRecords.ItemTemplate1}
       type: RepeatingPanel
-    layout_properties: {full_width_row: true, grid_position: 'VZTIYL,VEQJIX'}
+    layout_properties: {full_width_row: false, grid_position: 'VZTIYL,VEQJIX'}
     name: column_panel_2
     properties: {}
     type: ColumnPanel
