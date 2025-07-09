@@ -1,4 +1,5 @@
 from anvil import *
+import anvil.server
 import anvil.http
 
 from ._anvil_designer import PartRecordsTemplate

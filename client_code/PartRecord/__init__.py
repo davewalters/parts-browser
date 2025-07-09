@@ -1,6 +1,7 @@
 # PartDetail Form - detail view and editing of a part
 
 from anvil import *
+import anvil.server
 from ._anvil_designer import PartRecordTemplate
 import anvil.http
 import json

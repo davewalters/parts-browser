@@ -1,3 +1,4 @@
+import anvil.server
 # Set this manually depending on your testing state
 ENVIRONMENT = "local"  # or "dev", or "prod"
 

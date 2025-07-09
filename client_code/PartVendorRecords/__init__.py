@@ -1,6 +1,7 @@
 # VendorList Form - List and manage vendors for a part
 
 from anvil import *
+import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
 import anvil.http
 import json

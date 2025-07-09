@@ -1,6 +1,7 @@
 # V.ItemTemplate3 - handles individual vendor rows
 
 from anvil import *
+import anvil.server
 from ._anvil_designer import ItemTemplate3Template
 from .. import PartVendorRecords
 from .. import PartVendorRecord

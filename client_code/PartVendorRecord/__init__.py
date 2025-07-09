@@ -1,6 +1,7 @@
 # VendorDetails Form - Create or edit a single vendor entry
 
 from anvil import *
+import anvil.server
 from ._anvil_designer import PartVendorRecordTemplate
 import anvil.http
 import json

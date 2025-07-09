@@ -1,6 +1,7 @@
 # VendorRecord Form - record view, editing and deletion of a vendor record
 
 from anvil import *
+import anvil.server
 from ._anvil_designer import VendorRecordTemplate
 import anvil.http
 import json
