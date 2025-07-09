@@ -2,7 +2,7 @@ from anvil import *
 import anvil.http
 
 from ._anvil_designer import PartRecordsTemplate
-from . import config
+from .. import config
 
 
 class PartRecords(PartRecordsTemplate):

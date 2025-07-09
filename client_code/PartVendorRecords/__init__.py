@@ -6,7 +6,7 @@ import anvil.http
 import json
 from .. import PartVendorRecord
 from .. import PartRecord
-from . import config
+from .. import config
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part, filter_part="", filter_desc="", **kwargs):

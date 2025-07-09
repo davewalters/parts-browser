@@ -2,7 +2,7 @@ from anvil import *
 import anvil.http
 
 from ._anvil_designer import VendorRecordsTemplate
-from . import config
+from .. import config
 
 class VendorRecords(VendorRecordsTemplate):
   def __init__(self, filter_vendor_id="", filter_company_name="", **kwargs):
