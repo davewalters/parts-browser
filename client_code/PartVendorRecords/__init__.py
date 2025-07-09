@@ -6,6 +6,7 @@ import anvil.http
 import json
 from .. import PartVendorRecord
 from .. import PartRecord
+from . import config
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part, filter_part="", filter_desc="", **kwargs):
@@ -35,7 +36,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
   def get_vendor_lookup(self):
     try:
-      response = anvil.http.request("http://127.0.0.1:8000/vendors", method="GET", json=True)
+      response = anvil.http.request(f"{config.API_BASE_URL}/vendors", method="GET", json=True)
       return {vendor["_id"]: vendor.get("company_name", vendor["_id"]) for vendor in response}
     except Exception as e:
       Notification(f"⚠️ Could not load vendor names: {e}", style="warning").show()
@@ -63,7 +64,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.repeating_panel_1.items = self.vendor_data
 
     try:
-      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
       anvil.http.request(
         url=url,
         method="PUT",

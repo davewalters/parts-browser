@@ -6,7 +6,7 @@ import anvil.http
 import json
 from datetime import datetime
 from .. import VendorRecords
-
+fom . import config
 
 class VendorRecord(VendorRecordTemplate):
   def __init__(self, vendor, prev_filter_vendor_id="", prev_filter_company_name="", **kwargs):
@@ -76,7 +76,7 @@ class VendorRecord(VendorRecordTemplate):
     try:
       if self.is_new:
         anvil.http.request(
-          url="http://127.0.0.1:8000/vendors",
+          url=f"{config.API_BASE_URL}/vendors",
           method="POST",
           data=json.dumps(new_data),
           headers={"Content-Type": "application/json"}
@@ -84,7 +84,7 @@ class VendorRecord(VendorRecordTemplate):
         Notification("✅ Vendor added.").show()
       else:
         anvil.http.request(
-          url=f"http://127.0.0.1:8000/vendors/{new_data['_id']}",
+          url=f"{config.API_BASE_URL}/vendors/{new_data['_id']}",
           method="PUT",
           data=json.dumps(new_data),
           headers={"Content-Type": "application/json"}
@@ -108,7 +108,7 @@ class VendorRecord(VendorRecordTemplate):
       return
     try:
       response = anvil.http.request(
-        url=f"http://127.0.0.1:8000/vendors/{vendor_id}",
+        url=f"{config.API_BASE_URL}/vendors/{vendor_id}",
         method="DELETE"
       )
       Notification("🗑️ Vendor deleted.", style="danger").show()

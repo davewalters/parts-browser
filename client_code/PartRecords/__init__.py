@@ -2,6 +2,8 @@ from anvil import *
 import anvil.http
 
 from ._anvil_designer import PartRecordsTemplate
+from . import config
+
 
 class PartRecords(PartRecordsTemplate):
   def __init__(self, filter_part="", filter_desc="", **kwargs):
@@ -34,7 +36,7 @@ class PartRecords(PartRecordsTemplate):
 
     try:
       response = anvil.http.request(
-        url=f"http://127.0.0.1:8000/parts?prefix={prefix}&desc={desc}",
+        url=f"{config.API_BASE_URL}/parts?prefix={prefix}&desc={desc}",
         method="GET",
         json=True
       )

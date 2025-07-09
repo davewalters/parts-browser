@@ -6,6 +6,8 @@ import anvil.http
 import json
 from datetime import datetime
 from .. import PartVendorRecords
+from . import config
+
 
 
 class PartRecord(PartRecordTemplate):
@@ -88,10 +90,10 @@ class PartRecord(PartRecordTemplate):
       }
 
       if self.is_new:
-        url = "http://127.0.0.1:8000/parts"
+        url = f"{config.API_BASE_URL}/parts"
         method = "POST"
       else:
-        url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+        url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
         method = "PUT"
 
       json_string = json.dumps(new_data)
@@ -125,7 +127,7 @@ class PartRecord(PartRecordTemplate):
       return
     try:
       response = anvil.http.request(
-        url=f"http://127.0.0.1:8000/parts/{part_id}",
+        url=f"{config.API_BASE_URL}/parts/{part_id}",
         method="DELETE"
       )
       Notification("🗑️ Part deleted.", style="danger").show()

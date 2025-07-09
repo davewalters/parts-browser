@@ -2,6 +2,7 @@ from anvil import *
 import anvil.http
 
 from ._anvil_designer import VendorRecordsTemplate
+from . import config
 
 class VendorRecords(VendorRecordsTemplate):
   def __init__(self, filter_vendor_id="", filter_company_name="", **kwargs):
@@ -38,7 +39,7 @@ class VendorRecords(VendorRecordsTemplate):
       query_string = "&".join(params)
       print(query_string)
   
-      url = "http://127.0.0.1:8000/vendors/full"
+      url = f"{config.API_BASE_URL}/vendors/full"
       if query_string:
         url += f"?{query_string}"
   

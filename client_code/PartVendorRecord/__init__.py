@@ -6,6 +6,7 @@ import anvil.http
 import json
 from datetime import datetime
 from .. import PartVendorRecords
+from . import config
 
 class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
@@ -116,7 +117,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.part["default_vendor"] = self.vendor_data["vendor_id"]
     # Persist entire part document
     try:
-      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
       anvil.http.request(
         url=url,
         method="PUT",
@@ -157,7 +158,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
   
     # Save updated part document
     try:
-      url = f"http://127.0.0.1:8000/parts/{self.part['_id']}"
+      url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
       anvil.http.request(
         url=url,
         method="PUT",
