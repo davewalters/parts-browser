@@ -2,174 +2,183 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
+      - layout_properties: {col_xs: 2, row: DKFPPM, width_xs: 3}
         name: label_id
-        properties: {font_size: 16, text: 'Part No.:'}
+        properties:
+          font_size: 18
+          spacing:
+            margin: [null, null, '4', null]
+            padding: ['8', null, '0', null]
+          text: 'Part No.:'
         type: Label
-      - layout_properties: {col_xs: 4, row: DKFPPM, width_xs: 5}
+      - layout_properties: {col_xs: 6, row: DKFPPM, width_xs: 5}
         name: text_box_id
-        properties: {placeholder: part_no}
+        properties:
+          font_size: 16
+          foreground: theme:White
+          margin: [null, null, '4', null]
+          placeholder: part_no
         type: TextBox
-      layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 5}
+      layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 6}
       name: grid_panel_2
-      properties: {}
+      properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: FOQJWC, width_xs: 5}
+      - layout_properties: {col_xs: 2, row: FOQJWC, width_xs: 3}
         name: label_status
-        properties: {font_size: 16, text: 'Status:'}
+        properties: {font_size: 14, text: 'Status:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 7}
+      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 6}
         name: drop_down_status
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
-      layout_properties: {col_xs: 5, row: NHQTRB, width_xs: 3}
+      layout_properties: {col_xs: 6, row: NHQTRB, width_xs: 4}
       name: grid_panel_3
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: LNUGXX, width_xs: 3}
+      - layout_properties: {col_xs: 3, row: LNUGXX, width_xs: 3}
         name: label_rev
-        properties: {font_size: 16, text: 'Revision:'}
+        properties: {font_size: 14, text: 'Rev:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: LNUGXX, width_xs: 3}
+      - layout_properties: {col_xs: 5, row: LNUGXX, width_xs: 4}
         name: text_box_rev
-        properties: {placeholder: rev}
+        properties: {font_size: 14, placeholder: rev}
         type: TextBox
-      layout_properties: {col_xs: 8, row: NHQTRB, width_xs: 2}
+      layout_properties: {col_xs: 10, row: NHQTRB, width_xs: 2}
       name: grid_panel_4
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 2}
+      - layout_properties: {col_xs: 1, row: VTLTHM, width_xs: 2}
         name: label_desc
-        properties: {font_size: 16, text: 'Description:'}
+        properties: {font_size: 14, text: 'Description:'}
         type: Label
-      - layout_properties: {col_xs: 2, row: VTLTHM, width_xs: 9}
+      - layout_properties: {col_xs: 2, row: VTLTHM, width_xs: 8}
         name: text_box_desc
-        properties: {placeholder: description}
+        properties: {font_size: 14, placeholder: description}
         type: TextBox
-      layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 10}
+      layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 12}
       name: grid_panel_5
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
+      - layout_properties: {col_xs: 2, row: QQKKUG, width_xs: 2}
         name: label_type
-        properties: {font_size: 16, text: 'Type:'}
+        properties: {font_size: 14, text: 'Type:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: QQKKUG, width_xs: 5}
+      - layout_properties: {col_xs: 6, row: QQKKUG, width_xs: 5}
         name: drop_down_type
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
-      layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 5}
+      layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 6}
       name: grid_panel_6
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: KBWQNR, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: KBWQNR, width_xs: 3}
         name: label_unit
-        properties: {font_size: 16, text: 'Unit of Issue:'}
+        properties: {font_size: 14, text: 'Unit of Issue:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: KBWQNR, width_xs: 4}
+      - layout_properties: {col_xs: 5, row: KBWQNR, width_xs: 5}
         name: drop_down_unit
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
-      layout_properties: {col_xs: 5, row: JJKFRA, width_xs: 5}
+      layout_properties: {col_xs: 6, row: JJKFRA, width_xs: 6}
       name: grid_panel_10
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: CJEIBO, width_xs: 2}
+      - layout_properties: {col_xs: 2, row: CJEIBO, width_xs: 2}
         name: label_process
-        properties: {font_size: 16, text: 'Process:'}
+        properties: {font_size: 14, text: 'Process:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: CJEIBO, width_xs: 5}
+      - layout_properties: {col_xs: 6, row: CJEIBO, width_xs: 5}
         name: drop_down_process
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
-      layout_properties: {col_xs: 0, row: OQGALU, width_xs: 5}
+      layout_properties: {col_xs: 0, row: OQGALU, width_xs: 6}
       name: grid_panel_8
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: PGFLKV, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: PGFLKV, width_xs: 3}
         name: label_material
-        properties: {font_size: 16, text: 'Material:'}
+        properties: {font_size: 14, text: 'Material:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: PGFLKV, width_xs: 7}
+      - layout_properties: {col_xs: 5, row: PGFLKV, width_xs: 5}
         name: text_box_material
-        properties: {placeholder: material}
+        properties: {font_size: 14, placeholder: material}
         type: TextBox
-      layout_properties: {col_xs: 5, row: OQGALU, width_xs: 5}
+      layout_properties: {col_xs: 6, row: OQGALU, width_xs: 6}
       name: grid_panel_9
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: SCVJHT, width_xs: 2}
+      - layout_properties: {col_xs: 1, row: SCVJHT, width_xs: 2}
         name: label_vendor
-        properties: {font_size: 16, text: 'Active Vendor:'}
+        properties: {font_size: 14, text: 'Active Vendor:'}
         type: Label
-      - layout_properties: {col_xs: 2, row: SCVJHT, width_xs: 9}
+      - layout_properties: {col_xs: 3, row: SCVJHT, width_xs: 8}
         name: text_box_vendor
-        properties: {placeholder: vendor}
+        properties: {font_size: 14, placeholder: vendor}
         type: TextBox
-      layout_properties: {col_xs: 0, row: XCXJMA, width_xs: 10}
+      layout_properties: {col_xs: 0, row: XCXJMA, width_xs: 12}
       name: grid_panel_7
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: MYBKSM, width_xs: 3}
+      - layout_properties: {col_xs: 2, row: MYBKSM, width_xs: 3}
         name: label_cost
-        properties: {font_size: 16, text: 'Cost ($NZ):'}
+        properties: {font_size: 14, text: 'Cost ($NZ):'}
         type: Label
-      - layout_properties: {col_xs: 4, row: MYBKSM, width_xs: 6}
+      - layout_properties: {col_xs: 6, row: MYBKSM, width_xs: 5}
         name: text_box_cost
-        properties: {placeholder: cost_$NZ}
+        properties: {font_size: 14, placeholder: cost_$NZ}
         type: TextBox
-      layout_properties: {col_xs: 0, row: LUSFGC, width_xs: 5}
+      layout_properties: {col_xs: 0, row: LUSFGC, width_xs: 6}
       name: grid_panel_11
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: UAPIKI, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: UAPIKI, width_xs: 4}
         name: label_cost_date
-        properties: {font_size: 16, text: 'Date Costed:'}
+        properties: {font_size: 14, text: 'Date Costed:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: UAPIKI, width_xs: 7}
+      - layout_properties: {col_xs: 5, row: UAPIKI, width_xs: 5}
         name: text_box_cost_date
-        properties: {placeholder: date costed}
+        properties: {font_size: 14, placeholder: date costed}
         type: TextBox
-      layout_properties: {col_xs: 5, row: LUSFGC, width_xs: 5}
+      layout_properties: {col_xs: 6, row: LUSFGC, width_xs: 6}
       name: grid_panel_12
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 1}
+        layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 2}
         name: button_back
-        properties: {background: '', font_size: 14, text: back}
+        properties: {background: '', font_size: 14, icon: 'fa:arrow-left', text: ''}
         type: Button
       - event_bindings: {click: button_delete_click}
-        layout_properties: {col_xs: 4, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 3}
         name: button_delete
-        properties: {background: '', font_size: 14, role: null, text: delete record}
+        properties: {background: '', font_size: 14, icon: 'fa:times-circle', role: null, text: Delete Record}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 1}
+        layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 2}
         name: button_save
-        properties: {background: '', bold: false, font_size: 14, text: save}
+        properties: {background: '', bold: false, font_size: 14, icon: 'fa:save', text: Save}
         type: Button
       - event_bindings: {click: button_vendor_list_click}
-        layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 7, row: YXOXYU, width_xs: 2}
         name: button_vendor_list
-        properties: {text: Vendors}
+        properties: {icon: 'fa:user-circle', text: Vendors}
         type: Button
-      layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
+      layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 12}
       name: grid_panel_13
       properties: {}
       type: GridPanel
-    layout_properties: {full_width_row: true, grid_position: 'BOQNDB,UKLKDI'}
+    layout_properties: {full_width_row: false, grid_position: 'BOQNDB,UKLKDI'}
     name: grid_panel_1
     properties: {}
     type: GridPanel

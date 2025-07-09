@@ -56,7 +56,7 @@ components:
               name: text_box_desc
               properties: {font_size: 12, placeholder: Description e.g.  Hou, text: ''}
               type: TextBox
-            - layout_properties: {col_xs: 8, row: ANFIOO, width_xs: 2}
+            - layout_properties: {col_xs: 8, row: ANFIOO, width_xs: 3}
               name: label_count
               properties: {font_size: 12, icon: 'fa:check-circle-o', text: 'row count:'}
               type: Label
