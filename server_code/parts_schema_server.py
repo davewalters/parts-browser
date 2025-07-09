@@ -1,12 +1,7 @@
-import anvil.server
 from pydantic import BaseModel, Field, validator, ValidationError
 from typing import Optional, List, Union
 from datetime import date, datetime
 from pymongo import MongoClient
-
-# MongoDB connection setup (adjust if needed)
-client = MongoClient("mongodb+srv://<user>:<password>@<cluster-url>")
-db = client["manufacturing"]
 
 
 # ---------- Vendor Models ----------
@@ -105,11 +100,20 @@ class Part(BaseModel):
   vendor_part_numbers: List[VendorPartNumber]
 
 
-# ---------- Server Functions ----------
+# ---------- MongoDB Integration Helpers ----------
 
-@anvil.server.callable
+import os
+
+from dotenv import load_dotenv
+load_dotenv()
+uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
+
+client = MongoClient(uri)
+db = client.manufacturing  # Replace with your actual DB name
+
+
 def validate_and_save_part(data: dict) -> dict:
-  """Validate and upsert a part record to MongoDB."""
+  """Validate part and insert into MongoDB."""
   try:
     part = Part(**data)
     db.parts.replace_one({'_id': part._id}, part.dict(by_alias=True), upsert=True)
@@ -118,14 +122,15 @@ def validate_and_save_part(data: dict) -> dict:
     print(f"Validation error: {e.json()}")
     raise
 
-@anvil.server.callable
+
 def validate_all_parts():
-  """Validate all parts in MongoDB and return errors."""
+  """Run validation across all records in the parts collection."""
   invalid = []
   for doc in db.parts.find():
     try:
       Part(**doc)
     except ValidationError as e:
-      invalid.append((doc.get('_id'), e.errors()))
+      invalid.append((doc.get("_id"), e))
   return invalid
+
 
