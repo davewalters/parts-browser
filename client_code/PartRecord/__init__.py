@@ -59,22 +59,9 @@ class PartRecord(PartRecordTemplate):
   def button_save_click(self, **event_args):
     try:
       latest_cost = {
-        "cost_nz": 0.0,
-        "cost_date": "1970-01-01"
+        "cost_nz": float(self.text_box_cost.text or 0),
+        "cost_date": self.text_box_cost_date.text.strip() or "1970-01-01"
       }
-
-      try:
-        cost_val = float(self.text_box_cost.text)
-        latest_cost["cost_nz"] = cost_val
-      except (ValueError, TypeError):
-        pass
-
-      try:
-        date_text = self.text_box_cost_date.text.strip()
-        dt = datetime.fromisoformat(date_text)
-        latest_cost["cost_date"] = dt.date().isoformat()
-      except Exception:
-        pass
 
       new_data = {
         "_id": self.text_box_id.text,
@@ -87,36 +74,18 @@ class PartRecord(PartRecordTemplate):
         "material_spec": self.text_box_material.text,
         "unit": self.drop_down_unit.selected_value,
         "latest_cost": latest_cost,
+        "group_code": self.part.get("group_code", ""),
+        "root_serial": self.part.get("root_serial", ""),
+        "variant": self.part.get("variant", ""),
         "vendor_part_numbers": self.part.get("vendor_part_numbers", [])
       }
-
-      if self.is_new:
-        url = f"{config.API_BASE_URL}/parts"
-        method = "POST"
-      else:
-        url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
-        method = "PUT"
-
-      json_string = json.dumps(new_data)
-      #print("📤 Sending to FastAPI:", new_data)
-      #print("📤 Payload repr:", json_string)
-
-      anvil.http.request(
-        url=url,
-        method=method,
-        data=json_string,
-        headers={"Content-Type": "application/json"}
-      )
+      validated = anvil.server.call("save_part_from_client", new_data)
 
       Notification("✅ Part saved.", style="success").show()
       open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
-    # If the error is due to duplicate _id
-      if "already exists" in str(e):
-        Notification("⚠️ Part ID already exists. Please choose a different ID.", style="warning").show()
-      else:
-        Notification(f"❌ Save failed: {e}", style="danger").show()
+      Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
     open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)

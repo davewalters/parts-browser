@@ -1,7 +1,9 @@
+import os
 from pydantic import BaseModel, Field, validator, ValidationError
 from typing import Optional, List, Union
 from datetime import date, datetime
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
 
 # ---------- Vendor Models ----------
@@ -102,9 +104,7 @@ class Part(BaseModel):
 
 # ---------- MongoDB Integration Helpers ----------
 
-import os
 
-from dotenv import load_dotenv
 load_dotenv()
 uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
 
