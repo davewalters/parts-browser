@@ -79,6 +79,7 @@ class PartRecord(PartRecordTemplate):
         "variant": self.part.get("variant", ""),
         "vendor_part_numbers": self.part.get("vendor_part_numbers", [])
       }
+
       validated = anvil.server.call("save_part_from_client", new_data)
 
       Notification("✅ Part saved.", style="success").show()
@@ -86,6 +87,7 @@ class PartRecord(PartRecordTemplate):
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
 
   def button_back_click(self, **event_args):
     open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
