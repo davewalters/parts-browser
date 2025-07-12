@@ -98,11 +98,11 @@ class PartRecord(PartRecordTemplate):
     if not confirmed:
       return
     try:
-      response = anvil.http.request(
-        url=f"{config.API_BASE_URL}/parts/{part_id}",
-        method="DELETE"
-      )
-      Notification("🗑️ Part deleted.", style="danger").show()
+      response = anvil.server.call("delete_part", part_id)
+      if response.get("deleted_count", 0) == 1:
+        Notification("🗑️ Part deleted.", style="danger").show()
+      else:
+        Notification(f"⚠️ Part '{part_id}' not found.", style="warning").show()
       open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()

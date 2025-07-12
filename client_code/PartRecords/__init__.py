@@ -1,10 +1,7 @@
 from anvil import *
 import anvil.server
-import anvil.http
 
 from ._anvil_designer import PartRecordsTemplate
-from .. import config
-
 
 class PartRecords(PartRecordsTemplate):
   def __init__(self, filter_part="", filter_desc="", **kwargs):
@@ -36,15 +33,11 @@ class PartRecords(PartRecordsTemplate):
     desc = self.text_box_desc.text or ""
 
     try:
-      response = anvil.http.request(
-        url=f"{config.API_BASE_URL}/parts?prefix={prefix}&desc={desc}",
-        method="GET",
-        json=True
-      )
-      self.repeating_panel_1.items = response
-      self.label_count.text = f"{len(response)} parts returned"
+      filtered = anvil.server.call("get_filtered_parts", prefix, desc)
+      self.repeating_panel_1.items = filtered
+      self.label_count.text = f"✅ {len(filtered)} parts returned"
     except Exception as e:
-      self.label_count.text = f"Error: {e}"
+      self.label_count.text = f"❌ Error: {e}"
       self.repeating_panel_1.items = []
 
   def show_detail(self, part, **event_args):
