@@ -12,6 +12,10 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_type = filter_type
     self.prev_filter_status = filter_status
 
+    self.button_vendor_records.role = "mydefault-button"
+    self.button_new_part.role = "new-button"
+    
+
     # Populate dropdowns and textboxes
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
@@ -22,7 +26,12 @@ class PartRecords(PartRecordsTemplate):
     self.drop_down_type.items = [""] + ["part", "assembly", "phantom", "material", "service", "documentation"]
     self.drop_down_status.items = [""] + ["active", "obsolete"]
 
+    self.text_box_part_no.set_event_handler('change', self.update_filter)
+    self.text_box_desc.set_event_handler('change', self.update_filter)
+    self.drop_down_type.set_event_handler('change', self.update_filter)
+    self.drop_down_status.set_event_handler('change', self.update_filter)
     self.repeating_panel_1.set_event_handler("x-show-detail", self.show_detail)
+
     self.update_filter()
 
   def update_filter(self, **event_args):
@@ -52,6 +61,22 @@ class PartRecords(PartRecordsTemplate):
               prev_filter_desc = self.prev_filter_desc,
               prev_filter_type = self.prev_filter_type,
               prev_filter_status = self.prev_filter_status)
+
+  def button_new_part_click(self, **event_args):
+    """Open a new PartRecord form with current filter values."""
+    open_form(
+      "PartRecord",
+      part=None,
+      prev_filter_part=self.prev_filter_part,
+      prev_filter_desc=self.prev_filter_desc,
+      prev_filter_part_type=self.prev_filter_part_type,
+      prev_filter_status=self.prev_filter_status
+    )
+
+  def button_vendor_records_click(self, **event_args):
+    """Navigate to the VendorRecords form with no filters preserved."""
+    open_form("VendorRecords")
+
 
 
 
