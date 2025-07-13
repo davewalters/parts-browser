@@ -5,7 +5,7 @@ from datetime import datetime
 from .. import PartVendorRecords
 
 class PartVendorRecord(PartVendorRecordTemplate):
-  def __init__(self, part, vendor_data=None, filter_part="", filter_desc="", **kwargs):
+  def __init__(self, part, vendor_data=None, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_cancel.role = "mydefault-button"
@@ -14,9 +14,11 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.drop_down_vendor_currency.set_event_handler("change", self.drop_down_currency_change)
 
     self.part = part
-    self.prev_filter_part = filter_part
-    self.prev_filter_desc = filter_desc
-
+    self.prev_filter_part = prev_filter_part
+    self.prev_filter_desc = prev_filter_desc
+    self.prev_filter_type = prev_filter_type
+    self.prev_filter_status = prev_filter_status
+    
     try:
       vendor_list = anvil.server.call("get_all_vendors")
       self.drop_down_vendor_id.items = [
@@ -108,14 +110,20 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
     open_form("PartVendorRecords",
               part=self.part,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status
+             )
 
   def button_cancel_click(self, **event_args):
     open_form("PartVendorRecords",
               part=self.part,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status
+             )
 
   def button_delete_vendor_click(self, **event_args):
     vendor_id = self.vendor_data.get("vendor_id", "")
@@ -140,8 +148,11 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
     open_form("PartVendorRecords",
               part=self.part,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status
+             )
 
 
 

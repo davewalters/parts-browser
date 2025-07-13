@@ -5,14 +5,16 @@ from .. import PartVendorRecord
 from .. import PartRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
-  def __init__(self, part, filter_part="", filter_desc="", **kwargs):
+  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type = "", prev_filter_status = "", **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "save-button"
     self.button_cancel.role = "mydefault-button"
     self.part = part
     self.vendor_lookup = self.get_vendor_lookup()
-    self.prev_filter_part = filter_part
-    self.prev_filter_desc = filter_desc
+    self.prev_filter_part = prev_filter_part
+    self.prev_filter_desc = prev_filter_desc
+    self.prev_filter_type = prev_filter_type
+    self.prev_filter_status = prev_filter_status
     self.label_id.text = part.get("_id", "")
     self.label_id.role = "label-border"
 
@@ -44,14 +46,20 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     open_form("PartRecord",
               part=self.part,
               prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc)
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status,
+             )
 
   def button_new_vendor_click(self, **event_args):
     open_form("PartVendorRecord",
               part=self.part,
               vendor_data=None,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status,
+             )
 
   def set_active_vendor(self, vendor_id, **event_args):
     self.part["default_vendor"] = vendor_id
@@ -72,7 +80,10 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     open_form("PartVendorRecord",
               part=self.part,
               vendor_data=vendor_data,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status
+            )
 
 

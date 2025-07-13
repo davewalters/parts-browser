@@ -30,7 +30,7 @@ components:
           type: Button
         - components:
           - components:
-            - layout_properties: {col_xs: 0, row: ANFIOO, width_xs: 1}
+            - layout_properties: {col_xs: 1, row: ANFIOO, width_xs: 1}
               name: label_filter
               properties:
                 align: center
@@ -44,7 +44,7 @@ components:
                 spacing_above: none
                 spacing_below: none
               type: Label
-            - layout_properties: {col_xs: 1, row: ANFIOO, width_xs: 3}
+            - layout_properties: {col_xs: 2, row: ANFIOO, width_xs: 3}
               name: text_box_part_no
               properties:
                 font_size: 12
@@ -52,14 +52,30 @@ components:
                 placeholder: Part No e.g. 141- or ALPL
                 text: ''
               type: TextBox
-            - layout_properties: {col_xs: 4, row: ANFIOO, width_xs: 3}
+            - layout_properties: {col_xs: 6, row: ANFIOO, width_xs: 3}
               name: text_box_desc
               properties: {font_size: 12, placeholder: Description e.g.  Hou, text: ''}
               type: TextBox
-            - layout_properties: {col_xs: 8, row: ANFIOO, width_xs: 3}
+            - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 3}
               name: label_count
               properties: {font_size: 12, icon: 'fa:check-circle-o', text: 'row count:'}
               type: Label
+            - layout_properties: {col_xs: 1, row: MKQRIP, width_xs: 1}
+              name: label_dd_type
+              properties: {font_size: 12, text: Type}
+              type: Label
+            - layout_properties: {col_xs: 2, row: MKQRIP, width_xs: 3}
+              name: drop_down_type
+              properties: {font_size: 12}
+              type: DropDown
+            - layout_properties: {col_xs: 5, row: MKQRIP, width_xs: 1}
+              name: label_dd_status
+              properties: {font_size: 12, text: Status}
+              type: Label
+            - layout_properties: {col_xs: 6, row: MKQRIP, width_xs: 3}
+              name: drop_down_status
+              properties: {font_size: 12}
+              type: DropDown
             data_bindings: []
             layout_properties: {grid_position: 'EBBRPC,USAONS', row_background: ''}
             name: grid_panel_1
@@ -107,6 +123,10 @@ components:
       name: label_desc
       properties: {align: left, font_size: 12, text: Description}
       type: Label
+    - layout_properties: {column: type}
+      name: label_type
+      properties: {font_size: 12, text: Type}
+      type: Label
     - layout_properties: {column: status}
       name: label_status_header
       properties: {align: left, font_size: 12, text: Status}
@@ -115,13 +135,13 @@ components:
       name: label_vendor
       properties: {align: left, font_size: 12, text: Vendor}
       type: Label
-    - layout_properties: {column: cost_date}
-      name: label_cost_date
-      properties: {align: left, font_size: 12, text: Date Costed}
-      type: Label
     - layout_properties: {column: cost_nz}
       name: label_cost_nz
       properties: {align: left, font_size: 12, text: Cost_$NZ}
+      type: Label
+    - layout_properties: {column: cost_date}
+      name: label_cost_date
+      properties: {align: left, font_size: 12, text: Date Costed}
       type: Label
     - layout_properties: {column: button_view}
       name: button_view

@@ -12,7 +12,7 @@ from .. import config
 
 
 class PartRecord(PartRecordTemplate):
-  def __init__(self, part, prev_filter_part="", prev_filter_desc="", **kwargs):
+  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
@@ -23,6 +23,8 @@ class PartRecord(PartRecordTemplate):
     self.button_delete.visible = not self.is_new
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
+    self.prev_filter_type = prev_filter_type
+    self.prev_filter_status = prev_filter_status
 
     # Populate dropdown options
     self.drop_down_status.items = ["active", "obsolete"]
@@ -90,7 +92,12 @@ class PartRecord(PartRecordTemplate):
 
 
   def button_back_click(self, **event_args):
-    open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+    open_form("PartRecords",
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc,
+              filter_type = self.prev_filter_type,
+              filter_status = self.prev_filter_status
+             )
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -111,5 +118,7 @@ class PartRecord(PartRecordTemplate):
     open_form("PartVendorRecords", 
               part=self.part,
               filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc)
+              filter_desc=self.prev_filter_desc,
+              filter_type = self.prev_filter_type,
+              filter_status = self.prev_filter_status)
 

@@ -12,6 +12,8 @@ class ItemTemplate1(ItemTemplate1Template):
     self.label_rev.text = part.get("revision", "")
     self.label_desc.text = part.get("description", "")
     self.label_status.text = part.get("status", "")
+    self.label_type.text = part.get("type", "")
+    self.label_type.column = "type"
     self.label_vendor.text = part.get("default_vendor", "")
 
     cost_info = part.get("latest_cost", {})

@@ -12,6 +12,10 @@ components:
     name: label_desc
     properties: {font_size: 12}
     type: Label
+  - layout_properties: {column: type}
+    name: label_type
+    properties: {font_size: 12}
+    type: Label
   - layout_properties: {column: status}
     name: label_status
     properties: {font_size: 12}
@@ -20,12 +24,12 @@ components:
     name: label_vendor
     properties: {font_size: 12}
     type: Label
-  - layout_properties: {column: cost_date}
-    name: label_cost_date
-    properties: {font_size: 12}
-    type: Label
   - layout_properties: {column: cost_nz}
     name: label_cost_nz
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: cost_date}
+    name: label_cost_date
     properties: {font_size: 12}
     type: Label
   layout_properties: {full_width_row: true, grid_position: 'RJXCNZ,OPFLMU'}
