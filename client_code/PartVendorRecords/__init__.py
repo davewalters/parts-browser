@@ -1,13 +1,8 @@
-# VendorList Form - List and manage vendors for a part
-
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
-import anvil.http
-import json
 from .. import PartVendorRecord
 from .. import PartRecord
-from .. import config
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part, filter_part="", filter_desc="", **kwargs):
@@ -20,25 +15,27 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.prev_filter_desc = filter_desc
     self.label_id.text = part.get("_id", "")
     self.label_id.role = "label-border"
-    #self.grid_panel_2.role = "button-border"
+
     default_vendor = self.part.get("default_vendor", "")
     self.vendor_data = []
-    
+
     for vendor in self.part.get("vendor_part_numbers", []):
-      v = vendor.copy()  # Shallow copy to avoid modifying original data
+      v = vendor.copy()
       v["vendor_company_name"] = self.vendor_lookup.get(v.get("vendor_id"), v.get("vendor_id"))
       v["is_active"] = v.get("vendor_id") == default_vendor
       self.vendor_data.append(v)
 
-    
     self.repeating_panel_1.items = self.vendor_data
     self.repeating_panel_1.set_event_handler("x-set-default-vendor", self.set_active_vendor)
     self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor)
 
   def get_vendor_lookup(self):
     try:
-      response = anvil.http.request(f"{config.API_BASE_URL}/vendors", method="GET", json=True)
-      return {vendor["_id"]: vendor.get("company_name", vendor["_id"]) for vendor in response}
+      vendor_list = anvil.server.call("get_all_vendors")
+      return {
+        vendor.get("_id"): vendor.get("company_name", vendor["_id"])
+        for vendor in vendor_list
+      }
     except Exception as e:
       Notification(f"⚠️ Could not load vendor names: {e}", style="warning").show()
       return {}
@@ -65,13 +62,8 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.repeating_panel_1.items = self.vendor_data
 
     try:
-      url = f"{config.API_BASE_URL}/parts/{self.part['_id']}"
-      anvil.http.request(
-        url=url,
-        method="PUT",
-        data=json.dumps(self.part),
-        headers={"Content-Type": "application/json"}
-      )
+      # Replace full part record with validated version
+      validated = anvil.server.call("save_part_from_client", self.part)
       Notification(f"✅ '{vendor_id}' set as default vendor.", style="success").show()
     except Exception as e:
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
@@ -82,4 +74,5 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               vendor_data=vendor_data,
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc)
+
 

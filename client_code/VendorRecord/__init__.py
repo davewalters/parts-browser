@@ -1,13 +1,7 @@
-# VendorRecord Form - record view, editing and deletion of a vendor record
-
 from anvil import *
 import anvil.server
 from ._anvil_designer import VendorRecordTemplate
-import anvil.http
-import json
 from datetime import datetime
-from .. import VendorRecords
-from .. import config
 
 class VendorRecord(VendorRecordTemplate):
   def __init__(self, vendor, prev_filter_vendor_id="", prev_filter_company_name="", **kwargs):
@@ -21,7 +15,6 @@ class VendorRecord(VendorRecordTemplate):
     self.prev_filter_vendor_id = prev_filter_vendor_id
     self.prev_filter_company_name = prev_filter_company_name
 
-    # Populate dropdown options
     self.drop_down_status.items = ["active", "obsolete"]
 
     if self.vendor:
@@ -40,14 +33,12 @@ class VendorRecord(VendorRecordTemplate):
 
       self.text_box_contact_name.text = contact.get("name", "")
       self.text_box_phone.text = contact.get("phone", "")
-      self.text_box_email.text = contact.get("phone", "")
+      self.text_box_email.text = contact.get("email", "")
 
-      self.text_area_categories.text = ", ".join(self.vendor.get("categories", [])) if self.vendor else ""
+      self.text_area_categories.text = ", ".join(self.vendor.get("categories", []))
 
     else:
-      # set sensible defaults for new vendor
       self.drop_down_status.selected_value = "active"
-
 
   def button_save_click(self, **event_args):
     new_address = {
@@ -73,24 +64,10 @@ class VendorRecord(VendorRecordTemplate):
       "contact": new_contact,
       "categories": [c.strip() for c in self.text_area_categories.text.split(",") if c.strip()]
     }
-    
+
     try:
-      if self.is_new:
-        anvil.http.request(
-          url=f"{config.API_BASE_URL}/vendors",
-          method="POST",
-          data=json.dumps(new_data),
-          headers={"Content-Type": "application/json"}
-        )
-        Notification("✅ Vendor added.").show()
-      else:
-        anvil.http.request(
-          url=f"{config.API_BASE_URL}/vendors/{new_data['_id']}",
-          method="PUT",
-          data=json.dumps(new_data),
-          headers={"Content-Type": "application/json"}
-        )
-        Notification("💾 Vendor updated.").show()
+      validated = anvil.server.call("save_vendor_from_client", new_data)
+      Notification("✅ Vendor saved.").show()
       open_form("VendorRecords",
                 filter_vendor_id=self.prev_filter_vendor_id,
                 filter_company_name=self.prev_filter_company_name)
@@ -108,13 +85,11 @@ class VendorRecord(VendorRecordTemplate):
     if not confirmed:
       return
     try:
-      response = anvil.http.request(
-        url=f"{config.API_BASE_URL}/vendors/{vendor_id}",
-        method="DELETE"
-      )
+      result = anvil.server.call("delete_vendor", vendor_id)
       Notification("🗑️ Vendor deleted.", style="danger").show()
       open_form("VendorRecords",
                 filter_vendor_id=self.prev_filter_vendor_id,
                 filter_company_name=self.prev_filter_company_name)
     except Exception as e:
       Notification(f"❌ Delete failed: {e}", style="danger").show()
+
