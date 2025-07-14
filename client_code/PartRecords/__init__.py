@@ -49,9 +49,9 @@ class PartRecords(PartRecordsTemplate):
         status=self.prev_filter_status
       )
       self.repeating_panel_1.items = results
-      self.label_count.text = f"✅ {len(results)} parts returned"
+      self.label_count.text = f"{len(results)} parts returned"
     except Exception as e:
-      self.label_count.text = f"❌ Error: {e}"
+      self.label_count.text = f"Error: {e}"
       self.repeating_panel_1.items = []
 
   def show_detail(self, part, **event_args):
