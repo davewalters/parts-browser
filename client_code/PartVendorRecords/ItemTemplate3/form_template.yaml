@@ -26,11 +26,13 @@ components:
 - event_bindings: {click: button_view_click}
   layout_properties: {grid_position: 'IKIUQH,CUPMMX'}
   name: button_view
-  properties: {text: details}
+  properties: {font_size: 16, icon: 'fa:arrow-right', text: ''}
   type: Button
 - layout_properties: {grid_position: 'IKIUQH,ORBPTG'}
   name: radio_button_active_vendor
   properties: {font_size: 14, text: active_vendor}
   type: RadioButton
-container: {type: ColumnPanel}
+container:
+  properties: {background: 'theme:Gray 200'}
+  type: ColumnPanel
 is_package: true

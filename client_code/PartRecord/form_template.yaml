@@ -162,7 +162,7 @@ components:
       - event_bindings: {click: button_delete_click}
         layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 3}
         name: button_delete
-        properties: {background: '', font_size: 14, icon: 'fa:times-circle', role: null, text: Delete Record}
+        properties: {background: '', font_size: 14, icon: 'fa:trash-o', role: null, text: Delete Record}
         type: Button
       - event_bindings: {click: button_save_click}
         layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 2}

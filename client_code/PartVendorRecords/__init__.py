@@ -7,7 +7,7 @@ from .. import PartRecord
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type = "", prev_filter_status = "", **kwargs):
     self.init_components(**kwargs)
-    self.button_new_vendor.role = "save-button"
+    self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
     self.part = part
     self.vendor_lookup = self.get_vendor_lookup()

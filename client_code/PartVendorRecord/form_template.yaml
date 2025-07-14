@@ -3,114 +3,114 @@ components:
   - components:
     - layout_properties: {col_xs: 5, row: AGXZHZ, width_xs: 2}
       name: label_id
-      properties: {align: center, bold: true, font_size: 16, italic: false}
+      properties: {align: center, background: 'theme:Gray 200', bold: false, font_size: 16, foreground: '', italic: false}
       type: Label
     - components:
       - layout_properties: {col_xs: 0, row: EPCFKE, width_xs: 2}
         name: label_vendor_id
-        properties: {font_size: 16, text: 'Vendor:'}
+        properties: {background: '', font_size: 14, foreground: '', text: 'Vendor:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: EPCFKE, width_xs: 7}
+      - layout_properties: {col_xs: 3, row: EPCFKE, width_xs: 8}
         name: drop_down_vendor_id
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
-      layout_properties: {col_xs: 0, row: GMQKME, width_xs: 5}
+      layout_properties: {col_xs: 0, row: GMQKME, width_xs: 7}
       name: grid_panel_2
-      properties: {}
+      properties: {background: 'theme:Gray 200', foreground: ''}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: JUAKUD, width_xs: 3}
+      - layout_properties: {col_xs: 0, row: JUAKUD, width_xs: 4}
         name: label_vendor_part_no
-        properties: {font_size: 16, text: 'Vendor Part No:'}
+        properties: {font_size: 14, text: 'Vendor Part No:'}
         type: Label
       - layout_properties: {col_xs: 4, row: JUAKUD, width_xs: 7}
         name: text_box_vendor_part_no
-        properties: {}
+        properties: {font_size: 14}
         type: TextBox
       layout_properties: {col_xs: 7, row: GMQKME, width_xs: 5}
       name: grid_panel_3
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: LDYPRB, width_xs: 3}
         name: label_vendor_currency
-        properties: {font_size: 16, text: 'Currency:'}
+        properties: {font_size: 14, text: 'Currency:'}
         type: Label
       - layout_properties: {col_xs: 5, row: LDYPRB, width_xs: 6}
         name: drop_down_vendor_currency
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
       layout_properties: {col_xs: 0, row: KEREIV, width_xs: 4}
       name: grid_panel_4
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: VZQFIX, width_xs: 3}
         name: label_vendor_price
-        properties: {font_size: 16, text: 'Price:'}
+        properties: {font_size: 14, text: 'Price:'}
         type: Label
       - layout_properties: {col_xs: 4, row: VZQFIX, width_xs: 7}
         name: text_box_vendor_price
-        properties: {}
+        properties: {font_size: 14}
         type: TextBox
       layout_properties: {col_xs: 4, row: KEREIV, width_xs: 3}
       name: grid_panel_5
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: OFDJLX, width_xs: 5}
         name: label_rate
-        properties: {font_size: 16, text: 'Exchange Rate:'}
+        properties: {font_size: 14, text: 'Exchange Rate:'}
         type: Label
       - layout_properties: {col_xs: 5, row: OFDJLX, width_xs: 7}
         name: label_exchange_rate
-        properties: {font_size: 16}
+        properties: {font_size: 14}
         type: Label
       layout_properties: {col_xs: 0, row: GUCDDS, width_xs: 4}
       name: grid_panel_8
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: OHQYRE, width_xs: 4}
         name: label_cost_NZD
-        properties: {font_size: 16, text: 'Cost NZD:'}
+        properties: {font_size: 14, text: 'Cost NZD:'}
         type: Label
       - layout_properties: {col_xs: 4, row: OHQYRE, width_xs: 5}
         name: label_cost_nz
-        properties: {font_size: 16}
+        properties: {font_size: 14}
         type: Label
       layout_properties: {col_xs: 4, row: GUCDDS, width_xs: 3}
       name: grid_panel_6
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: ZXEYHR, width_xs: 4}
         name: label_cost_date
-        properties: {font_size: 16, text: 'Date Costed:'}
+        properties: {font_size: 14, text: 'Date Costed:'}
         type: Label
       - layout_properties: {col_xs: 4, row: ZXEYHR, width_xs: 7}
         name: text_box_cost_date
-        properties: {}
+        properties: {font_size: 14}
         type: TextBox
       layout_properties: {col_xs: 7, row: GUCDDS, width_xs: 5}
       name: grid_panel_7
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - event_bindings: {click: button_cancel_click}
-        layout_properties: {col_xs: 2, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 3}
         name: button_cancel
-        properties: {text: cancel}
+        properties: {icon: 'fa:times-circle', text: Cancel}
         type: Button
       - event_bindings: {click: button_delete_vendor_click}
-        layout_properties: {col_xs: 4, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 4, row: LWTNGS, width_xs: 4}
         name: button_delete_vendor
-        properties: {text: delete vendor}
+        properties: {icon: 'fa:trash-o', text: Delete Vendor}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 7, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 8, row: LWTNGS, width_xs: 3}
         name: button_save
-        properties: {text: save}
+        properties: {icon: 'fa:save', text: Save}
         type: Button
       layout_properties: {col_xs: 2, row: GELKNM, width_xs: 7}
       name: grid_panel_9
