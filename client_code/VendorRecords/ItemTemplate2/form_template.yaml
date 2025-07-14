@@ -23,11 +23,11 @@ components:
   - event_bindings: {click: button_view_click}
     layout_properties: {column: button_view}
     name: button_view
-    properties: {text: details}
+    properties: {font_size: 16, icon: 'fa:arrow-right', text: ''}
     type: Button
   layout_properties: {full_width_row: true, grid_position: 'IQVLHR,LMUZWE'}
   name: data_row_panel_1
-  properties: {}
+  properties: {background: 'theme:Gray 200'}
   type: DataRowPanel
 container: {type: ColumnPanel}
 is_package: true
