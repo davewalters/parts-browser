@@ -4,6 +4,7 @@ from ._anvil_designer import DesignBOMRecordTemplate
 import anvil.http
 import json
 from datetime import datetime
+from . import DesignBOMRecordRow
 from .. import config
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
@@ -11,8 +12,10 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.init_components(**properties)
     self.assembly_part_id = assembly_part_id
     self.bom_rows = []
+    self.button_add_row.role = "new-button"
+    self.button_save.role = "save-button"
 
-    self.title_label.text = f"Edit Design BOM: {assembly_part_id}"
+    self.label_assembly_id.text = self.assembly_part_id
     self.load_existing_bom()
 
   def load_existing_bom(self):
@@ -24,15 +27,15 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
     self.cost_status_label.text = ""
 
-  def add_row_btn_click(self, **event_args):
+  def button_add_row_click(self, **event_args):
     row = DesignBOMRecordRow(part_id="", qty=1, parent_form=self)
     self.bom_rows.append(row)
     self.repeating_panel_1.items = self.bom_rows
 
-  def save_bom_btn_click(self, **event_args):
-    self.cost_status_label.text = "Saving and rolling up costs..."
+  def button_save_click(self, **event_args):
+    self.label_cost_status.text = "Saving and rolling up costs..."
     self.rollup_spinner.visible = True
-    self.save_bom_btn.enabled = False
+    self.button_save.enabled = False
   
     try:
       components = self.collect_components()
@@ -50,7 +53,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       self.cost_status_label.text = f"Error: {str(e)}"
     finally:
       self.rollup_spinner.visible = False
-      self.save_bom_btn.enabled = True
+      self.button_save.enabled = True
     
   def collect_components(self):
     components = []

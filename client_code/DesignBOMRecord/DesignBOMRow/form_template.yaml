@@ -1,0 +1,30 @@
+components:
+- layout_properties: {grid_position: 'KJMOVC,ZGOZLZ'}
+  name: text_box_part_id
+  properties: {font_size: 14, placeholder: Part No.}
+  type: TextBox
+- layout_properties: {grid_position: 'KJMOVC,KCGGWI'}
+  name: label_part_desc
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'KJMOVC,AGXINH'}
+  name: label_status
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'KJMOVC,MCSRMZ'}
+  name: label_unit
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'KJMOVC,RJGBAO'}
+  name: text_box_qty
+  properties: {font_size: 14, placeholder: Qty}
+  type: TextBox
+- event_bindings: {click: button_delete_row_click}
+  layout_properties: {grid_position: 'KJMOVC,SJYEMI'}
+  name: button_delete_row
+  properties: {icon: 'fa:trash-o', text: Delete Row}
+  type: Button
+container:
+  properties: {background: 'theme:Gray 200', col_widths: '{"ZGOZLZ":15,"KCGGWI":25,"RJGBAO":20}'}
+  type: ColumnPanel
+is_package: true
