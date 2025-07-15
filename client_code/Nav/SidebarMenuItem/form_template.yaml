@@ -1,0 +1,10 @@
+components:
+- event_bindings: {click: nav_button_click}
+  layout_properties: {grid_position: 'CIIOTY,KNQUYS'}
+  name: nav_button
+  properties: {text: empty}
+  type: Button
+container:
+  event_bindings: {show: form_show}
+  type: ColumnPanel
+is_package: true
