@@ -5,7 +5,7 @@ import anvil.server
 class DesignBOMRow(DesignBOMRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
-    self.button_delete_row.role = "delete-button"
+    self.button_remove_row.role = "delete-button"
 
   def form_show(self, **event_args):
     print("form_show triggered")
@@ -36,6 +36,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_status.text = ""
       self.label_unit.text = ""
       self.text_box_part_id.role = "input-error"
+      self.text_box_part_id.tooltip = "Part not found or inactive"
       self.is_valid_part = False
 
     self.parent.raise_event("x-validation-updated")
@@ -61,8 +62,8 @@ class DesignBOMRow(DesignBOMRowTemplate):
     except ValueError:
       self.item['qty'] = 0
 
-  def button_delete_row_click(self, **event_args):
-    self.parent.raise_event("x-delete-row", row=self)
+  def button_remove_row_click(self, **event_args):
+    self.parent.raise_event("x-remove-row", row=self)
 
 
 
