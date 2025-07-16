@@ -13,20 +13,9 @@ components:
       - components:
         - data_bindings: []
           event_bindings: {click: button_new_part_click}
-          layout_properties: {col_xs: 2, row: BTIFCK, width_xs: 3}
+          layout_properties: {col_xs: 4, row: BTIFCK, width_xs: 3}
           name: button_new_part
           properties: {background: '', icon: 'fa:plus-circle', role: null, text: New Part}
-          type: Button
-        - event_bindings: {click: button_vendor_records_click}
-          layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 4}
-          name: button_vendor_records
-          properties:
-            icon: fa:user-circle
-            role: null
-            spacing:
-              margin: [null, null, '4', null]
-              padding: [null, '16', '8', '16']
-            text: Vendor Records
           type: Button
         - components:
           - components:

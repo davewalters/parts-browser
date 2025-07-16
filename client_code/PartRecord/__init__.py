@@ -7,6 +7,7 @@ import anvil.http
 import json
 from datetime import datetime
 from .. import PartVendorRecords
+from .. DesignBOMRecord import DesignBOMRecord
 from .. import config
 
 
@@ -18,9 +19,11 @@ class PartRecord(PartRecordTemplate):
     self.button_back.role = "mydefault-button"
     self.button_vendor_list.role = "mydefault-button"
     self.button_delete.role = "delete-button"
+    self.button_BOM.role = "new-button"
     self.part = part
     self.is_new = part is None
     self.button_delete.visible = not self.is_new
+    self.button_BOM.visible = part.get("type") == "assembly"
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
@@ -121,4 +124,7 @@ class PartRecord(PartRecordTemplate):
               filter_desc=self.prev_filter_desc,
               filter_type = self.prev_filter_type,
               filter_status = self.prev_filter_status)
+
+  def button_BOM_click(self, **event_args):
+    open_form(DesignBOMRecord(assembly_part_id=self.text_box_id.text))
 

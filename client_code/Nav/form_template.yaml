@@ -14,7 +14,7 @@ components:
     type: RepeatingPanel
   layout_properties: {slot: left-nav}
   name: column_panel_1
-  properties: {}
+  properties: {background: 'theme:Gray 200'}
   type: ColumnPanel
 - layout_properties: {slot: title}
   name: label_1

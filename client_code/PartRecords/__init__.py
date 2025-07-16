@@ -11,10 +11,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_desc = filter_desc
     self.prev_filter_type = filter_type
     self.prev_filter_status = filter_status
-
-    self.button_vendor_records.role = "mydefault-button"
     self.button_new_part.role = "new-button"
-    
 
     # Populate dropdowns and textboxes
     self.text_box_part_no.text = filter_part
@@ -73,9 +70,6 @@ class PartRecords(PartRecordsTemplate):
       prev_filter_status=self.prev_filter_status
     )
 
-  def button_vendor_records_click(self, **event_args):
-    """Navigate to the VendorRecords form with no filters preserved."""
-    open_form("VendorRecords")
 
 
 

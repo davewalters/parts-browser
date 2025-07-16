@@ -2,7 +2,6 @@ from ._anvil_designer import NavTemplate
 from anvil import *
 import anvil.server
 
-from . SidebarMenuItem import SidebarMenuItem
 from .. PartRecords import PartRecords
 from .. VendorRecords import VendorRecords
 #from ..DesignBOMBrowser import DesignBOMBrowser

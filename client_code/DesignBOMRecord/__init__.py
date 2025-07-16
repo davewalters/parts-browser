@@ -4,7 +4,6 @@ from ._anvil_designer import DesignBOMRecordTemplate
 import anvil.http
 import json
 from datetime import datetime
-from . import DesignBOMRecordRow
 from .. import config
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
