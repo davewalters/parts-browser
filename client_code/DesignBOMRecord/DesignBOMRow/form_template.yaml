@@ -27,6 +27,7 @@ components:
   properties: {icon: 'fa:trash-o', text: ''}
   type: Button
 container:
+  event_bindings: {show: form_show}
   properties: {background: 'theme:Gray 200', col_widths: '{"ZGOZLZ":10,"KCGGWI":17,"RJGBAO":13,"AGXINH":7,"MCSRMZ":7,"PPUCVE":6}'}
   type: ColumnPanel
 is_package: true

@@ -27,7 +27,8 @@ components:
     properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 1, row: NNEHMW, width_xs: 3}
+    - event_bindings: {click: button_save_bom_click}
+      layout_properties: {col_xs: 1, row: NNEHMW, width_xs: 3}
       name: button_save_bom
       properties: {icon: 'fa:save', text: Save}
       type: Button

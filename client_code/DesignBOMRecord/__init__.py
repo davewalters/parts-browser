@@ -37,6 +37,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
 
   def button_save_bom_click(self, **event_args):
+    print("button_save_bom triggered)")
     self.label_cost_status.text = "Saving and rolling up costs..."
     self.rollup_spinner.visible = True
     self.button_save_bom.enabled = False
