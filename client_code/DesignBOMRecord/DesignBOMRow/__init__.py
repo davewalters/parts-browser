@@ -21,7 +21,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_unit.text = ""
       self.text_box_part_id.role = ""
       self.is_valid_part = False
-      self.parent.raise_event("x-validation-updated")
+      self.raise_event("x-validation-updated")
       return
 
     part = anvil.server.call('get_part', part_id)
@@ -39,7 +39,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.text_box_part_id.tooltip = "Part not found or inactive"
       self.is_valid_part = False
 
-    self.parent.raise_event("x-validation-updated")
+    self.raise_event("x-validation-updated")
 
   def text_box_part_id_change(self, **event_args):
     self.item['part_id'] = self.text_box_part_id.text.strip()
@@ -63,7 +63,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.item['qty'] = 0
 
   def button_remove_row_click(self, **event_args):
-    self.parent.raise_event("x-remove-row", row=self)
+    self.raise_event("x-remove-row", row=self)
 
 
 

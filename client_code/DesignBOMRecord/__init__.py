@@ -19,6 +19,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     # Set up a timer to poll for status
     self.timer_status_poll.interval = 0.5
     self.timer_status_poll.enabled = False
+    self.spinner_rollup.visible = False
 
   def load_existing_bom(self):
     self.button_save_bom.enabled = False
@@ -47,6 +48,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.label_cost_status.text = "Saving and rolling up costs..."
     self.button_save_bom.enabled = False
     self.status_check_index = 0
+    self.spinner_rollup.visible = True
     self.timer_status_poll.enabled = True
 
     try:
@@ -67,6 +69,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
 
     finally:
       self.timer_status_poll.enabled = False
+      self.spinner_rollup.visible = False
       self.button_save_bom.enabled = True
 
   def timer_status_poll_tick(self, **event_args):
@@ -85,6 +88,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
         })
     self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
+
 
 
 
