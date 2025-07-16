@@ -28,7 +28,7 @@ components:
     type: GridPanel
   - components:
     - layout_properties: {col_xs: 1, row: NNEHMW, width_xs: 3}
-      name: button_save
+      name: button_save_bom
       properties: {icon: 'fa:save', text: Save}
       type: Button
     - layout_properties: {col_xs: 4, row: NNEHMW, width_xs: 3}
@@ -55,7 +55,7 @@ components:
       type: Label
     - layout_properties: {column: status}
       name: label_status
-      properties: {}
+      properties: {text: Status}
       type: Label
     - layout_properties: {column: unit}
       name: label_header_unit
