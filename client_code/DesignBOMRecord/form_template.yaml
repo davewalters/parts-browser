@@ -35,7 +35,8 @@ components:
       name: label_cost_status
       properties: {italic: true}
       type: Label
-    - layout_properties: {col_xs: 6, row: NNEHMW, width_xs: 3}
+    - event_bindings: {click: button_add_row_click}
+      layout_properties: {col_xs: 6, row: NNEHMW, width_xs: 3}
       name: button_add_row
       properties: {icon: 'fa:plus-circle', icon_align: left, text: Add Row}
       type: Button

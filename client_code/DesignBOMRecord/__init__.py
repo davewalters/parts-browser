@@ -5,6 +5,7 @@ import anvil.http
 import json
 from datetime import datetime
 from .. import config
+from .DesignBOMRow import DesignBOMRow
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
   def __init__(self, assembly_part_id, **properties):
@@ -21,14 +22,13 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     bom_doc = anvil.server.call('get_design_bom', self.assembly_part_id)
     self.bom_rows = []
     for comp in bom_doc.get("components", []):
-      row = DesignBOMRecordRow(part_id=comp["part_id"], qty=comp["qty"], parent_form=self)
+      row = DesignBOMRow(part_id=comp["part_id"], qty=comp["qty"], parent_form=self)
       self.bom_rows.append(row)
     self.repeating_panel_1.items = self.bom_rows
-    self.cost_status_label.text = ""
+    self.label_cost_status.text = ""
 
   def button_add_row_click(self, **event_args):
-    row = DesignBOMRecordRow(part_id="", qty=1, parent_form=self)
-    self.bom_rows.append(row)
+    self.bom_rows.append({"part_id": "", "qty": 1})
     self.repeating_panel_1.items = self.bom_rows
 
   def button_save_click(self, **event_args):
@@ -47,9 +47,9 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       msg = f"Cost updated: ${cost:.2f}"
       if skipped:
         msg += f" — {len(skipped)} parts skipped (inactive or missing)"
-      self.cost_status_label.text = msg
+      self.label_cost_status.text = msg
     except Exception as e:
-      self.cost_status_label.text = f"Error: {str(e)}"
+      self.label_cost_status.text = f"Error: {str(e)}"
     finally:
       self.rollup_spinner.visible = False
       self.button_save.enabled = True

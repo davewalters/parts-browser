@@ -823,6 +823,11 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   background-color: #adb5bd;
 }
 
+.anvil-role-input-error {
+  border: 2px solid red;
+  background-color: #ffeeee;
+}
+
 .anvil-role-mydefault-button button {
   background-color: #2196F3 !important;
   color: white !important;
