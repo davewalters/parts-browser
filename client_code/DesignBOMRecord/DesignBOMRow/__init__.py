@@ -23,7 +23,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_unit.text = ""
       self.text_box_part_id.role = ""
       self.item['is_valid_part'] = False
-      self.raise_event("x-validation-updated")
+      self.parent.raise_event("x-validation-updated")
       print("no part_id - invalid part")
       return
 
@@ -42,7 +42,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.item['is_valid_part'] = False
     print("part_id exists")
     print(self.item['is_valid_part'])
-    self.raise_event("x-validation-updated")
+    self.parent.raise_event("x-validation-updated")
 
 
   def text_box_part_id_change(self, **event_args):
