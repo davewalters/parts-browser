@@ -24,6 +24,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.text_box_part_id.role = ""
       self.item['is_valid_part'] = False
       self.raise_event("x-validation-updated")
+      print("no part_id - invalid part")
       return
 
     part = anvil.server.call('get_part', part_id)
@@ -39,7 +40,8 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_unit.text = ""
       self.text_box_part_id.role = "input-error"
       self.item['is_valid_part'] = False
-
+    print("part_id exists")
+    print(self.item['is_valid_part'])
     self.raise_event("x-validation-updated")
 
 
