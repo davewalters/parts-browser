@@ -32,18 +32,16 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_status.text = part.get('status', "")
       self.label_unit.text = part.get('unit', "")
       self.text_box_part_id.role = ""
-      self.text_box_part_id.tooltip = ""
       self.item['is_valid_part'] = True
     else:
       self.label_desc.text = "Part not found"
       self.label_status.text = ""
       self.label_unit.text = ""
       self.text_box_part_id.role = "input-error"
-      self.text_box_part_id.tooltip = "Part not found or inactive"
       self.item['is_valid_part'] = False
 
-    print(f"✅ is_valid_part set to {self.item['is_valid_part']}")
     self.raise_event("x-validation-updated")
+
 
   def text_box_part_id_change(self, **event_args):
     self.item['part_id'] = self.text_box_part_id.text.strip()
