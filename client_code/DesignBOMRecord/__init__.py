@@ -17,7 +17,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.load_existing_bom()
 
     # Set up a timer to poll for status
-    self.timer_status_poll.interval = 0.5
+    self.timer_status_poll.interval = 5.0
     self.timer_status_poll.enabled = False
     #self.spinner_rollup.visible = False
 
