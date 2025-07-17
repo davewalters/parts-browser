@@ -19,7 +19,7 @@ components:
       properties: {text: 'Cost NZD:'}
       type: Label
     - layout_properties: {col_xs: 5, row: SVIHOS, width_xs: 4}
-      name: assembly_cost_nz
+      name: label_assembly_cost_nz
       properties: {}
       type: Label
     layout_properties: {grid_position: 'CUTNLY,ETMNZE'}
@@ -27,6 +27,11 @@ components:
     properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
     type: GridPanel
   - components:
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 1, row: NNEHMW, width_xs: 1}
+      name: button_back
+      properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
     - event_bindings: {click: button_save_bom_click}
       layout_properties: {col_xs: 1, row: NNEHMW, width_xs: 3}
       name: button_save_bom

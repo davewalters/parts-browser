@@ -4,12 +4,17 @@ from ._anvil_designer import DesignBOMRecordTemplate
 from .DesignBOMRow import DesignBOMRow
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
-  def __init__(self, assembly_part_id, **properties):
-    self.init_components(**properties)
+  def __init__(self, assembly_part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
+    self.init_components(**kwargs)
     self.assembly_part_id = assembly_part_id
     self.label_assembly_id.text = self.assembly_part_id
     self.button_add_row.role = "new-button"
     self.button_save_bom.role = "save-button"
+
+    self.prev_filter_part = prev_filter_part
+    self.prev_filter_desc = prev_filter_desc
+    self.prev_filter_type = prev_filter_type
+    self.prev_filter_status = prev_filter_status
 
     self.repeating_panel_1.set_event_handler("x-validation-updated", self.validate_all_rows)
     self.repeating_panel_1.set_event_handler("x-remove-row", self.remove_row)
@@ -51,6 +56,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       )
 
       cost = result["cost_nz"]
+      self.label_assembly_cost_nz.text = cost
       skipped = result["skipped_parts"]
       msg = f"✅ Cost updated: ${cost:.2f}"
       if skipped:
@@ -74,6 +80,18 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
         })
     self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
+
+  def button_back_click(self, **event_args):
+    print(self.prev_filter_part)
+    print(self.prev_filter_desc)
+    print(self.prev_filter_status)
+    print(self.prev_filter_type)
+    
+    open_form("PartRecords",
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc,
+              filter_type=self.prev_filter_type,
+              filter_status=self.prev_filter_status)
 
 
 

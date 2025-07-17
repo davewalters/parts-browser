@@ -132,10 +132,10 @@ components:
         name: label_cost
         properties: {font_size: 14, text: 'Cost ($NZ):'}
         type: Label
-      - layout_properties: {col_xs: 6, row: MYBKSM, width_xs: 5}
-        name: text_box_cost
-        properties: {font_size: 14, placeholder: cost_$NZ}
-        type: TextBox
+      - layout_properties: {col_xs: 6, row: MYBKSM, width_xs: 3}
+        name: label_cost_nz
+        properties: {}
+        type: Label
       layout_properties: {col_xs: 0, row: LUSFGC, width_xs: 6}
       name: grid_panel_11
       properties: {background: 'theme:Gray 200'}
@@ -146,9 +146,9 @@ components:
         properties: {font_size: 14, text: 'Date Costed:'}
         type: Label
       - layout_properties: {col_xs: 5, row: UAPIKI, width_xs: 5}
-        name: text_box_cost_date
-        properties: {font_size: 14, placeholder: date costed}
-        type: TextBox
+        name: label_date_costed
+        properties: {}
+        type: Label
       layout_properties: {col_xs: 6, row: LUSFGC, width_xs: 6}
       name: grid_panel_12
       properties: {background: 'theme:Gray 200'}

@@ -89,9 +89,9 @@ components:
         properties: {font_size: 14, text: 'Date Costed:'}
         type: Label
       - layout_properties: {col_xs: 4, row: ZXEYHR, width_xs: 7}
-        name: text_box_cost_date
-        properties: {font_size: 14}
-        type: TextBox
+        name: label_date_costed
+        properties: {}
+        type: Label
       layout_properties: {col_xs: 7, row: GUCDDS, width_xs: 5}
       name: grid_panel_7
       properties: {background: 'theme:Gray 200'}

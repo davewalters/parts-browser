@@ -49,9 +49,8 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
-    self.text_box_cost_date.text = self.vendor_data["cost_date"]
+    self.label_date_costed.text = self.vendor_data["cost_date"]
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
-
     self.update_cost_nz()
 
   def get_exchange_rate(self, currency):
@@ -66,7 +65,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       self.vendor_data["cost_$NZ"] = cost_nz
       self.vendor_data["cost_date"] = datetime.today().date().isoformat()
       self.label_cost_nz.text = f"≈ ${cost_nz:.2f} NZD"
-      self.text_box_cost_date.text = self.vendor_data["cost_date"]
+      self.label_date_costed.text = self.vendor_data["cost_date"]
     except:
       self.label_cost_nz.text = "Invalid price"
 
@@ -79,42 +78,50 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
   def button_save_click(self, **event_args):
     self.vendor_data.update({
-      "vendor_id": self.drop_down_vendor_id.selected_value,
-      "vendor_part_no": self.text_box_vendor_part_no.text,
-      "vendor_currency": self.drop_down_vendor_currency.selected_value,
-      "vendor_price": float(self.text_box_vendor_price.text),
-      "cost_date": self.text_box_cost_date.text
+    "vendor_id": self.drop_down_vendor_id.selected_value,
+    "vendor_part_no": self.text_box_vendor_part_no.text,
+    "vendor_currency": self.drop_down_vendor_currency.selected_value,
+    "vendor_price": float(self.text_box_vendor_price.text),
+    "cost_date": self.label_date_costed.text
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
       self.part["default_vendor"] = self.vendor_data["vendor_id"]
-
+  
+    # Update vendor NZD cost
     rate = self.get_exchange_rate(self.vendor_data["vendor_currency"])
     self.vendor_data["cost_$NZ"] = round(self.vendor_data["vendor_price"] * rate, 2)
-
+  
     updated = False
     for idx, vendor in enumerate(self.part["vendor_part_numbers"]):
       if vendor["vendor_id"] == self.vendor_data["vendor_id"]:
         self.part["vendor_part_numbers"][idx] = self.vendor_data
         updated = True
         break
+  
+      if not updated:
+        self.part["vendor_part_numbers"].append(self.vendor_data)
+  
+      # ✅ Update part.latest_cost
+      self.part["latest_cost"] = {
+        "cost_nz": self.vendor_data["cost_$NZ"],
+        "cost_date": self.vendor_data["cost_date"]
+      }
+  
+      try:
+        validated = anvil.server.call("save_part_from_client", self.part)
+        Notification("✅ Vendor details and part cost saved.", style="success").show()
+      except Exception as e:
+        Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
+  
+      open_form("PartVendorRecords",
+                part=self.part,
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status
+              )
 
-    if not updated:
-      self.part["vendor_part_numbers"].append(self.vendor_data)
-
-    try:
-      validated = anvil.server.call("save_part_from_client", self.part)
-      Notification("✅ Vendor details saved.", style="success").show()
-    except Exception as e:
-      Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
-
-    open_form("PartVendorRecords",
-              part=self.part,
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc,
-              prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status
-             )
 
   def button_cancel_click(self, **event_args):
     open_form("PartVendorRecords",

@@ -47,21 +47,21 @@ class PartRecord(PartRecordTemplate):
       # Prefer rolled-up cost if present
       latest_cost = part.get("latest_cost", {})
       if latest_cost:
-        self.text_box_cost.text = str(latest_cost.get("cost_nz", ""))
-        self.text_box_cost_date.text = latest_cost.get("cost_date", "")
+        self.label_cost_nz.text = str(latest_cost.get("cost_nz", ""))
+        self.label_date_costed.text = latest_cost.get("cost_date", "")
       else:
         # Fallback: vendor cost
         vendor_id = part.get("default_vendor", "")
         active_vendor = next((v for v in part.get("vendor_part_numbers", []) if v.get("vendor_id") == vendor_id), {})
-        self.text_box_cost.text = str(active_vendor.get("cost_$NZ", ""))
-        self.text_box_cost_date.text = active_vendor.get("cost_date", "")
+        self.label_cost_nz.text = str(active_vendor.get("cost_$NZ", ""))
+        self.label_date_costed.text = active_vendor.get("cost_date", "")
 
     else:
       # New part defaults
       self.text_box_id.text = ""
       self.text_box_rev.text = "A"
-      self.text_box_cost.text = "0.00"
-      self.text_box_cost_date.text = datetime.today().date().isoformat()
+      self.label_cost_nz.text = "0.00"
+      self.label_date_costed.text = datetime.today().date().isoformat()
       self.drop_down_status.selected_value = "active"
       self.drop_down_type.selected_value = "part"
       self.drop_down_unit.selected_value = "each"
@@ -70,8 +70,8 @@ class PartRecord(PartRecordTemplate):
   def button_save_click(self, **event_args):
     try:
       latest_cost = {
-        "cost_nz": float(self.text_box_cost.text or 0),
-        "cost_date": self.text_box_cost_date.text.strip() or "1970-01-01"
+        "cost_nz": float(self.label_cost_nz.text or 0),
+        "cost_date": self.label_date_costed.text.strip() or "1970-01-01"
       }
 
       new_data = {
@@ -129,6 +129,11 @@ class PartRecord(PartRecordTemplate):
               filter_status=self.prev_filter_status)
 
   def button_BOM_click(self, **event_args):
-    open_form(DesignBOMRecord(assembly_part_id=self.text_box_id.text))
+    open_form("DesignBOMRecord",
+              assembly_part_id=self.text_box_id.text,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status)
 
 
