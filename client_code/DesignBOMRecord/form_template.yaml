@@ -1,5 +1,10 @@
 components:
 - components:
+  - event_bindings: {tick: timer_validate_rows_tick}
+    layout_properties: {grid_position: 'OJVFFW,OCNHLU'}
+    name: timer_validate_rows
+    properties: {interval: 0.2}
+    type: Timer
   - components:
     - layout_properties: {col_xs: 1, row: FHJTJZ, width_xs: 4}
       name: label_assembly_title

@@ -15,12 +15,14 @@ class DesignBOMRow(DesignBOMRowTemplate):
 
   def update_description(self):
     part_id = self.text_box_part_id.text.strip()
+    print(f"🔍 update_description for: {part_id}")
+
     if not part_id:
       self.label_desc.text = ""
       self.label_status.text = ""
       self.label_unit.text = ""
       self.text_box_part_id.role = ""
-      self.is_valid_part = False
+      self.item['is_valid_part'] = False
       self.raise_event("x-validation-updated")
       return
 
@@ -28,17 +30,19 @@ class DesignBOMRow(DesignBOMRowTemplate):
     if part:
       self.label_desc.text = part.get('description', "")
       self.label_status.text = part.get('status', "")
-      self.label_unit.text = part.get('unit_of_issue', "")
+      self.label_unit.text = part.get('unit', "")
       self.text_box_part_id.role = ""
-      self.is_valid_part = True
+      self.text_box_part_id.tooltip = ""
+      self.item['is_valid_part'] = True
     else:
       self.label_desc.text = "Part not found"
       self.label_status.text = ""
       self.label_unit.text = ""
       self.text_box_part_id.role = "input-error"
       self.text_box_part_id.tooltip = "Part not found or inactive"
-      self.is_valid_part = False
+      self.item['is_valid_part'] = False
 
+    print(f"✅ is_valid_part set to {self.item['is_valid_part']}")
     self.raise_event("x-validation-updated")
 
   def text_box_part_id_change(self, **event_args):
@@ -64,6 +68,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
 
   def button_remove_row_click(self, **event_args):
     self.raise_event("x-remove-row", row=self)
+
 
 
 
