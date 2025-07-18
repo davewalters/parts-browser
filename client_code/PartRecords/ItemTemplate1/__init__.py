@@ -16,12 +16,25 @@ class ItemTemplate1(ItemTemplate1Template):
     self.label_type.column = "type"
     self.label_vendor.text = part.get("default_vendor", "")
 
-    cost_info = part.get("latest_cost", {})
-    self.label_cost_nz.text = f"{cost_info.get('cost_nz', '')}" if cost_info else ""
-    self.label_cost_date.text = f"{cost_info.get('cost_date', '')}" if cost_info else ""
-
+    latest_cost = part.get("latest_cost", {})
+    cost_nz = latest_cost.get("cost_nz", None)
+    cost_date = latest_cost.get("cost_date", None)
+    self.label_cost_nz.text = self.format_currency(cost_nz)
+    self.label_cost_date.text = self.format_date(cost_date)
 
   def button_view_click(self, **event_args):
     self.parent.raise_event("x-show-detail", part=self.item)
+
+  def format_date(self, iso_string):
+    """Return only the date portion of an ISO 8601 string."""
+    return iso_string.split("T")[0] if "T" in iso_string else iso_string
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"
+
 
 

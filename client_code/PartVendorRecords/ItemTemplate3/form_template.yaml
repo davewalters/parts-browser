@@ -16,8 +16,8 @@ components:
   properties: {text: vendor_price}
   type: Label
 - layout_properties: {grid_position: 'IKIUQH,IRXKLV'}
-  name: label_cost_NZD
-  properties: {text: cost_NZD}
+  name: label_cost_nz
+  properties: {text: cost_nz}
   type: Label
 - layout_properties: {grid_position: 'IKIUQH,FSLPJB'}
   name: label_cost_date

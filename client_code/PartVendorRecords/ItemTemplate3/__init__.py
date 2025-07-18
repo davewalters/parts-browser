@@ -16,8 +16,12 @@ class ItemTemplate3(ItemTemplate3Template):
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "")
     self.label_vendor_price.text = str(self.item.get("vendor_price", ""))
-    self.label_cost_NZD.text = str(self.item.get("cost_$NZ", ""))
-    self.label_cost_date.text = self.item.get("cost_date", "")
+
+    latest_cost = self.item.get("latest_cost", {})
+    cost_nz = latest_cost.get("cost_nz", None)
+    cost_date = latest_cost.get("cost_date", None)
+    self.label_cost_nz.text = self.format_currency(cost_nz)
+    self.label_cost_date.text = self.format_date(cost_date)
 
     is_active = self.item.get("is_active", False)
     color = "#000" if is_active else "#aaa"  # grey out inactive
@@ -36,3 +40,13 @@ class ItemTemplate3(ItemTemplate3Template):
     if self.radio_button_active_vendor.selected:
       self.parent.raise_event("x-set-default-vendor", vendor_id=self.item.get("vendor_id"))
 
+  def format_date(self, iso_string):
+    """Return only the date portion of an ISO 8601 string."""
+    return iso_string.split("T")[0] if "T" in iso_string else iso_string
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"

@@ -75,8 +75,9 @@ class PartVendorRecord(PartVendorRecordTemplate):
       cost_nz = round(price * rate, 2)
       self.vendor_data["cost_$NZ"] = cost_nz
       self.vendor_data["cost_date"] = datetime.today().date().isoformat()
-      self.label_cost_nz.text = f"≈ ${cost_nz:.2f} NZD"
-      self.label_date_costed.text = self.vendor_data["cost_date"]
+
+      self.label_cost_nz.text = self.format_currency(cost_nz)
+      self.label_cost_date.text = self.format_date(datetime.today().date().isoformat())
     except:
       self.label_cost_nz.text = "Invalid price"
 
@@ -160,6 +161,17 @@ class PartVendorRecord(PartVendorRecordTemplate):
       Notification(f"❌ Failed to delete vendor: {e}", style="danger").show()
 
     self.button_cancel_click()
+
+  def format_date(self, iso_string):
+    """Return only the date portion of an ISO 8601 string."""
+    return iso_string.split("T")[0] if "T" in iso_string else iso_string
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"
 
 
 

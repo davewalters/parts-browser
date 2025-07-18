@@ -52,14 +52,10 @@ class PartRecord(PartRecordTemplate):
       self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
       latest_cost = self.part.get("latest_cost", {})
-      cost = latest_cost.get("cost_nz", None)
+      cost_nz = latest_cost.get("cost_nz", None)
       cost_date = latest_cost.get("cost_date", None)
-
-      if cost is not None:
-        self.label_cost_nz.text = f"{cost:.2f}"
-      if cost_date:
-        self.label_date_costed.text = cost_date.split("T")[0]  # Strip timestamp
-
+      self.label_cost_nz.text = self.format_currency(cost_nz)
+      self.label_date_costed.text = self.format_date(cost_date)
 
   def button_save_click(self, **event_args):
     try:
@@ -129,5 +125,16 @@ class PartRecord(PartRecordTemplate):
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status)
+
+  def format_date(self, iso_string):
+    """Return only the date portion of an ISO 8601 string."""
+    return iso_string.split("T")[0] if "T" in iso_string else iso_string
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"
 
 
