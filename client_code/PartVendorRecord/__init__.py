@@ -18,7 +18,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
-    
+
     try:
       vendor_list = anvil.server.call("get_all_vendors")
       self.drop_down_vendor_id.items = [
@@ -35,7 +35,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       "vendor_currency": "NZD",
       "vendor_price": 0.0,
       "cost_$NZ": 0.0,
-      "cost_date": datetime.today().date().isoformat()
+      "cost_date": datetime.today().isoformat()
     }
 
     is_active = self.vendor_data.get("vendor_id") == self.part.get("default_vendor", "")
@@ -49,7 +49,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
-    self.label_date_costed.text = self.vendor_data["cost_date"]
+
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
     self.update_cost_nz()
 
@@ -62,12 +62,16 @@ class PartVendorRecord(PartVendorRecordTemplate):
       price = float(self.text_box_vendor_price.text)
       rate = self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)
       cost_nz = round(price * rate, 2)
+      timestamp = datetime.now().isoformat()
+
       self.vendor_data["cost_$NZ"] = cost_nz
-      self.vendor_data["cost_date"] = datetime.today().date().isoformat()
+      self.vendor_data["cost_date"] = timestamp
+
       self.label_cost_nz.text = f"≈ ${cost_nz:.2f} NZD"
-      self.label_date_costed.text = self.vendor_data["cost_date"]
+      self.label_date_costed.text = timestamp[:10]  # strip time
     except:
       self.label_cost_nz.text = "Invalid price"
+      self.label_date_costed.text = ""
 
   def drop_down_currency_change(self, **event_args):
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
@@ -78,50 +82,45 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
   def button_save_click(self, **event_args):
     self.vendor_data.update({
-    "vendor_id": self.drop_down_vendor_id.selected_value,
-    "vendor_part_no": self.text_box_vendor_part_no.text,
-    "vendor_currency": self.drop_down_vendor_currency.selected_value,
-    "vendor_price": float(self.text_box_vendor_price.text),
-    "cost_date": self.label_date_costed.text
+      "vendor_id": self.drop_down_vendor_id.selected_value,
+      "vendor_part_no": self.text_box_vendor_part_no.text,
+      "vendor_currency": self.drop_down_vendor_currency.selected_value,
+      "vendor_price": float(self.text_box_vendor_price.text),
+      "cost_date": self.vendor_data["cost_date"]  # keep full timestamp
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
       self.part["default_vendor"] = self.vendor_data["vendor_id"]
-  
-    # Update vendor NZD cost
-    rate = self.get_exchange_rate(self.vendor_data["vendor_currency"])
-    self.vendor_data["cost_$NZ"] = round(self.vendor_data["vendor_price"] * rate, 2)
-  
+
+    # Insert or update vendor entry
     updated = False
     for idx, vendor in enumerate(self.part["vendor_part_numbers"]):
       if vendor["vendor_id"] == self.vendor_data["vendor_id"]:
         self.part["vendor_part_numbers"][idx] = self.vendor_data
         updated = True
         break
-  
-      if not updated:
-        self.part["vendor_part_numbers"].append(self.vendor_data)
-  
-      # ✅ Update part.latest_cost
-      self.part["latest_cost"] = {
-        "cost_nz": self.vendor_data["cost_$NZ"],
-        "cost_date": self.vendor_data["cost_date"]
-      }
-  
-      try:
-        validated = anvil.server.call("save_part_from_client", self.part)
-        Notification("✅ Vendor details and part cost saved.", style="success").show()
-      except Exception as e:
-        Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
-  
-      open_form("PartVendorRecords",
-                part=self.part,
-                prev_filter_part=self.prev_filter_part,
-                prev_filter_desc=self.prev_filter_desc,
-                prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status
-              )
 
+    if not updated:
+      self.part["vendor_part_numbers"].append(self.vendor_data)
+
+    # ✅ Update part.latest_cost
+    self.part["latest_cost"] = {
+      "cost_nz": self.vendor_data["cost_$NZ"],
+      "cost_date": self.vendor_data["cost_date"]
+    }
+
+    try:
+      validated = anvil.server.call("save_part_from_client", self.part)
+      Notification("✅ Vendor details and cost saved.", style="success").show()
+    except Exception as e:
+      Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
+
+    open_form("PartVendorRecords",
+              part=self.part,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status)
 
   def button_cancel_click(self, **event_args):
     open_form("PartVendorRecords",
@@ -129,8 +128,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status
-             )
+              prev_filter_status=self.prev_filter_status)
 
   def button_delete_vendor_click(self, **event_args):
     vendor_id = self.vendor_data.get("vendor_id", "")
@@ -158,8 +156,8 @@ class PartVendorRecord(PartVendorRecordTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status
-             )
+              prev_filter_status=self.prev_filter_status)
+
 
 
 

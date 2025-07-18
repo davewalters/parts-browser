@@ -5,19 +5,27 @@ from .. import PartVendorRecord
 from .. import PartRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
-  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type = "", prev_filter_status = "", **kwargs):
+  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
-    self.part = part
-    self.vendor_lookup = self.get_vendor_lookup()
+
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
-    self.label_id.text = part.get("_id", "")
+
+    # ✅ Always refresh from server to get up-to-date vendor info
+    try:
+      self.part = anvil.server.call("get_part", part["_id"])
+    except Exception as e:
+      Notification(f"⚠️ Could not reload part: {e}", style="warning").show()
+      self.part = part or {}
+
+    self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
 
+    self.vendor_lookup = self.get_vendor_lookup()
     default_vendor = self.part.get("default_vendor", "")
     self.vendor_data = []
 
@@ -48,8 +56,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status,
-             )
+              prev_filter_status=self.prev_filter_status)
 
   def button_new_vendor_click(self, **event_args):
     open_form("PartVendorRecord",
@@ -58,20 +65,17 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status,
-             )
+              prev_filter_status=self.prev_filter_status)
 
   def set_active_vendor(self, vendor_id, **event_args):
     self.part["default_vendor"] = vendor_id
-
     for item in self.vendor_data:
       item["is_active"] = item.get("vendor_id") == vendor_id
-
     self.repeating_panel_1.items = self.vendor_data
 
     try:
-      # Replace full part record with validated version
       validated = anvil.server.call("save_part_from_client", self.part)
+      self.part = validated
       Notification(f"✅ '{vendor_id}' set as default vendor.", style="success").show()
     except Exception as e:
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
@@ -83,7 +87,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status
-            )
+              prev_filter_status=self.prev_filter_status)
+
 
 

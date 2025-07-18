@@ -56,7 +56,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       )
 
       cost = result["cost_nz"]
-      self.label_assembly_cost_nz.text = cost
+      self.label_assembly_cost_nz.text = f"${cost:.2f}"
       skipped = result["skipped_parts"]
       msg = f"✅ Cost updated: ${cost:.2f}"
       if skipped:

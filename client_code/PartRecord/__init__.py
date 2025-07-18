@@ -34,38 +34,32 @@ class PartRecord(PartRecordTemplate):
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
     if not self.is_new:
-      self.text_box_id.text = part.get("_id", "")
-      self.text_box_rev.text = part.get("revision", "")
-      self.text_box_desc.text = part.get("description", "")
-      self.drop_down_status.selected_value = part.get("status", "active")
-      self.text_box_vendor.text = part.get("default_vendor", "")
-      self.drop_down_type.selected_value = part.get("type", "part")
-      self.drop_down_process.selected_value = part.get("process", "-")
-      self.text_box_material.text = part.get("material_spec", "")
-      self.drop_down_unit.selected_value = part.get("unit", "each")
+      # Refresh part from database
+      try:
+        self.part = anvil.server.call("get_part", part["_id"])
+      except Exception as e:
+        Notification(f"⚠️ Failed to refresh part: {e}", style="warning").show()
+        return
 
-      # Prefer rolled-up cost if present
-      latest_cost = part.get("latest_cost", {})
-      if latest_cost:
-        self.label_cost_nz.text = str(latest_cost.get("cost_nz", ""))
-        self.label_date_costed.text = latest_cost.get("cost_date", "")
-      else:
-        # Fallback: vendor cost
-        vendor_id = part.get("default_vendor", "")
-        active_vendor = next((v for v in part.get("vendor_part_numbers", []) if v.get("vendor_id") == vendor_id), {})
-        self.label_cost_nz.text = str(active_vendor.get("cost_$NZ", ""))
-        self.label_date_costed.text = active_vendor.get("cost_date", "")
+      self.text_box_id.text = self.part.get("_id", "")
+      self.text_box_rev.text = self.part.get("revision", "")
+      self.text_box_desc.text = self.part.get("description", "")
+      self.drop_down_status.selected_value = self.part.get("status", "active")
+      self.text_box_vendor.text = self.part.get("default_vendor", "")
+      self.drop_down_type.selected_value = self.part.get("type", "part")
+      self.drop_down_process.selected_value = self.part.get("process", "-")
+      self.text_box_material.text = self.part.get("material_spec", "")
+      self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
-    else:
-      # New part defaults
-      self.text_box_id.text = ""
-      self.text_box_rev.text = "A"
-      self.label_cost_nz.text = "0.00"
-      self.label_date_costed.text = datetime.today().date().isoformat()
-      self.drop_down_status.selected_value = "active"
-      self.drop_down_type.selected_value = "part"
-      self.drop_down_unit.selected_value = "each"
-      self.text_box_vendor.text = "DESIGNATWORK"
+      latest_cost = self.part.get("latest_cost", {})
+      cost = latest_cost.get("cost_nz", None)
+      cost_date = latest_cost.get("cost_date", None)
+
+      if cost is not None:
+        self.label_cost_nz.text = f"{cost:.2f}"
+      if cost_date:
+        self.label_date_costed.text = cost_date.split("T")[0]  # Strip timestamp
+
 
   def button_save_click(self, **event_args):
     try:
