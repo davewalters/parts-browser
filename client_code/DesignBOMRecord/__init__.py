@@ -21,6 +21,10 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
 
     self.load_existing_bom()
 
+    # Trigger validation once rows load
+    self.timer_validate_rows.interval = 0.1
+    self.timer_validate_rows.enabled = True
+
   def load_existing_bom(self):
     self.button_save_bom.enabled = False
     bom_doc = anvil.server.call('get_design_bom', self.assembly_part_id)
@@ -28,8 +32,11 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
     self.label_cost_status.text = ""
 
+  def timer_validate_rows_tick(self, **event_args):
+    self.timer_validate_rows.enabled = False
+    self.validate_all_rows()
+
   def validate_all_rows(self, **event_args):
-    print("🚨 validate_all_rows called")
     all_valid = all(row.item.get("is_valid_part", False) for row in self.repeating_panel_1.get_components())
     self.button_save_bom.enabled = all_valid
 
@@ -56,7 +63,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       )
 
       cost = result["cost_nz"]
-      self.label_assembly_cost_nz.text = f"${cost:.2f}"
+      self.label_assembly_cost_nz.text = cost
       skipped = result["skipped_parts"]
       msg = f"✅ Cost updated: ${cost:.2f}"
       if skipped:
@@ -82,16 +89,12 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
 
   def button_back_click(self, **event_args):
-    print(self.prev_filter_part)
-    print(self.prev_filter_desc)
-    print(self.prev_filter_status)
-    print(self.prev_filter_type)
-    
     open_form("PartRecords",
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status)
+
 
 
 

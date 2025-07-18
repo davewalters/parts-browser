@@ -98,9 +98,9 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_cancel_click}
-        layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 3}
+        layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 2}
         name: button_cancel
-        properties: {icon: 'fa:times-circle', text: Cancel}
+        properties: {icon: 'fa:arrow-left', text: ''}
         type: Button
       - event_bindings: {click: button_delete_vendor_click}
         layout_properties: {col_xs: 4, row: LWTNGS, width_xs: 4}

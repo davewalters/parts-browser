@@ -12,9 +12,14 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_cancel_click}
-        layout_properties: {col_xs: 2, row: ZDBMSI, width_xs: 2}
+        layout_properties: {col_xs: 3, row: ZDBMSI, width_xs: 1}
         name: button_cancel
         properties: {font_size: 14, icon: 'fa:arrow-left', text: ''}
+        type: Button
+      - event_bindings: {click: button_back_to_bom_click}
+        layout_properties: {col_xs: 5, row: ZDBMSI, width_xs: 1}
+        name: button_back_to_bom
+        properties: {icon: 'fa:list-ul', text: ''}
         type: Button
       - event_bindings: {click: button_new_vendor_click}
         layout_properties: {col_xs: 6, row: ZDBMSI, width_xs: 3}
