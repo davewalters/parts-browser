@@ -28,7 +28,7 @@ class ItemTemplate3(ItemTemplate3Template):
     
     for lbl in [self.label_vendor_id, self.label_vendor_part_no,
                 self.label_vendor_currency, self.label_vendor_price, 
-                self.label_cost_NZD, self.label_cost_date]:
+                self.label_cost_nz, self.label_cost_date]:
       lbl.foreground = color
 
     self.radio_button_active_vendor.selected = is_active
@@ -41,7 +41,9 @@ class ItemTemplate3(ItemTemplate3Template):
       self.parent.raise_event("x-set-default-vendor", vendor_id=self.item.get("vendor_id"))
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string."""
+    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
+    if not iso_string or not isinstance(iso_string, str):
+      return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):

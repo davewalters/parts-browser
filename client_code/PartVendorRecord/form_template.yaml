@@ -85,11 +85,11 @@ components:
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 0, row: ZXEYHR, width_xs: 4}
-        name: label_cost_date
+        name: label_date
         properties: {font_size: 14, text: 'Date Costed:'}
         type: Label
       - layout_properties: {col_xs: 4, row: ZXEYHR, width_xs: 7}
-        name: label_date_costed
+        name: label_cost_date
         properties: {}
         type: Label
       layout_properties: {col_xs: 7, row: GUCDDS, width_xs: 5}

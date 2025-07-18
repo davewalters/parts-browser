@@ -26,7 +26,9 @@ class ItemTemplate1(ItemTemplate1Template):
     self.parent.raise_event("x-show-detail", part=self.item)
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string."""
+    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
+    if not iso_string or not isinstance(iso_string, str):
+      return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):

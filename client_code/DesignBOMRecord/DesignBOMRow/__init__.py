@@ -32,8 +32,8 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_status.text = part.get('status', "")
       self.label_unit.text = part.get('unit', "")
       latest_cost = part.get("latest_cost", {})
-      cost = latest_cost.get("cost_nz", "")
-      self.label_cost_nz.text = f"${cost:.2f}" if isinstance(cost, (float, int)) else "–"
+      cost_nz = latest_cost.get("cost_nz", "")
+      self.label_cost_nz.text = self.format_currency(cost_nz)
       self.item['is_valid_part'] = True
     else:
       self.label_desc.text = "Part not found"
@@ -73,6 +73,17 @@ class DesignBOMRow(DesignBOMRowTemplate):
     part_id = self.item.get("part_id")
     if part_id:
       self.parent.raise_event("x-edit-vendor", part_id=part_id)
+
+  def format_date(self, iso_string):
+    """Return only the date portion of an ISO 8601 string."""
+    return iso_string.split("T")[0] if "T" in iso_string else iso_string
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"
 
 
 

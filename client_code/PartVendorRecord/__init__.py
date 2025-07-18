@@ -56,7 +56,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
-    self.label_date_costed.text = self.vendor_data["cost_date"]
+    self.label_cost_date.text = self.format_date(self.vendor_data["cost_date"])
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
 
     self.text_box_vendor_price.set_event_handler("change", self.text_box_vendor_price_change)
@@ -94,7 +94,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       "vendor_part_no": self.text_box_vendor_part_no.text,
       "vendor_currency": self.drop_down_vendor_currency.selected_value,
       "vendor_price": float(self.text_box_vendor_price.text),
-      "cost_date": self.label_date_costed.text
+      "cost_date": self.label_cost_date.text
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
@@ -163,7 +163,9 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.button_cancel_click()
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string."""
+    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
+    if not iso_string or not isinstance(iso_string, str):
+      return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):
