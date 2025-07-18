@@ -9,6 +9,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part, vendor_data=None,
                prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="",
                back_to_bom=False,
+               assembly_part_id=None,
                **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
@@ -30,6 +31,9 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.back_to_bom = back_to_bom
+    print(f"PartVendorRecord: back_to_bom: {back_to_bom}")
+    self.assembly_part_id = assembly_part_id or part.get("_id", "")
+
 
     try:
       vendor_list = anvil.server.call("get_all_vendors")
@@ -122,7 +126,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
   def button_cancel_click(self, **event_args):
     if self.back_to_bom:
       open_form("DesignBOMRecord",
-                assembly_part_id=self.part.get("_id", ""),
+                assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,

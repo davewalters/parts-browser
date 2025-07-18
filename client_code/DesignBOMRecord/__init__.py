@@ -2,6 +2,7 @@ from anvil import *
 import anvil.server
 from ._anvil_designer import DesignBOMRecordTemplate
 from .DesignBOMRow import DesignBOMRow
+from .. import PartVendorRecord
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
   def __init__(self, assembly_part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
@@ -18,12 +19,9 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
 
     self.repeating_panel_1.set_event_handler("x-validation-updated", self.validate_all_rows)
     self.repeating_panel_1.set_event_handler("x-remove-row", self.remove_row)
+    self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor_for_row)
 
     self.load_existing_bom()
-
-    # Trigger validation once rows load
-    self.timer_validate_rows.interval = 0.1
-    self.timer_validate_rows.enabled = True
 
   def load_existing_bom(self):
     self.button_save_bom.enabled = False
@@ -32,11 +30,8 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
     self.label_cost_status.text = ""
 
-  def timer_validate_rows_tick(self, **event_args):
-    self.timer_validate_rows.enabled = False
-    self.validate_all_rows()
-
   def validate_all_rows(self, **event_args):
+    print("🚨 validate_all_rows called")
     all_valid = all(row.item.get("is_valid_part", False) for row in self.repeating_panel_1.get_components())
     self.button_save_bom.enabled = all_valid
 
@@ -76,6 +71,20 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     finally:
       self.button_save_bom.enabled = True
 
+  def edit_vendor_for_row(self, part_id=None, **event_args):
+    print(f"edit_vendor_for_row called: {part_id}")
+    if part_id:
+      open_form("PartVendorRecords",
+                part=anvil.server.call("get_part", part_id),
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status,
+                back_to_bom=True,
+                assembly_part_id=self.assembly_part_id)
+
+
+
   def remove_row(self, **event_args):
     row_to_remove = event_args['row']
     updated_bom = []
@@ -94,6 +103,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status)
+
 
 
 

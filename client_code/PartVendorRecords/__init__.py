@@ -6,7 +6,14 @@ from .. import PartRecord
 from .. import DesignBOMRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
-  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", back_to_bom=False, **kwargs):
+  def __init__(self, part, 
+               prev_filter_part="",
+               prev_filter_desc="",
+               prev_filter_type="",
+               prev_filter_status="",
+               back_to_bom=False,
+               assembly_part_id=None,
+               **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
@@ -19,6 +26,8 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.prev_filter_status = prev_filter_status
     self.back_to_bom = back_to_bom
     self.button_back_to_bom.visible = self.back_to_bom
+    print(f"Part Vendor Records: back_to_bom: {back_to_bom}")
+    self.assembly_part_id = assembly_part_id
     
     self.label_id.text = part.get("_id", "")
     self.label_id.role = "label-border"
@@ -76,7 +85,8 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status)
+              prev_filter_status=self.prev_filter_status,
+              assembly_part_id = self.assembly_part_id)
 
   def set_active_vendor(self, vendor_id, **event_args):
     self.part["default_vendor"] = vendor_id
@@ -92,6 +102,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     except Exception as e:
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
+  
   def edit_vendor(self, vendor_data, **event_args):
     open_form("PartVendorRecord",
               part=self.part,
@@ -99,7 +110,9 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status)
+              prev_filter_status=self.prev_filter_status,
+              back_to_bom=self.back_to_bom,
+              assembly_part_id=self.assembly_part_id)
 
 
 

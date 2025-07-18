@@ -6,8 +6,8 @@ class DesignBOMRow(DesignBOMRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     self.button_remove_row.role = "delete-button"
-    self.button_edit_vendor.role = "mydefault-button"  # Add this to the template
-    self.label_cost_nz.visible = True  # Make sure this exists in the template
+    self.button_edit_vendor.role = "mydefault-button"
+    self.label_cost_nz.visible = True
 
   def form_show(self, **event_args):
     self.text_box_part_id.text = self.item.get('part_id', '')
@@ -70,11 +70,10 @@ class DesignBOMRow(DesignBOMRowTemplate):
     self.raise_event("x-remove-row", row=self)
 
   def button_edit_vendor_click(self, **event_args):
-    if self.item.get("part_id"):
-      open_form("PartVendorRecords",
-                part=anvil.server.call("get_part", self.item["part_id"]),
-                prev_filter_part=self.item["part_id"],
-                back_to_bom=True)
+    part_id = self.item.get("part_id")
+    if part_id:
+      self.parent.raise_event("x-edit-vendor", part_id=part_id)
+
 
 
 
