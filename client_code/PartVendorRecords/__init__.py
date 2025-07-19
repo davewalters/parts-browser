@@ -18,6 +18,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.button_cancel.role = "mydefault-button"
     self.button_back_to_bom.role = "mydefault-button"
 
+    print(f"part_id = {part_id}")
     self.part = anvil.server.call("get_part", part_id)
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
