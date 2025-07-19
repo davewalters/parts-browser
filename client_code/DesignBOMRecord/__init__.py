@@ -42,7 +42,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
 
 
   def validate_all_rows(self, **event_args):
-    print("🚨 validate_all_rows called")
+    #print("🚨 validate_all_rows called")
     all_valid = all(row.item.get("is_valid_part", False) for row in self.repeating_panel_1.get_components())
     self.button_save_bom.enabled = all_valid
 
@@ -83,7 +83,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       self.button_save_bom.enabled = True
 
   def edit_vendor_for_row(self, part_id=None, **event_args):
-    print(f"edit_vendor_for_row called: {part_id}")
+    #print(f"edit_vendor_for_row called: {part_id}")
     if part_id:
       open_form("PartVendorRecords",
                 part_id=part_id,
