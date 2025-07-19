@@ -2,7 +2,6 @@ from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
 from .. import PartVendorRecord
-from .. import PartRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part_id,
@@ -67,7 +66,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status)
     else:
-      get_open_form().content = PartRecord(
+      open_form("PartRecord",
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
@@ -78,7 +77,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.button_cancel_click()
 
   def button_new_vendor_click(self, **event_args):
-    get_open_form().content = PartVendorRecord(
+    open_form("PartVendorRecord",
               part_id=self.part.get("_id", ""),
               vendor_data=None,
               prev_filter_part=self.prev_filter_part,
@@ -103,7 +102,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
   def edit_vendor(self, vendor_data, **event_args):
-    get_open_form().content = PartVendorRecord(
+    open_form("PartVendorRecord",
               part_id=self.part.get("_id", ""),
               vendor_data=vendor_data,
               prev_filter_part=self.prev_filter_part,

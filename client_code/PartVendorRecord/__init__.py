@@ -2,7 +2,6 @@ from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordTemplate
 from datetime import datetime
-from .. import PartVendorRecords
 
 class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part_id,
@@ -131,7 +130,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status)
     else:
-      get_open_form().content = PartVendorRecords(
+      open_form("PartVendorRecords",
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,

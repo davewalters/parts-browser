@@ -3,9 +3,7 @@ import anvil.server
 from ._anvil_designer import PartRecordTemplate
 from datetime import datetime
 from .. import config
-from .. import PartVendorRecords
-from .. DesignBOMRecord import DesignBOMRecord
-from ..PartRecords import PartRecords
+from .. import PartRecords
 
 class PartRecord(PartRecordTemplate):
   def __init__(self, part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
@@ -86,11 +84,15 @@ class PartRecord(PartRecordTemplate):
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    get_open_form().content = PartRecords(
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc,
-              filter_type=self.prev_filter_type,
-              filter_status=self.prev_filter_status)
+    get_open_form().content_panel.clear()
+    get_open_form().content_panel.add_component(
+      PartRecords(
+        filter_part=self.prev_filter_part,
+        filter_desc=self.prev_filter_desc,
+        filter_type=self.prev_filter_type,
+        filter_status=self.prev_filter_status
+      )
+    )
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -106,7 +108,7 @@ class PartRecord(PartRecordTemplate):
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    get_open_form().content("PartVendorRecords",
+    open_form("PartVendorRecords",
               part_id=self.part.get("_id"),
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
@@ -114,7 +116,7 @@ class PartRecord(PartRecordTemplate):
               prev_filter_status=self.prev_filter_status)
 
   def button_BOM_click(self, **event_args):
-    get_open_form().content = DesignBOMRecord(
+    open_form("DesignBOMRecord", 
               assembly_part_id=self.part.get("_id"),
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
