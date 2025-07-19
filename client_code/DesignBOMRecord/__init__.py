@@ -58,7 +58,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
       )
 
       cost = result["cost_nz"]
-      self.label_assembly_cost_nz.text = cost
+      self.label_assembly_cost_nz.text = self.format_currency(cost)
       skipped = result["skipped_parts"]
       msg = f"✅ Cost updated: ${cost:.2f}"
       if skipped:
@@ -101,6 +101,13 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status)
+
+  def format_currency(self, value):
+    """Format a float as NZ currency, or return '–' if invalid."""
+    try:
+      return f"${float(value):.2f}"
+    except (ValueError, TypeError):
+      return "–"
 
 
 

@@ -55,7 +55,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
-    self.label_date_costed.text = self.format_date(self.vendor_data["cost_date"])
+    self.label_cost_date.text = self.format_date(self.vendor_data["cost_date"])
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
 
     self.text_box_vendor_price.set_event_handler("change", self.text_box_vendor_price_change)
@@ -76,7 +76,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       self.vendor_data["cost_date"] = datetime.today().isoformat()
 
       self.label_cost_nz.text = self.format_currency(cost_nz)
-      self.label_date_costed.text = self.format_date(self.vendor_data["cost_date"])
+      self.label_cost_date.text = self.format_date(self.vendor_data["cost_date"])
     except:
       self.label_cost_nz.text = "Invalid price"
 
@@ -93,7 +93,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       "vendor_part_no": self.text_box_vendor_part_no.text,
       "vendor_currency": self.drop_down_vendor_currency.selected_value,
       "vendor_price": float(self.text_box_vendor_price.text),
-      "cost_date": self.label_date_costed.text
+      "cost_date": self.label_cost_date.text
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
@@ -171,6 +171,9 @@ class PartVendorRecord(PartVendorRecordTemplate):
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
+
+
 
 
 

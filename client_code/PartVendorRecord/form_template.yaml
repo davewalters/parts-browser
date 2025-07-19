@@ -97,9 +97,9 @@ components:
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - event_bindings: {click: button_cancel_click}
+      - event_bindings: {click: button_back_click}
         layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 2}
-        name: button_cancel
+        name: button_back
         properties: {icon: 'fa:arrow-left', text: ''}
         type: Button
       - event_bindings: {click: button_delete_vendor_click}
