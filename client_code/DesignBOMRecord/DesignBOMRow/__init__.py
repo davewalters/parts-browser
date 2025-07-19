@@ -26,7 +26,18 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.parent.raise_event("x-validation-updated")
       return
 
-    part = anvil.server.call('get_part', part_id)
+    # Try to get cached part from parent
+    parent = self.parent
+    part_cache = getattr(parent, "part_cache", {})
+    if part_id in part_cache:
+      part = part_cache[part_id]
+    else:
+      part = anvil.server.call("get_part", part_id)
+      if isinstance(part_cache, dict):  # Safety
+        part_cache[part_id] = part
+      if hasattr(parent, "part_cache"):
+        parent.part_cache = part_cache
+  
     if part:
       self.label_desc.text = part.get('description', "")
       self.label_status.text = part.get('status', "")
@@ -35,6 +46,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       cost_nz = latest_cost.get("cost_nz", "")
       self.label_cost_nz.text = self.format_currency(cost_nz)
       self.item['is_valid_part'] = True
+      self.text_box_part_id.role = ""
     else:
       self.label_desc.text = "Part not found"
       self.label_status.text = ""
@@ -42,8 +54,9 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.label_cost_nz.text = "–"
       self.text_box_part_id.role = "input-error"
       self.item['is_valid_part'] = False
-
+  
     self.parent.raise_event("x-validation-updated")
+
 
   def text_box_part_id_change(self, **event_args):
     self.item['part_id'] = self.text_box_part_id.text.strip()
@@ -67,7 +80,7 @@ class DesignBOMRow(DesignBOMRowTemplate):
       self.item['qty'] = 0
 
   def button_remove_row_click(self, **event_args):
-    self.raise_event("x-remove-row", row=self)
+    self.parent.raise_event("x-remove-row", row=self)
 
   def button_edit_vendor_click(self, **event_args):
     part_id = self.item.get("part_id")

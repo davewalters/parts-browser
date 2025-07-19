@@ -28,9 +28,9 @@ components:
     type: GridPanel
   - components:
     - event_bindings: {click: button_back_click}
-      layout_properties: {col_xs: 3, row: NNEHMW, width_xs: 1}
+      layout_properties: {col_xs: 2, row: NNEHMW, width_xs: 2}
       name: button_back
-      properties: {icon: 'fa:arrow-left', text: ''}
+      properties: {font_size: 20, icon: 'fa:arrow-left', text: ''}
       type: Button
     - event_bindings: {click: button_add_row_click}
       layout_properties: {col_xs: 4, row: NNEHMW, width_xs: 2}

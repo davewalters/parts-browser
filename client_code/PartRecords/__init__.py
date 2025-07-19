@@ -13,6 +13,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_status = filter_status
     self.button_new_part.role = "new-button"
     self.button_home.role = "mydefault-button"
+    self.repeating_panel_1.role = "scrolling-panel"
 
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
