@@ -49,12 +49,10 @@ class PartRecords(PartRecordsTemplate):
       self.repeating_panel_1.items = []
 
   def show_detail(self, part, **event_args):
-    # Always refresh from the server by ID to get the latest cost
     try:
       part_id = part["_id"]
-      fresh_part = anvil.server.call("get_part", part_id)
       open_form("PartRecord",
-                part=fresh_part,
+                part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
@@ -64,11 +62,12 @@ class PartRecords(PartRecordsTemplate):
 
   def button_new_part_click(self, **event_args):
     open_form("PartRecord",
-              part=None,
+              part_id=None,
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status)
+
 
 
 

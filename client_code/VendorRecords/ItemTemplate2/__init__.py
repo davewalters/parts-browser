@@ -3,13 +3,12 @@
 from ._anvil_designer import ItemTemplate2Template
 from anvil import *
 import anvil.server
-from .. import VendorRecords
 
 class ItemTemplate2(ItemTemplate2Template):
   def __init__(self, **properties):
     self.init_components(**properties)
 
-    vendor = self.item
+    vendor = self.item or {}
     self.label_vendor_id.text = vendor.get("_id", "")
     self.label_company_name.text = vendor.get("company_name", "")
 
@@ -20,3 +19,4 @@ class ItemTemplate2(ItemTemplate2Template):
 
   def button_view_click(self, **event_args):
     self.parent.raise_event("x-show-detail", vendor=self.item)
+

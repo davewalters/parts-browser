@@ -74,16 +74,13 @@ class DesignBOMRow(DesignBOMRowTemplate):
     if part_id:
       self.parent.raise_event("x-edit-vendor", part_id=part_id)
 
-  def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string."""
-    return iso_string.split("T")[0] if "T" in iso_string else iso_string
-
   def format_currency(self, value):
     """Format a float as NZ currency, or return '–' if invalid."""
     try:
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
 
 
 

@@ -6,7 +6,7 @@ from .. import PartRecord
 from .. import DesignBOMRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
-  def __init__(self, part, 
+  def __init__(self, part_id,
                prev_filter_part="",
                prev_filter_desc="",
                prev_filter_type="",
@@ -14,22 +14,22 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                back_to_bom=False,
                assembly_part_id=None,
                **kwargs):
+
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
     self.button_back_to_bom.role = "mydefault-button"
 
-    self.part = part
+    self.part = anvil.server.call("get_part", part_id)
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.back_to_bom = back_to_bom
+    self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
     self.button_back_to_bom.visible = self.back_to_bom
-    print(f"Part Vendor Records: back_to_bom: {back_to_bom}")
-    self.assembly_part_id = assembly_part_id
-    
-    self.label_id.text = part.get("_id", "")
+
+    self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
     self.vendor_lookup = self.get_vendor_lookup()
     self.load_vendor_data()
@@ -69,7 +69,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                 prev_filter_status=self.prev_filter_status)
     else:
       open_form("PartRecord",
-                part=self.part,
+                part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
@@ -80,13 +80,14 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
   def button_new_vendor_click(self, **event_args):
     open_form("PartVendorRecord",
-              part=self.part,
+              part_id=self.part.get("_id", ""),
               vendor_data=None,
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status,
-              assembly_part_id = self.assembly_part_id)
+              back_to_bom=self.back_to_bom,
+              assembly_part_id=self.assembly_part_id)
 
   def set_active_vendor(self, vendor_id, **event_args):
     self.part["default_vendor"] = vendor_id
@@ -102,10 +103,9 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     except Exception as e:
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
-  
   def edit_vendor(self, vendor_data, **event_args):
     open_form("PartVendorRecord",
-              part=self.part,
+              part_id=self.part.get("_id", ""),
               vendor_data=vendor_data,
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
@@ -113,6 +113,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_status=self.prev_filter_status,
               back_to_bom=self.back_to_bom,
               assembly_part_id=self.assembly_part_id)
+
 
 
 

@@ -5,8 +5,9 @@ from ._anvil_designer import ItemTemplate1Template
 class ItemTemplate1(ItemTemplate1Template):
   def __init__(self, **properties):
     self.init_components(**properties)
+    self.set_display_fields()
 
-    # Extract fields from item
+  def set_display_fields(self):
     part = self.item
     self.label_id.text = part.get("_id", "")
     self.label_rev.text = part.get("revision", "")
@@ -17,16 +18,14 @@ class ItemTemplate1(ItemTemplate1Template):
     self.label_vendor.text = part.get("default_vendor", "")
 
     latest_cost = part.get("latest_cost", {})
-    cost_nz = latest_cost.get("cost_nz", None)
-    cost_date = latest_cost.get("cost_date", None)
-    self.label_cost_nz.text = self.format_currency(cost_nz)
-    self.label_cost_date.text = self.format_date(cost_date)
+    self.label_cost_nz.text = self.format_currency(latest_cost.get("cost_nz"))
+    self.label_cost_date.text = self.format_date(latest_cost.get("cost_date"))
 
   def button_view_click(self, **event_args):
     self.parent.raise_event("x-show-detail", part=self.item)
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
+    """Return only the date portion of an ISO 8601 string, or fallback."""
     if not iso_string or not isinstance(iso_string, str):
       return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
@@ -37,6 +36,7 @@ class ItemTemplate1(ItemTemplate1Template):
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
 
 
 

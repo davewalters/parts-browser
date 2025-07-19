@@ -1,5 +1,3 @@
-# PartRecord Form - detail view and editing of a part
-
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartRecordTemplate
@@ -9,7 +7,7 @@ from .. import PartVendorRecords
 from .. DesignBOMRecord import DesignBOMRecord
 
 class PartRecord(PartRecordTemplate):
-  def __init__(self, part, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
+  def __init__(self, part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
@@ -17,50 +15,46 @@ class PartRecord(PartRecordTemplate):
     self.button_delete.role = "delete-button"
     self.button_BOM.role = "new-button"
 
-    self.part = part or {}
-    self.is_new = part is None
-    self.button_delete.visible = not self.is_new
-    self.button_BOM.visible = self.part.get("type") == "assembly"
-
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
 
-    # Dropdown options
+    try:
+      self.part = anvil.server.call("get_part", part_id)
+    except Exception as e:
+      Notification(f"⚠️ Failed to load part: {e}", style="warning").show()
+      self.part = {}
+      return
+
+    self.button_delete.visible = bool(self.part)
+    self.button_BOM.visible = self.part.get("type") == "assembly"
+
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
     self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
-    if not self.is_new:
-      # Refresh part from database
-      try:
-        self.part = anvil.server.call("get_part", part["_id"])
-      except Exception as e:
-        Notification(f"⚠️ Failed to refresh part: {e}", style="warning").show()
-        return
+    self.text_box_id.text = self.part.get("_id", "")
+    self.text_box_rev.text = self.part.get("revision", "")
+    self.text_box_desc.text = self.part.get("description", "")
+    self.drop_down_status.selected_value = self.part.get("status", "active")
+    self.text_box_vendor.text = self.part.get("default_vendor", "")
+    self.drop_down_type.selected_value = self.part.get("type", "part")
+    self.drop_down_process.selected_value = self.part.get("process", "-")
+    self.text_box_material.text = self.part.get("material_spec", "")
+    self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
-      self.text_box_id.text = self.part.get("_id", "")
-      self.text_box_rev.text = self.part.get("revision", "")
-      self.text_box_desc.text = self.part.get("description", "")
-      self.drop_down_status.selected_value = self.part.get("status", "active")
-      self.text_box_vendor.text = self.part.get("default_vendor", "")
-      self.drop_down_type.selected_value = self.part.get("type", "part")
-      self.drop_down_process.selected_value = self.part.get("process", "-")
-      self.text_box_material.text = self.part.get("material_spec", "")
-      self.drop_down_unit.selected_value = self.part.get("unit", "each")
-
-      latest_cost = self.part.get("latest_cost", {})
-      cost_nz = latest_cost.get("cost_nz", None)
-      cost_date = latest_cost.get("cost_date", None)
-      self.label_cost_nz.text = self.format_currency(cost_nz)
-      self.label_date_costed.text = self.format_date(cost_date)
+    latest_cost = self.part.get("latest_cost", {})
+    cost_nz = latest_cost.get("cost_nz", None)
+    cost_date = latest_cost.get("cost_date", None)
+    self.label_cost_nz.text = self.format_currency(cost_nz)
+    self.label_date_costed.text = self.format_date(cost_date)
 
   def button_save_click(self, **event_args):
     try:
       latest_cost = {
-        "cost_nz": float(self.label_cost_nz.text or 0),
+        "cost_nz": float(self.label_cost_nz.text.replace("$", "") or 0),
         "cost_date": self.label_date_costed.text.strip() or "1970-01-01"
       }
 
@@ -82,7 +76,7 @@ class PartRecord(PartRecordTemplate):
       }
 
       validated = anvil.server.call("save_part_from_client", new_data)
-      self.part = validated  # refresh the in-memory copy
+      self.part = validated
 
       Notification("✅ Part saved.", style="success").show()
       open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
@@ -111,32 +105,31 @@ class PartRecord(PartRecordTemplate):
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    open_form("PartVendorRecords", 
-              part=self.part,
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc,
-              filter_type=self.prev_filter_type,
-              filter_status=self.prev_filter_status)
+    open_form("PartVendorRecords",
+              part_id=self.part.get("_id"),
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status)
 
   def button_BOM_click(self, **event_args):
     open_form("DesignBOMRecord",
-              assembly_part_id=self.text_box_id.text,
+              assembly_part_id=self.part.get("_id"),
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status)
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
     if not iso_string or not isinstance(iso_string, str):
       return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):
-    """Format a float as NZ currency, or return '–' if invalid."""
     try:
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
 
 

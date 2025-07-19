@@ -40,9 +40,15 @@ class VendorRecords(VendorRecordsTemplate):
       self.repeating_panel_1.items = []
 
   def show_detail(self, vendor, **event_args):
+    try:
+      fresh_vendor = anvil.server.call("get_vendor", vendor["_id"])
+    except Exception as e:
+      Notification(f"⚠️ Could not refresh vendor: {e}", style="warning").show()
+      fresh_vendor = vendor
+
     open_form(
       "VendorRecord",
-      vendor=vendor,
+      vendor=fresh_vendor,
       prev_filter_vendor_id=self.text_box_vendor_id.text,
       prev_filter_company_name=self.text_box_company_name.text
     )
@@ -54,6 +60,7 @@ class VendorRecords(VendorRecordsTemplate):
       prev_filter_vendor_id=self.text_box_vendor_id.text,
       prev_filter_company_name=self.text_box_company_name.text
     )
+
 
 
 

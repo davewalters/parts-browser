@@ -1,8 +1,8 @@
 from anvil import *
 import anvil.server
+
 from ._anvil_designer import DesignBOMRecordTemplate
 from .DesignBOMRow import DesignBOMRow
-from .. import PartVendorRecord
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
   def __init__(self, assembly_part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
@@ -75,15 +75,13 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     print(f"edit_vendor_for_row called: {part_id}")
     if part_id:
       open_form("PartVendorRecords",
-                part=anvil.server.call("get_part", part_id),
+                part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
                 back_to_bom=True,
                 assembly_part_id=self.assembly_part_id)
-
-
 
   def remove_row(self, **event_args):
     row_to_remove = event_args['row']
@@ -103,6 +101,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status)
+
 
 
 

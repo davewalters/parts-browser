@@ -6,17 +6,18 @@ from .. import PartVendorRecords
 from .. import DesignBOMRecord
 
 class PartVendorRecord(PartVendorRecordTemplate):
-  def __init__(self, part, vendor_data=None,
+  def __init__(self, part_id,
+               vendor_data=None,
                prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="",
                back_to_bom=False,
                assembly_part_id=None,
                **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
-    self.button_cancel.role = "mydefault-button"
+    self.button_back.role = "mydefault-button"
     self.button_delete_vendor.role = "delete-button"
 
-    self.part = part
+    self.part = anvil.server.call("get_part", part_id)
     self.vendor_data = vendor_data or {
       "vendor_id": "",
       "vendor_part_no": "",
@@ -31,9 +32,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.back_to_bom = back_to_bom
-    print(f"PartVendorRecord: back_to_bom: {back_to_bom}")
-    self.assembly_part_id = assembly_part_id or part.get("_id", "")
-
+    self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
 
     try:
       vendor_list = anvil.server.call("get_all_vendors")
@@ -50,13 +49,13 @@ class PartVendorRecord(PartVendorRecordTemplate):
     is_active = self.vendor_data.get("vendor_id") == self.part.get("default_vendor", "")
     self.button_delete_vendor.visible = not is_active
 
-    self.label_id.text = part.get("_id", "")
+    self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
     self.drop_down_vendor_id.selected_value = self.vendor_data["vendor_id"]
     self.text_box_vendor_part_no.text = self.vendor_data["vendor_part_no"]
     self.drop_down_vendor_currency.selected_value = self.vendor_data["vendor_currency"]
     self.text_box_vendor_price.text = str(self.vendor_data["vendor_price"])
-    self.label_cost_date.text = self.format_date(self.vendor_data["cost_date"])
+    self.label_date_costed.text = self.format_date(self.vendor_data["cost_date"])
     self.label_exchange_rate.text = f"Rate: {self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)}"
 
     self.text_box_vendor_price.set_event_handler("change", self.text_box_vendor_price_change)
@@ -74,10 +73,10 @@ class PartVendorRecord(PartVendorRecordTemplate):
       rate = self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)
       cost_nz = round(price * rate, 2)
       self.vendor_data["cost_$NZ"] = cost_nz
-      self.vendor_data["cost_date"] = datetime.today().date().isoformat()
+      self.vendor_data["cost_date"] = datetime.today().isoformat()
 
       self.label_cost_nz.text = self.format_currency(cost_nz)
-      self.label_cost_date.text = self.format_date(datetime.today().date().isoformat())
+      self.label_date_costed.text = self.format_date(self.vendor_data["cost_date"])
     except:
       self.label_cost_nz.text = "Invalid price"
 
@@ -94,7 +93,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       "vendor_part_no": self.text_box_vendor_part_no.text,
       "vendor_currency": self.drop_down_vendor_currency.selected_value,
       "vendor_price": float(self.text_box_vendor_price.text),
-      "cost_date": self.label_cost_date.text
+      "cost_date": self.label_date_costed.text
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
@@ -124,7 +123,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     except Exception as e:
       Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
 
-  def button_cancel_click(self, **event_args):
+  def button_back_click(self, **event_args):
     if self.back_to_bom:
       open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,
@@ -134,7 +133,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
                 prev_filter_status=self.prev_filter_status)
     else:
       open_form("PartVendorRecords",
-                part=self.part,
+                part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
@@ -160,20 +159,19 @@ class PartVendorRecord(PartVendorRecordTemplate):
     except Exception as e:
       Notification(f"❌ Failed to delete vendor: {e}", style="danger").show()
 
-    self.button_cancel_click()
+    self.button_back_click()
 
   def format_date(self, iso_string):
-    """Return only the date portion of an ISO 8601 string, or epoch if blank."""
     if not iso_string or not isinstance(iso_string, str):
       return "1970-01-01"
     return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):
-    """Format a float as NZ currency, or return '–' if invalid."""
     try:
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
 
 
 

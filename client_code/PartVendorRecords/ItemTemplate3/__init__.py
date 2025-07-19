@@ -1,10 +1,6 @@
-# V.ItemTemplate3 - handles individual vendor rows
-
 from anvil import *
 import anvil.server
 from ._anvil_designer import ItemTemplate3Template
-from .. import PartVendorRecords
-from .. import PartVendorRecord
 
 class ItemTemplate3(ItemTemplate3Template):
   def __init__(self, **properties):
@@ -12,26 +8,31 @@ class ItemTemplate3(ItemTemplate3Template):
     self.radio_button_active_vendor.group_name = "vendor_active_group"
     self.radio_button_active_vendor.set_event_handler("change", self.radio_button_active_vendor_change)
 
-    self.label_vendor_id.text = self.item.get("vendor_company_name", "")
-    self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
-    self.label_vendor_currency.text = self.item.get("vendor_currency", "")
-    self.label_vendor_price.text = str(self.item.get("vendor_price", ""))
+    self.set_display_fields()
 
-    latest_cost = self.item.get("latest_cost", {})
-    cost_nz = latest_cost.get("cost_nz", None)
-    cost_date = latest_cost.get("cost_date", None)
+  def set_display_fields(self):
+    item = self.item
+    self.label_vendor_id.text = item.get("vendor_company_name", "")
+    self.label_vendor_part_no.text = item.get("vendor_part_no", "")
+    self.label_vendor_currency.text = item.get("vendor_currency", "")
+    self.label_vendor_price.text = self.format_currency(item.get("vendor_price"))
+
+    # Fallback to cost fields from vendor itself if no latest_cost dict
+    cost_nz = item.get("cost_$NZ") or item.get("latest_cost", {}).get("cost_nz", None)
+    cost_date = item.get("cost_date") or item.get("latest_cost", {}).get("cost_date", None)
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_cost_date.text = self.format_date(cost_date)
 
-    is_active = self.item.get("is_active", False)
-    color = "#000" if is_active else "#aaa"  # grey out inactive
-    
+    is_active = item.get("is_active", False)
+    self.radio_button_active_vendor.selected = is_active
+    self.set_label_colors(is_active)
+
+  def set_label_colors(self, is_active):
+    color = "#000" if is_active else "#aaa"
     for lbl in [self.label_vendor_id, self.label_vendor_part_no,
                 self.label_vendor_currency, self.label_vendor_price, 
                 self.label_cost_nz, self.label_cost_date]:
       lbl.foreground = color
-
-    self.radio_button_active_vendor.selected = is_active
 
   def button_view_click(self, **event_args):
     self.parent.raise_event("x-edit-vendor", vendor_data=self.item)
@@ -52,3 +53,4 @@ class ItemTemplate3(ItemTemplate3Template):
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
