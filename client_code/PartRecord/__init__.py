@@ -25,10 +25,7 @@ class PartRecord(PartRecordTemplate):
       Notification(f"⚠️ Failed to load part: {e}", style="warning").show()
       self.part = {}
       return
-
-    self.button_delete.visible = bool(self.part)
-    self.button_BOM.visible = self.part.get("type") == "assembly"
-
+    
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
     self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
@@ -49,6 +46,9 @@ class PartRecord(PartRecordTemplate):
     cost_date = latest_cost.get("cost_date", None)
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_date_costed.text = self.format_date(cost_date)
+
+    self.button_delete.visible = bool(self.part)
+    self.button_BOM.visible = self.drop_down_type.selected_value == "assembly"
 
   def button_save_click(self, **event_args):
     try:
