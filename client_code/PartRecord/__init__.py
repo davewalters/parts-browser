@@ -3,7 +3,7 @@ import anvil.server
 from ._anvil_designer import PartRecordTemplate
 from datetime import datetime
 from .. import config
-from .. import PartRecords
+from .. PartRecords import PartRecords
 
 class PartRecord(PartRecordTemplate):
   def __init__(self, part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):

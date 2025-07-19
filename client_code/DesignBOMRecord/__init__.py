@@ -3,7 +3,6 @@ import anvil.server
 
 from ._anvil_designer import DesignBOMRecordTemplate
 from .DesignBOMRow import DesignBOMRow
-from ..PartVendorRecords import PartVendorRecords
 from ..PartRecords import PartRecords
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
@@ -86,7 +85,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
   def edit_vendor_for_row(self, part_id=None, **event_args):
     print(f"edit_vendor_for_row called: {part_id}")
     if part_id:
-      get_open_form().content = PartVendorRecords(
+      open_form("PartVendorRecords",
                 part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
@@ -108,11 +107,15 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
 
   def button_back_click(self, **event_args):
-    get_open_form().content = PartRecords(
-              filter_part=self.prev_filter_part,
-              filter_desc=self.prev_filter_desc,
-              filter_type=self.prev_filter_type,
-              filter_status=self.prev_filter_status)
+    get_open_form().content_panel.clear()
+    get_open_form().content_panel.add_component(
+      PartRecords(
+        filter_part=self.prev_filter_part,
+        filter_desc=self.prev_filter_desc,
+        filter_type=self.prev_filter_type,
+        filter_status=self.prev_filter_status
+      )
+    )
 
   def format_currency(self, value):
     """Format a float as NZ currency, or return '–' if invalid."""

@@ -46,14 +46,14 @@ class VendorRecords(VendorRecordsTemplate):
       Notification(f"⚠️ Could not refresh vendor: {e}", style="warning").show()
       fresh_vendor = vendor
 
-    get_open_form().content = VendorRecord(
+    open_form("VendorRecord",
       vendor=fresh_vendor,
       prev_filter_vendor_id=self.text_box_vendor_id.text,
       prev_filter_company_name=self.text_box_company_name.text
     )
 
   def button_new_vendor_click(self, **event_args):
-    get_open_form().content = VendorRecord(
+    open_form("VendorRecord",
       vendor=None,
       prev_filter_vendor_id=self.text_box_vendor_id.text,
       prev_filter_company_name=self.text_box_company_name.text

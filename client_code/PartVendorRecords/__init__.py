@@ -1,7 +1,7 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
-from .. import PartVendorRecord
+from ..PartVendorRecord import PartVendorRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part_id,

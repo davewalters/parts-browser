@@ -70,16 +70,12 @@ class VendorRecord(VendorRecordTemplate):
     try:
       validated = anvil.server.call("save_vendor_from_client", new_data)
       Notification("✅ Vendor saved.", style="success").show()
-      get_open_form().content = VendorRecords(
-                filter_vendor_id=self.prev_filter_vendor_id,
-                filter_company_name=self.prev_filter_company_name)
+      self.open_vendor_records()
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    get_open_form().content = VendorRecords(
-              filter_vendor_id=self.prev_filter_vendor_id,
-              filter_company_name=self.prev_filter_company_name)
+    self.open_vendor_records()
 
   def button_delete_click(self, **event_args):
     vendor_id = self.text_box_id.text
@@ -87,10 +83,15 @@ class VendorRecord(VendorRecordTemplate):
       try:
         anvil.server.call("delete_vendor", vendor_id)
         Notification("🗑️ Vendor deleted.", style="danger").show()
-        get_open_form().content("VendorRecords",
-                  filter_vendor_id=self.prev_filter_vendor_id,
-                  filter_company_name=self.prev_filter_company_name)
+        self.open_vendor_records()
       except Exception as e:
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
-
+  def open_vendor_records(self):
+    get_open_form().content_panel.clear()
+    get_open_form().content_panel.add_component(
+      VendorRecords(
+        filter_vendor_id=self.prev_filter_vendor_id,
+        filter_company_name=self.prev_filter_company_name
+      )
+    )
