@@ -12,6 +12,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_type = filter_type
     self.prev_filter_status = filter_status
     self.button_new_part.role = "new-button"
+    self.button_home.role = "mydefault-button"
 
     self.text_box_part_no.text = filter_part
     self.text_box_desc.text = filter_desc
@@ -67,6 +68,10 @@ class PartRecords(PartRecordsTemplate):
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status)
+
+  def button_home_click(self, **event_args):
+    open_form("Nav")
+  
 
 
 

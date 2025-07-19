@@ -2,9 +2,14 @@ components:
 - components:
   - components:
     - components:
+      - event_bindings: {click: button_home_click}
+        layout_properties: {col_xs: 4, row: OIDCLY, width_xs: 2}
+        name: button_home
+        properties: {font_size: 20, icon: 'fa:home', text: ''}
+        type: Button
       - data_bindings: []
         event_bindings: {click: button_new_vendor_click}
-        layout_properties: {col_xs: 4, row: OIDCLY, width_xs: 3}
+        layout_properties: {col_xs: 6, row: OIDCLY, width_xs: 3}
         name: button_new_vendor
         properties: {background: '', icon: 'fa:plus-circle', text: New Vendor}
         type: Button

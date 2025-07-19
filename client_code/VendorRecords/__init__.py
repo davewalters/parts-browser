@@ -8,6 +8,7 @@ class VendorRecords(VendorRecordsTemplate):
   def __init__(self, filter_vendor_id="", filter_company_name="", **kwargs):
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"
+    self.button_home.role = "mydefault-button"
     self.grid_panel_1.role = "gridpanel-border"
     self.repeating_panel_1.role = "scrolling-panel"
     self.text_box_vendor_id.col_width = 4
@@ -58,6 +59,9 @@ class VendorRecords(VendorRecordsTemplate):
       prev_filter_vendor_id=self.text_box_vendor_id.text,
       prev_filter_company_name=self.text_box_company_name.text
     )
+
+  def button_home_click(self, **event_args):
+    open_form("Nav")
 
 
 

@@ -11,9 +11,14 @@ components:
       type: Image
     - components:
       - components:
+        - event_bindings: {click: button_home_click}
+          layout_properties: {col_xs: 2, row: BTIFCK, width_xs: 2}
+          name: button_home
+          properties: {font_size: 20, icon: 'fa:home', text: ''}
+          type: Button
         - data_bindings: []
           event_bindings: {click: button_new_part_click}
-          layout_properties: {col_xs: 4, row: BTIFCK, width_xs: 3}
+          layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 3}
           name: button_new_part
           properties: {background: '', icon: 'fa:plus-circle', role: null, text: New Part}
           type: Button
