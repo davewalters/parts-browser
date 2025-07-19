@@ -3,7 +3,6 @@ import anvil.server
 from ._anvil_designer import PartVendorRecordTemplate
 from datetime import datetime
 from .. import PartVendorRecords
-from .. import DesignBOMRecord
 
 class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part_id,
@@ -125,7 +124,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
   def button_back_click(self, **event_args):
     if self.back_to_bom:
-      get_open_form().content = DesignBOMRecord(
+      open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,

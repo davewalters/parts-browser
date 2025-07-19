@@ -3,7 +3,6 @@ import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
 from .. import PartVendorRecord
 from .. import PartRecord
-from .. import DesignBOMRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
   def __init__(self, part_id,
@@ -61,7 +60,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
   def button_cancel_click(self, **event_args):
     if self.back_to_bom:
-      get_open_form().content = DesignBOMRecord(
+      open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
