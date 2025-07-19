@@ -18,6 +18,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
 
+    self.repeating_panel_1.role = "scrolling-panel"
     self.repeating_panel_1.set_event_handler("x-validation-updated", self.validate_all_rows)
     self.repeating_panel_1.set_event_handler("x-remove-row", self.remove_row)
     self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor_for_row)
@@ -49,11 +50,11 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
   def button_add_row_click(self, **event_args):
     updated_bom = []
     for row in self.repeating_panel_1.get_components():
-      updated_bom.append({
+      updated_bom.insert(0,{
         "part_id": row.text_box_part_id.text.strip(),
         "qty": float(row.text_box_qty.text.strip()) if row.text_box_qty.text.strip() else 0
       })
-    updated_bom.append({"part_id": "", "qty": 1})
+    updated_bom.insert(0,{"part_id": "", "qty": 1})
     self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
 
