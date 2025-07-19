@@ -19,12 +19,17 @@ class PartRecord(PartRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
 
-    try:
-      self.part = anvil.server.call("get_part", part_id)
-    except Exception as e:
-      Notification(f"⚠️ Failed to load part: {e}", style="warning").show()
-      self.part = {}
-      return
+    self.part = {}
+    self.is_new = part_id is None
+    if not self.is_new:
+      try:
+        fetched = anvil.server.call("get_part", part_id)
+        if fetched is None:
+          Notification(f"⚠️ Part ID '{part_id}' not found in database.", style="warning").show()
+        else:
+          self.part = fetched
+      except Exception as e:
+        Notification(f"❌ Failed to load part: {e}", style="danger").show()
     
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
@@ -35,15 +40,15 @@ class PartRecord(PartRecordTemplate):
     self.text_box_rev.text = self.part.get("revision", "")
     self.text_box_desc.text = self.part.get("description", "")
     self.drop_down_status.selected_value = self.part.get("status", "active")
-    self.text_box_vendor.text = self.part.get("default_vendor", "")
+    self.text_box_vendor.text = self.part.get("default_vendor", "DESIGNATWORK")
     self.drop_down_type.selected_value = self.part.get("type", "part")
     self.drop_down_process.selected_value = self.part.get("process", "-")
     self.text_box_material.text = self.part.get("material_spec", "")
     self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
     latest_cost = self.part.get("latest_cost", {})
-    cost_nz = latest_cost.get("cost_nz", None)
-    cost_date = latest_cost.get("cost_date", None)
+    cost_nz = latest_cost.get("cost_nz", 0.0)
+    cost_date = latest_cost.get("cost_date", datetime.today().isoformat())
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_date_costed.text = self.format_date(cost_date)
 
