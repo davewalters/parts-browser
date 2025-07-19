@@ -2,131 +2,136 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
-        name: label_id
-        properties: {font_size: 16, text: Vendor ID}
-        type: Label
-      - layout_properties: {col_xs: 3, row: DKFPPM, width_xs: 8}
-        name: text_box_id
-        properties: {foreground: 'theme:White', placeholder: vendor_id}
-        type: TextBox
-      layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 7}
-      name: grid_panel_2
-      properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: FOQJWC, width_xs: 5}
-        name: label_status
-        properties: {font_size: 14, text: 'Status:'}
-        type: Label
-      - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 7}
-        name: drop_down_status
-        properties: {font_size: 14}
-        type: DropDown
-      layout_properties: {col_xs: 7, row: NHQTRB, width_xs: 4}
-      name: grid_panel_3
-      properties: {background: 'theme:Gray 200'}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 3}
-        name: label_company_name
-        properties: {font_size: 14, text: 'Company Name:'}
-        type: Label
-      - layout_properties: {col_xs: 3, row: VTLTHM, width_xs: 8}
-        name: text_box_company_name
-        properties: {font_size: 14, placeholder: company_name}
-        type: TextBox
-      layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 7}
-      name: grid_panel_5
-      properties: {background: 'theme:Gray 200'}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: RKUGMY, width_xs: 3}
-        name: label_categories
-        properties: {font_size: 14, text: 'Categories:'}
-        type: Label
-      - layout_properties: {col_xs: 3, row: RKUGMY, width_xs: 8}
-        name: text_area_categories
-        properties: {font_size: 14, height: 61, placeholder: 'categories,', text: ''}
-        type: TextArea
-      layout_properties: {col_xs: 0, row: JCUSTZ, width_xs: 7}
-      name: grid_panel_7
-      properties: {background: 'theme:Gray 200'}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
-        name: label_address
-        properties: {font_size: 14, text: 'Address:'}
-        type: Label
-      - layout_properties: {col_xs: 3, row: QQKKUG, width_xs: 5}
-        name: text_box_address_line1
-        properties: {font_size: 14, placeholder: address line1}
-        type: TextBox
-      - layout_properties: {col_xs: 3, row: TDHAVC, width_xs: 5}
-        name: text_box_address_line2
-        properties: {font_size: 14, placeholder: address line2}
-        type: TextBox
-      - layout_properties: {col_xs: 3, row: QHPECG, width_xs: 5}
-        name: text_box_city
-        properties: {font_size: 14, placeholder: city}
-        type: TextBox
-      - layout_properties: {col_xs: 8, row: QHPECG, width_xs: 3}
-        name: text_box_postal_code
-        properties: {font_size: 14, placeholder: postal code}
-        type: TextBox
-      - layout_properties: {col_xs: 3, row: VLRKMV, width_xs: 5}
-        name: text_box_state
-        properties: {font_size: 14, placeholder: state}
-        type: TextBox
-      - layout_properties: {col_xs: 3, row: VNVHRR, width_xs: 5}
-        name: text_box_country
-        properties: {font_size: 14, placeholder: country}
-        type: TextBox
-      layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 7}
-      name: grid_panel_6
-      properties: {background: 'theme:Gray 200'}
-      type: GridPanel
-    - components:
-      - layout_properties: {col_xs: 0, row: BLCIEE, width_xs: 12}
-        name: text_box_contact_name
-        properties: {font_size: 14, placeholder: contact name}
-        type: TextBox
-      - layout_properties: {col_xs: 0, row: GCWYUP, width_xs: 12}
-        name: text_box_phone
-        properties: {font_size: 14, placeholder: phone}
-        type: TextBox
-      - layout_properties: {col_xs: 0, row: PUCKWG, width_xs: 12}
-        name: text_box_email
-        properties: {font_size: 14, placeholder: email}
-        type: TextBox
-      layout_properties: {col_xs: 7, row: JJKFRA, width_xs: 4}
-      name: grid_panel_4
-      properties: {background: 'theme:Gray 200'}
-      type: GridPanel
-    - components:
-      - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 2}
-        name: button_back
-        properties: {background: '', font_size: 14, icon: 'fa:arrow-left', text: ''}
-        type: Button
-      - event_bindings: {click: button_delete_click}
-        layout_properties: {col_xs: 3, row: YXOXYU, width_xs: 3}
-        name: button_delete
-        properties: {background: '', font_size: 14, icon: 'fa:trash-o', role: null, text: Delete Record}
-        type: Button
-      - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
-        name: button_save
-        properties: {background: '', bold: false, font_size: 14, icon: 'fa:save', text: Save}
-        type: Button
-      layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
-      name: grid_panel_13
+      - components:
+        - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
+          name: label_id
+          properties: {font_size: 16, text: Vendor ID}
+          type: Label
+        - layout_properties: {col_xs: 3, row: DKFPPM, width_xs: 8}
+          name: text_box_id
+          properties: {foreground: 'theme:White', placeholder: vendor_id}
+          type: TextBox
+        layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 7}
+        name: grid_panel_2
+        properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
+        type: GridPanel
+      - components:
+        - layout_properties: {col_xs: 0, row: FOQJWC, width_xs: 5}
+          name: label_status
+          properties: {font_size: 14, text: 'Status:'}
+          type: Label
+        - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 7}
+          name: drop_down_status
+          properties: {font_size: 14}
+          type: DropDown
+        layout_properties: {col_xs: 7, row: NHQTRB, width_xs: 4}
+        name: grid_panel_3
+        properties: {background: 'theme:Gray 200'}
+        type: GridPanel
+      - components:
+        - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 3}
+          name: label_company_name
+          properties: {font_size: 14, text: 'Company Name:'}
+          type: Label
+        - layout_properties: {col_xs: 3, row: VTLTHM, width_xs: 8}
+          name: text_box_company_name
+          properties: {font_size: 14, placeholder: company_name}
+          type: TextBox
+        layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 7}
+        name: grid_panel_5
+        properties: {background: 'theme:Gray 200'}
+        type: GridPanel
+      - components:
+        - layout_properties: {col_xs: 0, row: RKUGMY, width_xs: 3}
+          name: label_categories
+          properties: {font_size: 14, text: 'Categories:'}
+          type: Label
+        - layout_properties: {col_xs: 3, row: RKUGMY, width_xs: 8}
+          name: text_area_categories
+          properties: {font_size: 14, height: 61, placeholder: 'categories,', text: ''}
+          type: TextArea
+        layout_properties: {col_xs: 0, row: JCUSTZ, width_xs: 7}
+        name: grid_panel_7
+        properties: {background: 'theme:Gray 200'}
+        type: GridPanel
+      - components:
+        - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
+          name: label_address
+          properties: {font_size: 14, text: 'Address:'}
+          type: Label
+        - layout_properties: {col_xs: 3, row: QQKKUG, width_xs: 5}
+          name: text_box_address_line1
+          properties: {font_size: 14, placeholder: address line1}
+          type: TextBox
+        - layout_properties: {col_xs: 3, row: TDHAVC, width_xs: 5}
+          name: text_box_address_line2
+          properties: {font_size: 14, placeholder: address line2}
+          type: TextBox
+        - layout_properties: {col_xs: 3, row: QHPECG, width_xs: 5}
+          name: text_box_city
+          properties: {font_size: 14, placeholder: city}
+          type: TextBox
+        - layout_properties: {col_xs: 8, row: QHPECG, width_xs: 3}
+          name: text_box_postal_code
+          properties: {font_size: 14, placeholder: postal code}
+          type: TextBox
+        - layout_properties: {col_xs: 3, row: VLRKMV, width_xs: 5}
+          name: text_box_state
+          properties: {font_size: 14, placeholder: state}
+          type: TextBox
+        - layout_properties: {col_xs: 3, row: VNVHRR, width_xs: 5}
+          name: text_box_country
+          properties: {font_size: 14, placeholder: country}
+          type: TextBox
+        layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 7}
+        name: grid_panel_6
+        properties: {background: 'theme:Gray 200'}
+        type: GridPanel
+      - components:
+        - layout_properties: {col_xs: 0, row: BLCIEE, width_xs: 12}
+          name: text_box_contact_name
+          properties: {font_size: 14, placeholder: contact name}
+          type: TextBox
+        - layout_properties: {col_xs: 0, row: GCWYUP, width_xs: 12}
+          name: text_box_phone
+          properties: {font_size: 14, placeholder: phone}
+          type: TextBox
+        - layout_properties: {col_xs: 0, row: PUCKWG, width_xs: 12}
+          name: text_box_email
+          properties: {font_size: 14, placeholder: email}
+          type: TextBox
+        layout_properties: {col_xs: 7, row: JJKFRA, width_xs: 4}
+        name: grid_panel_4
+        properties: {background: 'theme:Gray 200'}
+        type: GridPanel
+      - components:
+        - event_bindings: {click: button_back_click}
+          layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 2}
+          name: button_back
+          properties: {background: '', font_size: 14, icon: 'fa:arrow-left', text: ''}
+          type: Button
+        - event_bindings: {click: button_delete_click}
+          layout_properties: {col_xs: 3, row: YXOXYU, width_xs: 3}
+          name: button_delete
+          properties: {background: '', font_size: 14, icon: 'fa:trash-o', role: null, text: Delete Record}
+          type: Button
+        - event_bindings: {click: button_save_click}
+          layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
+          name: button_save
+          properties: {background: '', bold: false, font_size: 14, icon: 'fa:save', text: Save}
+          type: Button
+        layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
+        name: grid_panel_13
+        properties: {}
+        type: GridPanel
+      layout_properties: {grid_position: 'EXYRDL,LIZEQZ'}
+      name: grid_panel_1
       properties: {}
       type: GridPanel
-    layout_properties: {full_width_row: false, grid_position: 'BOQNDB,UKLKDI'}
-    name: grid_panel_1
+    layout_properties: {grid_position: 'MFHGJA,ZQAMUH'}
+    name: column_panel_1
     properties: {}
-    type: GridPanel
+    type: ColumnPanel
   layout_properties: {slot: default}
   name: content_panel
   properties: {}

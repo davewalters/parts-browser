@@ -5,6 +5,7 @@ from datetime import datetime
 from .. import config
 from .. import PartVendorRecords
 from .. DesignBOMRecord import DesignBOMRecord
+from ..PartRecords import PartRecords
 
 class PartRecord(PartRecordTemplate):
   def __init__(self, part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
@@ -79,13 +80,13 @@ class PartRecord(PartRecordTemplate):
       self.part = validated
 
       Notification("✅ Part saved.", style="success").show()
-      open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      get_open_form().content = PartRecords(filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    open_form("PartRecords",
+    get_open_form().content = PartRecords(
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
@@ -100,12 +101,12 @@ class PartRecord(PartRecordTemplate):
           Notification("🗑️ Part deleted.", style="danger").show()
         else:
           Notification(f"⚠️ Part '{part_id}' not found.", style="warning").show()
-        open_form("PartRecords", filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+        get_open_form().content = PartRecords(filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
       except Exception as e:
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    open_form("PartVendorRecords",
+    get_open_form().content("PartVendorRecords",
               part_id=self.part.get("_id"),
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
@@ -113,7 +114,7 @@ class PartRecord(PartRecordTemplate):
               prev_filter_status=self.prev_filter_status)
 
   def button_BOM_click(self, **event_args):
-    open_form("DesignBOMRecord",
+    get_open_form().content = DesignBOMRecord(
               assembly_part_id=self.part.get("_id"),
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,

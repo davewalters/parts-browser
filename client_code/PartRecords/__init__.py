@@ -3,6 +3,7 @@ import anvil.server
 
 from ._anvil_designer import PartRecordsTemplate
 from .. import config
+from ..PartRecord import PartRecord
 
 class PartRecords(PartRecordsTemplate):
   def __init__(self, filter_part="", filter_desc="", filter_type="", filter_status="", **kwargs):
@@ -51,7 +52,7 @@ class PartRecords(PartRecordsTemplate):
   def show_detail(self, part, **event_args):
     try:
       part_id = part["_id"]
-      open_form("PartRecord",
+      get_open_form().content = PartRecord(
                 part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
@@ -61,7 +62,7 @@ class PartRecords(PartRecordsTemplate):
       alert(f"Error loading part detail: {e}")
 
   def button_new_part_click(self, **event_args):
-    open_form("PartRecord",
+    get_open_form().content = PartRecord(
               part_id=None,
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,

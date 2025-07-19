@@ -59,7 +59,7 @@ components:
         name: button_view
         properties: {font_size: 12}
         type: Label
-      layout_properties: {full_width_row: true, grid_position: 'EKIJXN,KHMVDO'}
+      layout_properties: {full_width_row: false, grid_position: 'EKIJXN,KHMVDO'}
       name: data_row_panel_1
       properties: {align: center, auto_display_data: true, background: 'theme:Gray 600', bold: false, foreground: 'theme:White'}
       type: DataRowPanel

@@ -125,14 +125,14 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
   def button_back_click(self, **event_args):
     if self.back_to_bom:
-      open_form("DesignBOMRecord",
+      get_open_form().content = DesignBOMRecord(
                 assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status)
     else:
-      open_form("PartVendorRecords",
+      get_open_form().content = PartVendorRecords(
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,

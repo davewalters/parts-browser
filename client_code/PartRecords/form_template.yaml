@@ -143,7 +143,7 @@ components:
   - components:
     - data_bindings:
       - {code: 'self.item['''']', property: items, writeback: false}
-      layout_properties: {full_width_row: true, grid_position: 'NZZUDN,VGBBZR'}
+      layout_properties: {full_width_row: false, grid_position: 'NZZUDN,VGBBZR'}
       name: repeating_panel_1
       properties: {item_template: PartRecords.ItemTemplate1}
       type: RepeatingPanel

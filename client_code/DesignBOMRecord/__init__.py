@@ -3,6 +3,8 @@ import anvil.server
 
 from ._anvil_designer import DesignBOMRecordTemplate
 from .DesignBOMRow import DesignBOMRow
+from ..PartVendorRecords import PartVendorRecords
+from ..PartRecords import PartRecords
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
   def __init__(self, assembly_part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
@@ -29,6 +31,16 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.bom_rows = bom_doc.get("components", [])
     self.repeating_panel_1.items = self.bom_rows
     self.label_cost_status.text = ""
+  
+    try:
+      assembly_part = anvil.server.call("get_part", self.assembly_part_id)
+      latest_cost = assembly_part.get("latest_cost", {})
+      cost_nz = latest_cost.get("cost_nz", None)
+      self.label_assembly_cost_nz.text = self.format_currency(cost_nz)
+    except Exception as e:
+      self.label_assembly_cost_nz.text = "–"
+      Notification(f"⚠️ Could not load cost: {e}", style="warning").show()
+
 
   def validate_all_rows(self, **event_args):
     print("🚨 validate_all_rows called")
@@ -74,7 +86,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
   def edit_vendor_for_row(self, part_id=None, **event_args):
     print(f"edit_vendor_for_row called: {part_id}")
     if part_id:
-      open_form("PartVendorRecords",
+      get_open_form().content = PartVendorRecords(
                 part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
@@ -96,7 +108,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
 
   def button_back_click(self, **event_args):
-    open_form("PartRecords",
+    get_open_form().content = PartRecords(
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,

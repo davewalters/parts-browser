@@ -61,14 +61,14 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
   def button_cancel_click(self, **event_args):
     if self.back_to_bom:
-      open_form("DesignBOMRecord",
+      get_open_form().content = DesignBOMRecord(
                 assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status)
     else:
-      open_form("PartRecord",
+      get_open_form().content = PartRecord(
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
@@ -79,7 +79,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.button_cancel_click()
 
   def button_new_vendor_click(self, **event_args):
-    open_form("PartVendorRecord",
+    get_open_form().content = PartVendorRecord(
               part_id=self.part.get("_id", ""),
               vendor_data=None,
               prev_filter_part=self.prev_filter_part,
@@ -104,7 +104,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
   def edit_vendor(self, vendor_data, **event_args):
-    open_form("PartVendorRecord",
+    get_open_form().content = PartVendorRecord(
               part_id=self.part.get("_id", ""),
               vendor_data=vendor_data,
               prev_filter_part=self.prev_filter_part,

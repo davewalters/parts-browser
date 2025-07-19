@@ -2,6 +2,7 @@ from anvil import *
 import anvil.server
 from ._anvil_designer import VendorRecordTemplate
 from datetime import datetime
+from ..VendorRecords import VendorRecords
 
 class VendorRecord(VendorRecordTemplate):
   def __init__(self, vendor, prev_filter_vendor_id="", prev_filter_company_name="", **kwargs):
@@ -69,14 +70,14 @@ class VendorRecord(VendorRecordTemplate):
     try:
       validated = anvil.server.call("save_vendor_from_client", new_data)
       Notification("✅ Vendor saved.", style="success").show()
-      open_form("VendorRecords",
+      get_open_form().content = VendorRecords(
                 filter_vendor_id=self.prev_filter_vendor_id,
                 filter_company_name=self.prev_filter_company_name)
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    open_form("VendorRecords",
+    get_open_form().content = VendorRecords(
               filter_vendor_id=self.prev_filter_vendor_id,
               filter_company_name=self.prev_filter_company_name)
 
@@ -86,7 +87,7 @@ class VendorRecord(VendorRecordTemplate):
       try:
         anvil.server.call("delete_vendor", vendor_id)
         Notification("🗑️ Vendor deleted.", style="danger").show()
-        open_form("VendorRecords",
+        get_open_form().content("VendorRecords",
                   filter_vendor_id=self.prev_filter_vendor_id,
                   filter_company_name=self.prev_filter_company_name)
       except Exception as e:
