@@ -19,12 +19,17 @@ class PartRecord(PartRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
 
-    try:
-      self.part = anvil.server.call("get_part", part_id)
-    except Exception as e:
-      Notification(f"⚠️ Failed to load part: {e}", style="warning").show()
-      self.part = {}
-      return
+    self.part = {}
+    self.is_new = part_id is None
+    if not self.is_new:
+      try:
+        fetched = anvil.server.call("get_part", part_id)
+        if fetched is None:
+          Notification(f"⚠️ Part ID '{part_id}' not found in database.", style="warning").show()
+        else:
+          self.part = fetched
+      except Exception as e:
+        Notification(f"❌ Failed to load part: {e}", style="danger").show()
     
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
