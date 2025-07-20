@@ -33,7 +33,7 @@ components:
     - components:
       - layout_properties: {column: vendor_id}
         name: label_vendor_id
-        properties: {bold: false, text: Vendor ID}
+        properties: {bold: false, text: Vendor}
         type: Label
       - layout_properties: {column: vendor_part_no}
         name: label_vendor_part_no

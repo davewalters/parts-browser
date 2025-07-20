@@ -1,6 +1,6 @@
 components:
 - layout_properties: {grid_position: 'IKIUQH,SQMAXU'}
-  name: label_vendor_id
+  name: label_vendor
   properties: {text: vendor_id}
   type: Label
 - layout_properties: {grid_position: 'IKIUQH,JRCERN'}

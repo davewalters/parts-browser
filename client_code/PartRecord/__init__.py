@@ -83,7 +83,7 @@ class PartRecord(PartRecordTemplate):
       self.part = validated
 
       Notification("✅ Part saved.", style="success").show()
-      get_open_form().content = PartRecords(filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
+      #get_open_form().content = PartRecords(filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
@@ -113,20 +113,28 @@ class PartRecord(PartRecordTemplate):
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def button_vendor_list_click(self, **event_args):
-    open_form("PartVendorRecords",
-              part_id=self.part.get("_id"),
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc,
-              prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status)
+    part_id = self.ensure_part_saved()
+    if part_id:
+      open_form("PartVendorRecords",
+                part_id=part_id,
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status)
+    else:
+      print(f"PartRecord->PartVendorRecords: part_id is: {part_id}")
 
   def button_BOM_click(self, **event_args):
-    open_form("DesignBOMRecord", 
-              assembly_part_id=self.part.get("_id"),
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc,
-              prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status)
+    part_id = self.ensure_part_saved()
+    if part_id:
+      open_form("DesignBOM",
+                assembly_part_id=part_id,
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status)
+    else:
+      print(f"PartRecord->DesignBOMRecord: part_id is: {part_id}")
 
   def format_date(self, iso_string):
     if not iso_string or not isinstance(iso_string, str):
@@ -138,6 +146,14 @@ class PartRecord(PartRecordTemplate):
       return f"${float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
+  def ensure_part_saved(self):
+    part_id = self.part.get("_id")
+    if not part_id:
+      self.button_save_click()
+      part_id = self.part.get("_id")
+    return part_id
+
 
 
 

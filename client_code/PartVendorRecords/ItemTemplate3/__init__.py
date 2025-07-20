@@ -12,24 +12,25 @@ class ItemTemplate3(ItemTemplate3Template):
 
   def set_display_fields(self):
     item = self.item
-    self.label_vendor_id.text = item.get("vendor_company_name", "")
+    self.label_vendor.text = item.get("vendor_company_name", "")
     self.label_vendor_part_no.text = item.get("vendor_part_no", "")
     self.label_vendor_currency.text = item.get("vendor_currency", "")
     self.label_vendor_price.text = self.format_currency(item.get("vendor_price"))
 
     # Fallback to cost fields from vendor itself if no latest_cost dict
-    cost_nz = item.get("cost_$NZ") or item.get("latest_cost", {}).get("cost_nz", None)
+    cost1 = item.get("cost_$NZ")
+    cost2 = item.get("latest_cost", {}).get("cost_nz", None)
+    cost_nz = cost1 if cost1 is not None else cost2
     cost_date = item.get("cost_date") or item.get("latest_cost", {}).get("cost_date", None)
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_cost_date.text = self.format_date(cost_date)
-
     is_active = item.get("is_active", False)
     self.radio_button_active_vendor.selected = is_active
     self.set_label_colors(is_active)
 
   def set_label_colors(self, is_active):
     color = "#000" if is_active else "#aaa"
-    for lbl in [self.label_vendor_id, self.label_vendor_part_no,
+    for lbl in [self.label_vendor, self.label_vendor_part_no,
                 self.label_vendor_currency, self.label_vendor_price, 
                 self.label_cost_nz, self.label_cost_date]:
       lbl.foreground = color

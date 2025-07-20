@@ -20,6 +20,8 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
     print(f"part_id = {part_id}")
     self.part = anvil.server.call("get_part", part_id)
+    s_part_id = self.part.get("_id", "")
+    print(f"self.part.get_id: {s_part_id}")
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
