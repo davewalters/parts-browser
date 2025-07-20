@@ -127,7 +127,7 @@ class PartRecord(PartRecordTemplate):
   def button_BOM_click(self, **event_args):
     part_id = self.ensure_part_saved()
     if part_id:
-      open_form("DesignBOM",
+      open_form("DesignBOMRecord",
                 assembly_part_id=part_id,
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,

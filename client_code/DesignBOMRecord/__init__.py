@@ -49,7 +49,22 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.button_save_bom.enabled = all_valid
 
   def button_add_row_click(self, **event_args):
-    self.bom_rows.append({"part_id": "", "qty": 1})
+    # Retain full data from existing rows
+    updated_bom = []
+    for row in self.repeating_panel_1.get_components():
+      item_copy = row.item.copy()
+      # Ensure qty is updated to what's currently typed in
+      try:
+        item_copy["qty"] = float(row.text_box_qty.text.strip())
+      except (ValueError, TypeError):
+        item_copy["qty"] = 0
+      item_copy["part_id"] = row.text_box_part_id.text.strip()
+      updated_bom.append(item_copy)
+
+    # Insert a new blank row at the top
+    updated_bom.insert(0, {"part_id": "", "qty": 1})
+
+    self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
 
   def button_save_bom_click(self, **event_args):
@@ -92,12 +107,17 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
   def remove_row(self, **event_args):
     row_to_remove = event_args['row']
     updated_bom = []
+
     for row in self.repeating_panel_1.get_components():
       if row is not row_to_remove:
-        updated_bom.append({
-          "part_id": row.text_box_part_id.text.strip(),
-          "qty": float(row.text_box_qty.text.strip()) if row.text_box_qty.text.strip() else 0
-        })
+        item_copy = row.item.copy()
+        try:
+          item_copy["qty"] = float(row.text_box_qty.text.strip())
+        except (ValueError, TypeError):
+          item_copy["qty"] = 0
+        item_copy["part_id"] = row.text_box_part_id.text.strip()
+        updated_bom.append(item_copy)
+
     self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
 
