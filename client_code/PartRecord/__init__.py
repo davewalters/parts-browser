@@ -37,7 +37,7 @@ class PartRecord(PartRecordTemplate):
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
     self.text_box_id.text = self.part.get("_id", "")
-    self.text_box_rev.text = self.part.get("revision", "")
+    self.text_box_rev.text = self.part.get("revision", "A")
     self.text_box_desc.text = self.part.get("description", "")
     self.drop_down_status.selected_value = self.part.get("status", "active")
     self.text_box_vendor.text = self.part.get("default_vendor", "DESIGNATWORK")
