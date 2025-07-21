@@ -1,6 +1,7 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordsTemplate
+from datetime import datetime
 from ..PartVendorRecord import PartVendorRecord
 
 class PartVendorRecords(PartVendorRecordsTemplate):
@@ -33,6 +34,29 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
     self.vendor_lookup = self.get_vendor_lookup()
+    from datetime import datetime
+
+    # If vendor_part_numbers is empty but a default_vendor exists, add it
+    default_vendor = self.part.get("default_vendor", "")
+    if default_vendor and not self.part.get("vendor_part_numbers"):
+      company_name = self.vendor_lookup.get(default_vendor, default_vendor)
+      default_entry = {
+        "vendor_id": default_vendor,
+        "vendor_part_number": self.part.get("_id", ""),
+        "vendor_currency": "NZ",
+        "vendor_cost": 0.0,
+        "cost_nz": 0.0,
+        "cost_date": datetime.today(),  # Use raw datetime
+        "vendor_company_name": company_name
+      }
+      self.part["vendor_part_numbers"] = [default_entry]
+    
+      try:
+        anvil.server.call("save_part_from_client", self.part)
+        Notification(f"✅ Default vendor '{company_name}' added.", style="success").show()
+      except Exception as e:
+        Notification(f"❌ Could not save default vendor: {e}", style="danger", timeout=None).show()
+
     self.load_vendor_data()
 
   def get_vendor_lookup(self):
@@ -114,6 +138,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_status=self.prev_filter_status,
               back_to_bom=self.back_to_bom,
               assembly_part_id=self.assembly_part_id)
+
 
 
 
