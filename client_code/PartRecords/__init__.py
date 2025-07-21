@@ -5,12 +5,13 @@ from ._anvil_designer import PartRecordsTemplate
 from .. import config
 
 class PartRecords(PartRecordsTemplate):
-  def __init__(self, filter_part="", filter_desc="", filter_type="", filter_status="", **kwargs):
+  def __init__(self, filter_part="", filter_desc="", filter_type="", filter_status="", filter_designbom=False, **kwargs):
     self.init_components(**kwargs)
     self.prev_filter_part = filter_part
     self.prev_filter_desc = filter_desc
     self.prev_filter_type = filter_type
     self.prev_filter_status = filter_status
+    self.prev_filter_designbom = filter_designbom
     self.button_new_part.role = "new-button"
     self.button_home.role = "mydefault-button"
     self.repeating_panel_1.role = "scrolling-panel"
@@ -26,6 +27,7 @@ class PartRecords(PartRecordsTemplate):
     self.text_box_desc.set_event_handler('change', self.update_filter)
     self.drop_down_type.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
+    self.radio_designbom.set_event_handler('change', self.update_filter)
     self.repeating_panel_1.set_event_handler("x-show-detail", self.show_detail)
 
     self.update_filter()
@@ -35,6 +37,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_desc = self.text_box_desc.text or ""
     self.prev_filter_type = self.drop_down_type.selected_value or ""
     self.prev_filter_status = self.drop_down_status.selected_value or ""
+    self.prev_filter_designbom = self.radio_designbom.selected or False
 
     try:
       results = anvil.server.call(
@@ -42,7 +45,8 @@ class PartRecords(PartRecordsTemplate):
         prefix=self.prev_filter_part,
         desc=self.prev_filter_desc,
         part_type=self.prev_filter_type,
-        status=self.prev_filter_status
+        status=self.prev_filter_status,
+        designbom = self.prev_filter_designbom,
       )
       self.repeating_panel_1.items = results
       self.label_count.text = f"{len(results)} parts returned"
@@ -58,7 +62,8 @@ class PartRecords(PartRecordsTemplate):
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
     except Exception as e:
       alert(f"Error loading part detail: {e}")
 
@@ -68,7 +73,8 @@ class PartRecords(PartRecordsTemplate):
               prev_filter_part=self.prev_filter_part,
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status)
+              prev_filter_status=self.prev_filter_status,
+              prev_filter_designbom=self.prev_filter_designbom)
 
   def button_home_click(self, **event_args):
     open_form("Nav")

@@ -10,6 +10,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                prev_filter_desc="",
                prev_filter_type="",
                prev_filter_status="",
+               prev_filter_designbom=False,
                back_to_bom=False,
                assembly_part_id=None,
                **kwargs):
@@ -27,6 +28,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
+    self.prev_filter_designbom = prev_filter_designbom
     self.back_to_bom = back_to_bom
     self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
     self.button_back_to_bom.visible = self.back_to_bom
@@ -34,9 +36,6 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
     self.vendor_lookup = self.get_vendor_lookup()
-    from datetime import datetime
-
-    from datetime import datetime
 
     default_vendor = self.part.get("default_vendor", "")
     if default_vendor and not self.part.get("vendor_part_numbers"):
@@ -97,14 +96,16 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
     else:
       open_form("PartRecord",
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
 
   def button_back_to_bom_click(self, **event_args):
     self.button_cancel_click()
@@ -117,6 +118,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status,
+              prev_filter_designbom=self.prev_filter_designbom,
               back_to_bom=self.back_to_bom,
               assembly_part_id=self.assembly_part_id)
 
@@ -142,6 +144,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_desc=self.prev_filter_desc,
               prev_filter_type=self.prev_filter_type,
               prev_filter_status=self.prev_filter_status,
+              prev_filter_designbom=self.prev_filter_designbom,
               back_to_bom=self.back_to_bom,
               assembly_part_id=self.assembly_part_id)
 

@@ -70,6 +70,11 @@ components:
               name: drop_down_status
               properties: {font_size: 12}
               type: DropDown
+            - event_bindings: {clicked: radio_designbom_clicked}
+              layout_properties: {col_xs: 9, row: MKQRIP, width_xs: 3}
+              name: radio_designbom
+              properties: {font_size: 12, text: DesignBOM}
+              type: RadioButton
             data_bindings: []
             layout_properties: {grid_position: 'EBBRPC,USAONS', row_background: ''}
             name: grid_panel_1

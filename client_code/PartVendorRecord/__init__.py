@@ -6,7 +6,11 @@ from datetime import datetime, date
 class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part_id,
                vendor_data=None,
-               prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="",
+               prev_filter_part="", 
+               prev_filter_desc="", 
+               prev_filter_type="", 
+               prev_filter_status="",
+               
                back_to_bom=False,
                assembly_part_id=None,
                **kwargs):

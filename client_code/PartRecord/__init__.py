@@ -6,7 +6,13 @@ from .. import config
 from .. PartRecords import PartRecords
 
 class PartRecord(PartRecordTemplate):
-  def __init__(self, part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
+  def __init__(self, part_id, 
+              prev_filter_part="",
+              prev_filter_desc="",
+              prev_filter_type="",
+              prev_filter_status="",
+              prev_filter_designbom=False,
+              **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
@@ -18,7 +24,8 @@ class PartRecord(PartRecordTemplate):
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
-
+    self.prev_filter_designbom = prev_filter_designbom
+    
     self.part = {}
     self.is_new = part_id is None
     if not self.is_new:
@@ -95,7 +102,8 @@ class PartRecord(PartRecordTemplate):
         filter_part=self.prev_filter_part,
         filter_desc=self.prev_filter_desc,
         filter_type=self.prev_filter_type,
-        filter_status=self.prev_filter_status
+        filter_status=self.prev_filter_status,
+        filter_designbom=self.prev_filter_designbom
       )
     )
 
@@ -120,7 +128,8 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.pre_filter_designbom)
     else:
       print(f"PartRecord->PartVendorRecords: part_id is: {part_id}")
 
@@ -132,7 +141,8 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
     else:
       print(f"PartRecord->DesignBOMRecord: part_id is: {part_id}")
 
