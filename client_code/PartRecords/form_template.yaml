@@ -1,11 +1,11 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 0, row: IDUWHI, width_xs: 3}
+    - layout_properties: {col_xs: 0, row: IDUWHI, width_xs: 4}
       name: image_1
       properties:
         display_mode: zoom_to_fill
-        height: 144
+        height: 188.09091186523438
         margin: [null, null, '0', null]
         source: _/theme/parts.JPG
       type: Image
@@ -92,7 +92,7 @@ components:
             margin: ['4', null, '0', null]
             padding: ['0', null, null, null]
         type: GridPanel
-      layout_properties: {col_xs: 3, row: IDUWHI, width_xs: 9}
+      layout_properties: {col_xs: 4, row: IDUWHI, width_xs: 8}
       name: grid_panel_4
       properties:
         spacing:

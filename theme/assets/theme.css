@@ -878,7 +878,7 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   width: 90%;                             /* full width of parent container */
   text-align: left;                        /* optional: align text to left for nav look */
   box-sizing: border-box;                  /* ensures padding doesnt affect width */
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   padding: 8px 8px !important;
   border: none !important;
   text-transform: unset !important;
