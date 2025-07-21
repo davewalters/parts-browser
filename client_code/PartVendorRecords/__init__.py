@@ -51,10 +51,12 @@ class PartVendorRecords(PartVendorRecordsTemplate):
         "vendor_company_name": company_name
       }
 
-    
       self.part["vendor_part_numbers"] = [default_entry]
     
       try:
+        # Remove UI-only fields before sending to schema validator
+        for v in self.part["vendor_part_numbers"]:
+          v.pop("vendor_company_name", None)
         anvil.server.call("save_part_from_client", self.part)
         Notification(f"✅ Default vendor '{company_name}' added.", style="success").show()
       except Exception as e:

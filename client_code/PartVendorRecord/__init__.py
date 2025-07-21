@@ -1,7 +1,7 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartVendorRecordTemplate
-from datetime import datetime
+from datetime import datetime, date
 
 class PartVendorRecord(PartVendorRecordTemplate):
   def __init__(self, part_id,
@@ -71,8 +71,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       rate = self.get_exchange_rate(self.drop_down_vendor_currency.selected_value)
       cost_nz = round(price * rate, 2)
       self.vendor_data["cost_$NZ"] = cost_nz
-      self.vendor_data["cost_date"] = datetime.today().isoformat()
-
+      self.vendor_data["cost_date"] = datetime.today().date()
       self.label_cost_nz.text = self.format_currency(cost_nz)
       self.label_cost_date.text = self.format_date(self.vendor_data["cost_date"])
     except:
@@ -91,7 +90,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       "vendor_part_no": self.text_box_vendor_part_no.text,
       "vendor_currency": self.drop_down_vendor_currency.selected_value,
       "vendor_price": float(self.text_box_vendor_price.text),
-      "cost_date": self.label_cost_date.text
+      # Do not overwrite cost_date here — already set correctly in update_cost_nz()
     })
 
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
@@ -112,14 +111,19 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
     self.part["latest_cost"] = {
       "cost_nz": self.vendor_data["cost_$NZ"],
-      "cost_date": self.vendor_data["cost_date"]
+      "cost_date": self.vendor_data["cost_date"]  # Should already be a date object
     }
 
     try:
+      for v in self.part["vendor_part_numbers"]:
+        v.pop("vendor_company_name", None)
+        v.pop("is_active", None)
+
       validated = anvil.server.call("save_part_from_client", self.part)
       Notification("✅ Vendor details and part cost saved.", style="success").show()
     except Exception as e:
-      Notification(f"❌ Failed to save vendor: {e}", style="danger").show()
+      Notification(f"❌ Failed to save vendor: {e}", style="danger", timeout=None).show()
+
 
   def button_back_click(self, **event_args):
     if self.back_to_bom:
@@ -159,14 +163,14 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
     self.button_back_click()
 
-    def format_date(self, date_input):
-      if isinstance(date_input, datetime):
-        return date_input.date().isoformat()
-      elif isinstance(date_input, date):
-        return date_input.isoformat()
-      elif isinstance(date_input, str):
-        return date_input.split("T")[0] if "T" in date_input else date_input
-      return "1970-01-01"
+  def format_date(self, date_input):
+    if isinstance(date_input, datetime):
+      return date_input.date().isoformat()
+    elif isinstance(date_input, date):
+      return date_input.isoformat()
+    elif isinstance(date_input, str):
+      return date_input.split("T")[0] if "T" in date_input else date_input
+    return "1970-01-01"
 
   def format_currency(self, value):
     try:
