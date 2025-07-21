@@ -6,7 +6,13 @@ from .DesignBOMRow import DesignBOMRow
 from ..PartRecords import PartRecords
 
 class DesignBOMRecord(DesignBOMRecordTemplate):
-  def __init__(self, assembly_part_id, prev_filter_part="", prev_filter_desc="", prev_filter_type="", prev_filter_status="", **kwargs):
+  def __init__(self, assembly_part_id,
+               prev_filter_part="",
+               prev_filter_desc="",
+               prev_filter_type="",
+               prev_filter_status="",
+               prev_filter_designbom=False, 
+               **kwargs):
     self.init_components(**kwargs)
     self.part_cache = {}
     self.assembly_part_id = assembly_part_id
@@ -18,6 +24,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
+    self.prev_filter_designbom=prev_filter_designbom
 
     self.repeating_panel_1.role = "scrolling-panel"
     self.repeating_panel_1.set_event_handler("x-validation-updated", self.validate_all_rows)
@@ -101,6 +108,7 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom,
                 back_to_bom=True,
                 assembly_part_id=self.assembly_part_id)
 
@@ -122,15 +130,12 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.repeating_panel_1.items = self.bom_rows
 
   def button_back_click(self, **event_args):
-    get_open_form().content_panel.clear()
-    get_open_form().content_panel.add_component(
-      PartRecords(
-        filter_part=self.prev_filter_part,
-        filter_desc=self.prev_filter_desc,
-        filter_type=self.prev_filter_type,
-        filter_status=self.prev_filter_status
-      )
-    )
+    open_form("PartRecords",
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc,
+              filter_type=self.prev_filter_type,
+              filter_status=self.prev_filter_status,
+              filter_designbom=self.prev_filter_designbom)
 
   def format_currency(self, value):
     """Format a float as NZ currency, or return '–' if invalid."""

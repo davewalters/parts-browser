@@ -1,5 +1,6 @@
 from anvil import *
 import anvil.server
+from anvil.js.window import setTimeout
 
 from ._anvil_designer import PartRecordsTemplate
 from .. import config
@@ -22,12 +23,14 @@ class PartRecords(PartRecordsTemplate):
     self.drop_down_status.items = [""] + ["active", "obsolete"]
     self.drop_down_type.selected_value = filter_type
     self.drop_down_status.selected_value = filter_status
+    self.check_box_designbom.checked = filter_designbom
+
 
     self.text_box_part_no.set_event_handler('change', self.update_filter)
     self.text_box_desc.set_event_handler('change', self.update_filter)
     self.drop_down_type.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
-    self.radio_designbom.set_event_handler('change', self.update_filter)
+    self.check_box_designbom.set_event_handler('change', self.update_filter)
     self.repeating_panel_1.set_event_handler("x-show-detail", self.show_detail)
 
     self.update_filter()
@@ -37,7 +40,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_desc = self.text_box_desc.text or ""
     self.prev_filter_type = self.drop_down_type.selected_value or ""
     self.prev_filter_status = self.drop_down_status.selected_value or ""
-    self.prev_filter_designbom = self.radio_designbom.selected or False
+    self.prev_filter_designbom = self.check_box_designbom.checked
 
     try:
       results = anvil.server.call(
@@ -46,7 +49,7 @@ class PartRecords(PartRecordsTemplate):
         desc=self.prev_filter_desc,
         part_type=self.prev_filter_type,
         status=self.prev_filter_status,
-        designbom = self.prev_filter_designbom,
+        designbom = self.prev_filter_designbom
       )
       self.repeating_panel_1.items = results
       self.label_count.text = f"{len(results)} parts returned"
@@ -64,6 +67,7 @@ class PartRecords(PartRecordsTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
                 prev_filter_designbom=self.prev_filter_designbom)
+      print(f"opening PartRecord: prev_filter_designbom = {self.prev_filter_designbom}")
     except Exception as e:
       alert(f"Error loading part detail: {e}")
 
@@ -78,6 +82,7 @@ class PartRecords(PartRecordsTemplate):
 
   def button_home_click(self, **event_args):
     open_form("Nav")
+
   
 
 

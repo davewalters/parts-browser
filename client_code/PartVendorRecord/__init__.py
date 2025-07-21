@@ -10,7 +10,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
                prev_filter_desc="", 
                prev_filter_type="", 
                prev_filter_status="",
-               
+               prev_filter_designbom=False,
                back_to_bom=False,
                assembly_part_id=None,
                **kwargs):
@@ -33,6 +33,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
+    self.prev_filter_designbom = prev_filter_designbom
     self.back_to_bom = back_to_bom
     self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
 
@@ -136,14 +137,16 @@ class PartVendorRecord(PartVendorRecordTemplate):
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
     else:
       open_form("PartVendorRecords",
                 part_id=self.part.get("_id", ""),
                 prev_filter_part=self.prev_filter_part,
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status)
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
 
   def button_delete_vendor_click(self, **event_args):
     vendor_id = self.vendor_data.get("vendor_id", "")

@@ -88,10 +88,6 @@ class VendorRecord(VendorRecordTemplate):
         Notification(f"❌ Delete failed: {e}", style="danger").show()
 
   def open_vendor_records(self):
-    get_open_form().content_panel.clear()
-    get_open_form().content_panel.add_component(
-      VendorRecords(
-        filter_vendor_id=self.prev_filter_vendor_id,
-        filter_company_name=self.prev_filter_company_name
-      )
-    )
+    open_form("VendorRecords",
+              filter_vendor_id=self.prev_filter_vendor_id,
+              filter_company_name=self.prev_filter_company_name)

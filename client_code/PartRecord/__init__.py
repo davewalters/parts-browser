@@ -25,6 +25,7 @@ class PartRecord(PartRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.prev_filter_designbom = prev_filter_designbom
+    print(f"In PartRecord: prev_filter_designbom = {prev_filter_designbom}")
     
     self.part = {}
     self.is_new = part_id is None
@@ -96,16 +97,13 @@ class PartRecord(PartRecordTemplate):
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   def button_back_click(self, **event_args):
-    get_open_form().content_panel.clear()
-    get_open_form().content_panel.add_component(
-      PartRecords(
-        filter_part=self.prev_filter_part,
-        filter_desc=self.prev_filter_desc,
-        filter_type=self.prev_filter_type,
-        filter_status=self.prev_filter_status,
-        filter_designbom=self.prev_filter_designbom
-      )
-    )
+    open_form("PartRecords",
+              filter_part=self.prev_filter_part,
+              filter_desc=self.prev_filter_desc,
+              filter_type=self.prev_filter_type,
+              filter_status=self.prev_filter_status,
+              filter_designbom=self.prev_filter_designbom)
+    print(f"In PartRecord opening PartRecords, self.prev_filter_designbom = {self.prev_filter_designbom}")
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -129,7 +127,7 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
-                prev_filter_designbom=self.pre_filter_designbom)
+                prev_filter_designbom=self.prev_filter_designbom)
     else:
       print(f"PartRecord->PartVendorRecords: part_id is: {part_id}")
 
