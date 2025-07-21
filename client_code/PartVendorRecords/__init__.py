@@ -36,19 +36,22 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.vendor_lookup = self.get_vendor_lookup()
     from datetime import datetime
 
-    # If vendor_part_numbers is empty but a default_vendor exists, add it
+    from datetime import datetime
+
     default_vendor = self.part.get("default_vendor", "")
     if default_vendor and not self.part.get("vendor_part_numbers"):
       company_name = self.vendor_lookup.get(default_vendor, default_vendor)
       default_entry = {
         "vendor_id": default_vendor,
-        "vendor_part_number": self.part.get("_id", ""),
-        "vendor_currency": "NZ",
-        "vendor_cost": 0.0,
-        "cost_nz": 0.0,
-        "cost_date": datetime.today(),  # Use raw datetime
+        "vendor_part_no": self.part.get("_id", ""),
+        "vendor_currency": "NZD",
+        "vendor_price": 0.0,                   
+        "cost_$NZ": 0.0,
+        "cost_date": datetime.today().date(),
         "vendor_company_name": company_name
       }
+
+    
       self.part["vendor_part_numbers"] = [default_entry]
     
       try:
@@ -56,8 +59,9 @@ class PartVendorRecords(PartVendorRecordsTemplate):
         Notification(f"✅ Default vendor '{company_name}' added.", style="success").show()
       except Exception as e:
         Notification(f"❌ Could not save default vendor: {e}", style="danger", timeout=None).show()
-
+    
     self.load_vendor_data()
+
 
   def get_vendor_lookup(self):
     try:

@@ -159,10 +159,14 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
     self.button_back_click()
 
-  def format_date(self, iso_string):
-    if not iso_string or not isinstance(iso_string, str):
+    def format_date(self, date_input):
+      if isinstance(date_input, datetime):
+        return date_input.date().isoformat()
+      elif isinstance(date_input, date):
+        return date_input.isoformat()
+      elif isinstance(date_input, str):
+        return date_input.split("T")[0] if "T" in date_input else date_input
       return "1970-01-01"
-    return iso_string.split("T")[0] if "T" in iso_string else iso_string
 
   def format_currency(self, value):
     try:
