@@ -75,11 +75,13 @@ components:
         name: button_back
         properties: {font_size: 16, icon: 'fa:arrow-left', text: ''}
         type: Button
-      - layout_properties: {col_xs: 5, row: WHXICK, width_xs: 2}
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 5, row: WHXICK, width_xs: 2}
         name: button_save
         properties: {icon: 'fa:save', text: Save}
         type: Button
-      - layout_properties: {col_xs: 7, row: WHXICK, width_xs: 2}
+      - event_bindings: {click: button_add_item_click}
+        layout_properties: {col_xs: 7, row: WHXICK, width_xs: 2}
         name: button_add_item
         properties: {icon: 'fa:plus-circle', text: Add Item}
         type: Button
@@ -132,6 +134,10 @@ components:
       type: Label
     - layout_properties: {column: view}
       name: label_view
+      properties: {}
+      type: Label
+    - layout_properties: {column: delete}
+      name: label_del
       properties: {}
       type: Label
     layout_properties: {grid_position: 'ZCFPXS,UFQWWW'}

@@ -12,6 +12,8 @@ class PartVendorRecord(PartVendorRecordTemplate):
                prev_filter_status="",
                prev_filter_designbom=False,
                back_to_bom=False,
+               back_to_po=False,
+               purchase_order_id=None,
                assembly_part_id=None,
                **kwargs):
     self.init_components(**kwargs)
@@ -35,6 +37,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.prev_filter_status = prev_filter_status
     self.prev_filter_designbom = prev_filter_designbom
     self.back_to_bom = back_to_bom
+    self.back_to_po = back_to_po
     self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
 
     try:
@@ -131,7 +134,9 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
 
   def button_back_click(self, **event_args):
-    if self.back_to_bom:
+    if self.back_to_po:
+      open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
+    elif self.back_to_bom:
       open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,
                 prev_filter_part=self.prev_filter_part,

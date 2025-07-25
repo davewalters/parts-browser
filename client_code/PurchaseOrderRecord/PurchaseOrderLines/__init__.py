@@ -50,14 +50,23 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
     self.parent.raise_event("x-save-purchase-order")
-    open_form("PartVendorRecord", part_id=self.item["part_id"], back_to_po=True)
+    open_form("PartVendorRecord", part_id=self.item["part_id"], back_to_po=True, purchase_order_id=self.label_id.text)
 
   def button_view_click(self, **event_args):
     if not self.item.get("part_id"):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
     self.parent.raise_event("x-save-purchase-order")
-    open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+    open_form("PartVendorRecords", part_id=self.item["part_id"], back_to_po=True, purchase_order_id=self.label_id.text)
+
+  def button_delete_click(self, **event_args):
+    if confirm("Delete this line item?"):
+    self.parent.raise_event("x-delete-po-line", row_index=self.item_index)
+
+  
+
+  
+
 
 
 

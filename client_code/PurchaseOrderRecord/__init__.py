@@ -40,6 +40,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
     self.populate_form()
     self.repeating_panel_lines.set_event_handler("x-refresh-line-cost", self.refresh_line_cost)
+    self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
+
 
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
@@ -55,7 +57,9 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     if vendor_id:
       self.drop_down_vendor_name.selected_value = vendor_id
 
-    self.repeating_panel_lines.items = self.purchase_order.get("lines", [])
+    for line in self.purchase_order["lines"]:
+      line["purchase_order_id"] = self.purchase_order["_id"]
+    self.repeating_panel_lines.items = self.purchase_order["lines"]
 
   def load_vendor_dropdown(self):
     self.vendors = anvil.server.call("get_filtered_vendors")
@@ -102,7 +106,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "vendor_unit_cost": 0.0,
       "vendor_currency": "NZD",
       "total_cost_nz": 0.0,
-      "delivery_date": date.today().isoformat()
+      "delivery_date": date.today().isoformat(),
+      "purchase_order_id": self.label_id.text
     }
     self.repeating_panel_lines.items = self.repeating_panel_lines.items + [new_line]
 
@@ -133,25 +138,6 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     except Exception as e:
       Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
 
-    except Exception as e:
-      Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
-    try:
-      part = anvil.server.call("get_part", part_id) if part_id else {}
-      cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
-      line_total = qty_ordered * cost_nz
-
-      part = anvil.server.call("get_part", part_id) if part_id else {}
-      cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
-      vendor_price = float(part.get("vendor_part_numbers", [{}])[0].get("vendor_price", 0.0))
-      line_total = qty_ordered * cost_nz
-
-      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_price
-      self.repeating_panel_lines.items[row_index]["total_cost_nz"] = round(line_total, 2)
-      self.repeating_panel_lines.items = self.repeating_panel_lines.items  # Trigger UI refresh
-
-    except Exception as e:
-      Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
-
   def button_save_click(self, **event_args):
     try:
       lines = self.repeating_panel_lines.items
@@ -160,41 +146,31 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
       total_cost_nz = 0.0
       for line in lines:
-        try:
-          qty = float(line.get("qty_ordered", 0))
-          part_id = line.get("part_id", "")
-          part = anvil.server.call("get_part", part_id) if part_id else {}
-          cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
-          line_total = qty * cost_nz
+        qty = float(line.get("qty_ordered", 0))
+        part_id = line.get("part_id", "")
+        part = anvil.server.call("get_part", part_id) if part_id else {}
+        cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
+        line_total = qty * cost_nz
 
-          default_vendor = part.get("default_vendor")
-          po_vendor = self.drop_down_vendor_name.selected_value
-          if default_vendor != po_vendor:
-            Notification(f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.", style="warning").show()
-            open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+        default_vendor = part.get("default_vendor")
+        po_vendor = self.drop_down_vendor_name.selected_value
+        if default_vendor != po_vendor:
+          Notification(f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.", style="warning").show()
+          open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+          return
 
-            return
-          if default_vendor != po_vendor:
-            Notification(f"⚠️ Default vendor for part '{part_id}' does not match purchase order vendor.", style="warning").show()
-            open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+        vendor_price = 0.0
+        vendor_currency = "NZD"
+        for v in part.get("vendor_part_numbers", []):
+          if v.get("vendor_id") == default_vendor:
+            vendor_price = float(v.get("vendor_price", 0.0))
+            vendor_currency = v.get("vendor_currency", "NZD")
+            break
 
-            return
-
-          vendor_price = 0.0
-          vendor_currency = "NZD"
-          for v in part.get("vendor_part_numbers", []):
-            if v.get("vendor_id") == default_vendor:
-              vendor_price = float(v.get("vendor_price", 0.0))
-              vendor_currency = v.get("vendor_currency", "NZD")
-              break
-
-          line["vendor_unit_cost"] = vendor_price
-          line["vendor_currency"] = vendor_currency
-          line["total_cost_nz"] = round(line_total, 2)
-          total_cost_nz += line_total
-
-        except Exception as e:
-          raise ValueError(f"Invalid values in line item: {line}\nError: {e}")
+        line["vendor_unit_cost"] = vendor_price
+        line["vendor_currency"] = vendor_currency
+        line["total_cost_nz"] = round(line_total, 2)
+        total_cost_nz += line_total
 
       purchase_order = {
         "_id": self.label_id.text.strip(),
@@ -216,6 +192,14 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
+  def delete_line_item(self, row_index, **event_args):
+    items = list(self.repeating_panel_lines.items)
+    del items[row_index]
+    self.repeating_panel_lines.items = items
+
+
+
 
 
 

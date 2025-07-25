@@ -35,13 +35,20 @@ components:
     name: label_total_cost_nz
     properties: {font_size: 12}
     type: Label
-  - layout_properties: {column: edit_price}
+  - event_bindings: {click: button_edit_price_click}
+    layout_properties: {column: edit_price}
     name: button_edit_price
     properties: {icon: 'fa:dollar', text: ''}
     type: Button
-  - layout_properties: {column: view}
+  - event_bindings: {click: button_view_click}
+    layout_properties: {column: view}
     name: button_view
     properties: {icon: 'fa:arrow-right', text: ''}
+    type: Button
+  - event_bindings: {click: button_delete_click}
+    layout_properties: {column: delete}
+    name: button_delete
+    properties: {icon: 'fa:trash', text: ''}
     type: Button
   layout_properties: {grid_position: 'HEAIZR,YERTYG'}
   name: data_row_panel_1
