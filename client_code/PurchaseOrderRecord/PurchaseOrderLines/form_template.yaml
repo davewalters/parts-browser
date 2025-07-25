@@ -1,3 +1,44 @@
-components: []
+components:
+- components:
+  - layout_properties: {column: part_id}
+    name: label_part_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: vendor_part_id}
+    name: label_vendor_part_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: description}
+    name: label_description
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: qty_ordered}
+    name: label_qty_ordered
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: qty_received}
+    name: text_box_qty_received
+    properties: {font_size: 12}
+    type: TextBox
+  - layout_properties: {column: vendor_currency}
+    name: label_vendor_currency
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: vendor_unit_price}
+    name: label_vendor_unit_price
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: total_cost_nz}
+    name: label_total_cost_nz
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: view}
+    name: button_view
+    properties: {icon: 'fa:arrow-right', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'HEAIZR,YERTYG'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
 container: {type: ColumnPanel}
 is_package: true
