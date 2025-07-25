@@ -6,7 +6,7 @@ components:
     properties: {font_size: 12}
     type: TextBox
   - layout_properties: {column: vendor_part_id}
-    name: label_vendor_part_id
+    name: label_vendor_part_no
     properties: {font_size: 12}
     type: Label
   - layout_properties: {column: description}

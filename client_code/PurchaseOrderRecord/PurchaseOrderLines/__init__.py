@@ -61,7 +61,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
 
   def button_delete_click(self, **event_args):
     if confirm("Delete this line item?"):
-    self.parent.raise_event("x-delete-po-line", row_index=self.item_index)
+      self.parent.raise_event("x-delete-po-line", row_index=self.item_index)
 
   
 

@@ -8,6 +8,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.init_components(**properties)
     self.button_back.role = "mydefault-button"
     self.button_add_item.role = "new-button"
+    self.button_save.role = "save-button"
     self.drop_down_status.items = ["open", "partial", "closed", "cancelled"]
     self.drop_down_payment_method.items = ["Visa", "PayPal", "Eftpos", "Account"]
 

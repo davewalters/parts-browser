@@ -16,7 +16,7 @@ components:
         type: Label
       - layout_properties: {col_xs: 5, row: TLSMDI, width_xs: 2}
         name: drop_down_status
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
       - layout_properties: {col_xs: 8, row: TLSMDI, width_xs: 2}
         name: label_title_order_date
@@ -32,7 +32,7 @@ components:
         type: Label
       - layout_properties: {col_xs: 2, row: TQMJXG, width_xs: 5}
         name: drop_down_vendor_name
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
       - layout_properties: {col_xs: 8, row: TQMJXG, width_xs: 2}
         name: label_title_due_date
@@ -48,7 +48,7 @@ components:
         type: Label
       - layout_properties: {col_xs: 2, row: ENSSKA, width_xs: 2}
         name: drop_down_payment_method
-        properties: {}
+        properties: {font_size: 14}
         type: DropDown
       - layout_properties: {col_xs: 4, row: ENSSKA, width_xs: 1}
         name: check_box_paid
@@ -71,7 +71,8 @@ components:
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 3, row: WHXICK, width_xs: 2}
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 3, row: WHXICK, width_xs: 2}
         name: button_back
         properties: {font_size: 16, icon: 'fa:arrow-left', text: ''}
         type: Button
@@ -150,7 +151,7 @@ components:
     type: RepeatingPanel
   - layout_properties: {grid_position: 'QITAOS,GPRXMN'}
     name: text_area_notes
-    properties: {}
+    properties: {font_size: 12}
     type: TextArea
   layout_properties: {slot: default}
   name: content_panel
