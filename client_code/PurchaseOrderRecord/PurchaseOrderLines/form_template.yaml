@@ -1,9 +1,10 @@
 components:
 - components:
-  - layout_properties: {column: part_id}
-    name: label_part_id
+  - event_bindings: {lost_focus: text_box_part_id_lost_focus}
+    layout_properties: {column: part_id}
+    name: text_box_part_id
     properties: {font_size: 12}
-    type: Label
+    type: TextBox
   - layout_properties: {column: vendor_part_id}
     name: label_vendor_part_id
     properties: {font_size: 12}
@@ -12,11 +13,13 @@ components:
     name: label_description
     properties: {font_size: 12}
     type: Label
-  - layout_properties: {column: qty_ordered}
-    name: label_qty_ordered
+  - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus}
+    layout_properties: {column: qty_ordered}
+    name: text_box_qty_ordered
     properties: {font_size: 12}
-    type: Label
-  - layout_properties: {column: qty_received}
+    type: TextBox
+  - event_bindings: {lost_focus: text_box_qty_received_lost_focus}
+    layout_properties: {column: qty_received}
     name: text_box_qty_received
     properties: {font_size: 12}
     type: TextBox
@@ -32,6 +35,10 @@ components:
     name: label_total_cost_nz
     properties: {font_size: 12}
     type: Label
+  - layout_properties: {column: edit_price}
+    name: button_edit_price
+    properties: {icon: 'fa:dollar', text: ''}
+    type: Button
   - layout_properties: {column: view}
     name: button_view
     properties: {icon: 'fa:arrow-right', text: ''}

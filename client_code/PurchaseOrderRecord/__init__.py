@@ -7,7 +7,6 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
   def __init__(self, purchase_order_id=None, **properties):
     self.init_components(**properties)
     self.button_back.role = "mydefault-button"
-    self.button_save.role = "save-button"
     self.button_add_item.role = "new-button"
     self.drop_down_status.items = ["open", "partial", "closed", "cancelled"]
     self.drop_down_payment_method.items = ["Visa", "PayPal", "Eftpos", "Account"]
@@ -40,6 +39,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       }
 
     self.populate_form()
+    self.repeating_panel_lines.set_event_handler("x-refresh-line-cost", self.refresh_line_cost)
 
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
@@ -106,6 +106,24 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     }
     self.repeating_panel_lines.items = self.repeating_panel_lines.items + [new_line]
 
+  def refresh_line_cost(self, row_index, part_id, qty_ordered, **event_args):
+    try:
+      part = anvil.server.call("get_part", part_id) if part_id else {}
+      cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
+      line_total = qty_ordered * cost_nz
+
+      part = anvil.server.call("get_part", part_id) if part_id else {}
+      cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
+      vendor_price = float(part.get("vendor_part_numbers", [{}])[0].get("vendor_price", 0.0))
+      line_total = qty_ordered * cost_nz
+
+      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_price
+      self.repeating_panel_lines.items[row_index]["total_cost_nz"] = round(line_total, 2)
+      self.repeating_panel_lines.items = self.repeating_panel_lines.items  # Trigger UI refresh
+
+    except Exception as e:
+      Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
+
   def button_save_click(self, **event_args):
     try:
       lines = self.repeating_panel_lines.items
@@ -116,9 +134,12 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       for line in lines:
         try:
           qty = float(line.get("qty_ordered", 0))
-          cost = float(line.get("vendor_unit_cost", 0))
+          part_id = line.get("part_id", "")
+          part = anvil.server.call("get_part", part_id) if part_id else {}
+          cost = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
           line_total = qty * cost
           line["total_cost_nz"] = round(line_total, 2)
+          # vendor_unit_cost is preserved as the vendor-specified price in their currency
           total_cost_nz += line_total
         except Exception as e:
           raise ValueError(f"Invalid values in line item: {line}\nError: {e}")
@@ -143,4 +164,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
+
+
 
