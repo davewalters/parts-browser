@@ -12,13 +12,16 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                prev_filter_status="",
                prev_filter_designbom=False,
                back_to_bom=False,
+               back_to_po=False,
                assembly_part_id=None,
+               purchase_order_id=None,
                **kwargs):
 
     self.init_components(**kwargs)
     self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
     self.button_back_to_bom.role = "mydefault-button"
+    self.button_back_to_po.role = "mydefault-button"
 
     print(f"part_id = {part_id}")
     self.part = anvil.server.call("get_part", part_id)
@@ -30,9 +33,11 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.prev_filter_status = prev_filter_status
     self.prev_filter_designbom = prev_filter_designbom
     self.back_to_bom = back_to_bom
-    self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
     self.button_back_to_bom.visible = self.back_to_bom
-
+    self.back_to_po = back_to_po
+    self.button_back_to_po.visible = self.back_to_po
+    self.assembly_part_id = assembly_part_id or self.part.get("_id", "")
+    
     self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
     self.vendor_lookup = self.get_vendor_lookup()
@@ -90,6 +95,9 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor)
 
   def button_cancel_click(self, **event_args):
+    if self.back_to_po:
+      open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
+    return
     if self.back_to_bom:
       open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,
@@ -109,6 +117,9 @@ class PartVendorRecords(PartVendorRecordsTemplate):
 
   def button_back_to_bom_click(self, **event_args):
     self.button_cancel_click()
+
+  def button_back_to_po_click(self, **event_args):
+    open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)  
 
   def button_new_vendor_click(self, **event_args):
     open_form("PartVendorRecord",

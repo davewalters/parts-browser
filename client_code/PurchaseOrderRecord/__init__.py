@@ -171,11 +171,13 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
           po_vendor = self.drop_down_vendor_name.selected_value
           if default_vendor != po_vendor:
             Notification(f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.", style="warning").show()
-            open_form("PartVendorRecords", part_id=part_id, back_to_po=True)
+            open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+
             return
           if default_vendor != po_vendor:
             Notification(f"⚠️ Default vendor for part '{part_id}' does not match purchase order vendor.", style="warning").show()
-            open_form("PartVendorRecords", part_id=part_id, back_to_po=True)
+            open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+
             return
 
           vendor_price = 0.0

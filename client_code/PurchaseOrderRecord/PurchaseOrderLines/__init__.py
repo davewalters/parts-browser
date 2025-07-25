@@ -57,7 +57,8 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
     self.parent.raise_event("x-save-purchase-order")
-    open_form("PartVendorRecords", part_id=self.item["part_id"], back_to_po=True)
+    open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
+
 
 
 
