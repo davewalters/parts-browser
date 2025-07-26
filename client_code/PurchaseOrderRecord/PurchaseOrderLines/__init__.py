@@ -17,6 +17,26 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
     self.label_vendor_unit_price.text = f"{float(self.item.get('vendor_unit_cost', 0)):0.2f}"
     self.label_total_cost_nz.text = f"{float(self.item.get('total_cost_nz', 0)):0.2f}"
 
+  def form_show(self, **event_args):
+    panel = self.get_repeating_panel()
+    if panel and self.item.get("part_id"):
+      self.refresh_line()
+
+
+  def get_repeating_panel(self):
+    parent = self.parent
+    level = 0
+    while parent:
+      print(f"🔍 Checking parent at level {level}: {type(parent)}")
+      if hasattr(parent, "items"):
+        print("✅ Found repeating panel.")
+        return parent
+      parent = parent.parent
+      level += 1
+    print("❌ Could not find parent with 'items'")
+    return None
+
+
   def refresh_line(self):
     try:
       part_id = self.text_box_part_id.text.strip()
@@ -24,8 +44,9 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       self.item["part_id"] = part_id
       self.item["qty_ordered"] = qty
 
-      row_index = self.parent.items.index(self.item)
-      self.parent.raise_event(
+      panel = self.get_repeating_panel()
+      row_index = panel.items.index(self.item)
+      panel.raise_event(
         "x-refresh-line-cost",
         row_index=row_index,
         part_id=part_id,
@@ -50,7 +71,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
     if not self.item.get("part_id"):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
-    self.parent.raise_event("x-save-purchase-order")
+    self.get_repeating_panel().raise_event("x-save-purchase-order")
     open_form("PartVendorRecord",
               part_id=self.item["part_id"],
               back_to_po=True,
@@ -60,7 +81,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
     if not self.item.get("part_id"):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
-    self.parent.raise_event("x-save-purchase-order")
+    self.get_repeating_panel().raise_event("x-save-purchase-order")
     open_form("PartVendorRecords",
               part_id=self.item["part_id"],
               back_to_po=True,
@@ -68,8 +89,11 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
 
   def button_delete_click(self, **event_args):
     if confirm("Delete this line item?"):
-      row_index = self.parent.items.index(self.item)
-      self.parent.raise_event("x-delete-po-line", row_index=row_index)
+      panel = self.get_repeating_panel()
+      row_index = panel.items.index(self.item)
+      panel.raise_event("x-delete-po-line", row_index=row_index)
+
+
 
 
   
