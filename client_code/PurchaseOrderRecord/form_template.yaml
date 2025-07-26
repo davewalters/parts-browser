@@ -95,60 +95,65 @@ components:
     properties: {}
     type: GridPanel
   - components:
-    - layout_properties: {column: part_id}
-      name: label_part_id
-      properties: {text: Part No.}
-      type: Label
-    - layout_properties: {column: vendor_part_id}
-      name: label_vendor_part_no
-      properties:
-        text: |
-          Vendor Part No
-      type: Label
-    - layout_properties: {column: description}
-      name: label_description
-      properties: {text: Description}
-      type: Label
-    - layout_properties: {column: qty_ordered}
-      name: label_qty_ordered
-      properties: {text: Qty Ordered}
-      type: Label
-    - layout_properties: {column: qty_received}
-      name: label_qty_received
-      properties: {text: Qty Received}
-      type: Label
-    - layout_properties: {column: vendor_currency}
-      name: label_vendor_currency
-      properties: {text: Vendor Currency}
-      type: Label
-    - layout_properties: {column: vendor_unit_price}
-      name: label_vendor_unit_price
-      properties: {text: Vendor Unit Price}
-      type: Label
-    - layout_properties: {column: total_cost_nz}
-      name: label_total_cost_nz
-      properties: {text: Total Cost NZD}
-      type: Label
-    - layout_properties: {column: edit_price}
-      name: label_edit_price
-      properties: {}
-      type: Label
-    - layout_properties: {column: view}
-      name: label_view
-      properties: {}
-      type: Label
-    - layout_properties: {column: delete}
-      name: label_del
-      properties: {}
-      type: Label
-    layout_properties: {grid_position: 'ZCFPXS,UFQWWW'}
-    name: data_row_panel_1
-    properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
-    type: DataRowPanel
-  - layout_properties: {grid_position: 'MFTKXW,RWKOJG'}
-    name: repeating_panel_lines
-    properties: {item_template: PurchaseOrderRecord.PurchaseOrderLines}
-    type: RepeatingPanel
+    - components:
+      - layout_properties: {column: part_id}
+        name: label_part_id
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: vendor_part_id}
+        name: label_vendor_part_no
+        properties:
+          text: |
+            Vendor Part No
+        type: Label
+      - layout_properties: {column: description}
+        name: label_description
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: qty_ordered}
+        name: label_qty_ordered
+        properties: {text: Qty Ordered}
+        type: Label
+      - layout_properties: {column: qty_received}
+        name: label_qty_received
+        properties: {text: Qty Received}
+        type: Label
+      - layout_properties: {column: vendor_currency}
+        name: label_vendor_currency
+        properties: {text: Vendor Currency}
+        type: Label
+      - layout_properties: {column: vendor_unit_price}
+        name: label_vendor_unit_price
+        properties: {text: Vendor Unit Price}
+        type: Label
+      - layout_properties: {column: total_cost_nz}
+        name: label_total_cost_nz
+        properties: {text: Total Cost NZD}
+        type: Label
+      - layout_properties: {column: edit_price}
+        name: label_edit_price
+        properties: {}
+        type: Label
+      - layout_properties: {column: view}
+        name: label_view
+        properties: {}
+        type: Label
+      - layout_properties: {column: delete}
+        name: label_del
+        properties: {}
+        type: Label
+      layout_properties: {col_xs: 0, row: KMLRTN, width_xs: 12}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: BQHAOO, width_xs: 12}
+      name: repeating_panel_lines
+      properties: {item_template: PurchaseOrderRecord.PurchaseOrderLines}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'LQTTWI,RNPIIJ'}
+    name: grid_panel_po_lines
+    properties: {}
+    type: GridPanel
   - layout_properties: {grid_position: 'QITAOS,GPRXMN'}
     name: text_area_notes
     properties: {font_size: 12}

@@ -11,7 +11,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.button_save.role = "save-button"
     self.drop_down_status.items = ["open", "partial", "closed", "cancelled"]
     self.drop_down_payment_method.items = ["Visa", "PayPal", "Eftpos", "Account"]
-
+    
     self.purchase_order = {}
     self.vendors = []
     self.is_new = purchase_order_id is None
@@ -111,7 +111,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "delivery_date": date.today().isoformat(),
       "purchase_order_id": self.label_id.text
     }
-    self.repeating_panel_lines.items = self.repeating_panel_lines.items + [new_line]
+    self.repeating_panel_lines.items = [new_line] + self.repeating_panel_lines.items
 
   def refresh_line_cost(self, row_index, part_id, qty_ordered, **event_args):
     try:
@@ -200,9 +200,9 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "notes": self.text_area_notes.text
       }
 
-      anvil.server.call("save_purchase_order", purchase_order)
+      self.label_order_cost_nz.text = self.format_currency(purchase_order["order_cost_nz"])
       Notification("✅ Purchase order saved.", style="success").show()
-      open_form("PurchaseOrderRecords")
+      #open_form("PurchaseOrderRecords")
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
@@ -211,6 +211,21 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     items = list(self.repeating_panel_lines.items)
     del items[row_index]
     self.repeating_panel_lines.items = items
+
+  def set_grid_columns(self):
+    self.label_part_id.grid_column = "A"
+    self.label_vendor_part_no.grid_column = "B"
+    self.label_descrip
+    self.label_header_qty.grid_column = "C"
+    self.label_header_unit.grid_column = "D"
+    self.label_header_total.grid_column = "E"
+
+    for row in self.repeating_panel_lines.get_components():
+      row.text_box_part_id.grid_column = "A"
+      row.label_description.grid_column = "B"
+      row.text_box_qty_ordered.grid_column = "C"
+      row.label_vendor_unit_price.grid_column = "D"
+      row.label_total_cost_nz.grid_column = "E"
 
 
 

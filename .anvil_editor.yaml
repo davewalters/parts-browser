@@ -16,6 +16,7 @@ unique_ids:
     PartVendorRecords.ItemTemplate3: '1751714363687956694938869.1277'
     PurchaseOrderRecord: '1753265205822924829375088.9769'
     PurchaseOrderRecord.PurchaseOrderLines: '1753265538079849612171424.9434'
+    PurchaseOrderRecord.RowTemplate1: '1753572753021843307260204.588'
     VendorRecord: '1751880206306501648000146.48193'
     VendorRecords: '1751857443470862083059973.3711'
     VendorRecords.ItemTemplate2: '1751857729937623899630071.331'
