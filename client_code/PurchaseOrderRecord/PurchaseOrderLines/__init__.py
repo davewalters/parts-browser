@@ -24,9 +24,10 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       self.item["part_id"] = part_id
       self.item["qty_ordered"] = qty
 
+      row_index = self.parent.items.index(self.item)
       self.parent.raise_event(
         "x-refresh-line-cost",
-        row_index=self.item_index,
+        row_index=row_index,
         part_id=part_id,
         qty_ordered=qty
       )
@@ -50,18 +51,26 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
     self.parent.raise_event("x-save-purchase-order")
-    open_form("PartVendorRecord", part_id=self.item["part_id"], back_to_po=True, purchase_order_id=self.label_id.text)
+    open_form("PartVendorRecord",
+              part_id=self.item["part_id"],
+              back_to_po=True,
+              purchase_order_id=self.item.get("purchase_order_id", ""))
 
   def button_view_click(self, **event_args):
     if not self.item.get("part_id"):
       Notification("⚠️ Enter a Part ID first", style="warning").show()
       return
     self.parent.raise_event("x-save-purchase-order")
-    open_form("PartVendorRecords", part_id=self.item["part_id"], back_to_po=True, purchase_order_id=self.label_id.text)
+    open_form("PartVendorRecords",
+              part_id=self.item["part_id"],
+              back_to_po=True,
+              purchase_order_id=self.item.get("purchase_order_id", ""))
 
   def button_delete_click(self, **event_args):
     if confirm("Delete this line item?"):
-      self.parent.raise_event("x-delete-po-line", row_index=self.item_index)
+      row_index = self.parent.items.index(self.item)
+      self.parent.raise_event("x-delete-po-line", row_index=row_index)
+
 
   
 

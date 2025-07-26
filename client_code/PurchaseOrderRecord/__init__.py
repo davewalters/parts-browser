@@ -43,7 +43,6 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.repeating_panel_lines.set_event_handler("x-refresh-line-cost", self.refresh_line_cost)
     self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
 
-
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
     self.drop_down_status.selected_value = self.purchase_order.get("status", "open")
@@ -114,27 +113,15 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
   def refresh_line_cost(self, row_index, part_id, qty_ordered, **event_args):
     try:
-      part = anvil.server.call("get_part", part_id) if part_id else {}
-      cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
-      line_total = qty_ordered * cost_nz
-
-      default_vendor = part.get("default_vendor")
-      po_vendor = self.drop_down_vendor_name.selected_value
-      if default_vendor != po_vendor:
-        Notification(f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.", style="warning").show()
-
-      vendor_price = 0.0
-      vendor_currency = "NZD"
-      for v in part.get("vendor_part_numbers", []):
-        if v.get("vendor_id") == default_vendor:
-          vendor_price = float(v.get("vendor_price", 0.0))
-          vendor_currency = v.get("vendor_currency", "NZD")
-          break
-
-      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_price
-      self.repeating_panel_lines.items[row_index]["vendor_currency"] = vendor_currency
+      vendor_id = self.drop_down_vendor_name.selected_value
+      vendor_info = anvil.server.call("get_part_vendor_info", part_id, vendor_id)
+      line_total = qty_ordered * vendor_info["latest_cost_nz"] if qty_ordered else 0.0
+      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_info["vendor_price"]
+      self.repeating_panel_lines.items[row_index]["vendor_currency"] = vendor_info["vendor_currency"]
+      self.repeating_panel_lines.items[row_index]["vendor_part_no"] = vendor_info["vendor_part_no"]
+      self.repeating_panel_lines.items[row_index]["description"] = vendor_info["description"]
       self.repeating_panel_lines.items[row_index]["total_cost_nz"] = round(line_total, 2)
-      self.repeating_panel_lines.items = self.repeating_panel_lines.items  # Trigger UI refresh
+      self.repeating_panel_lines.items = self.repeating_panel_lines.items
 
     except Exception as e:
       Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
@@ -146,31 +133,33 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         raise ValueError("At least one line item is required.")
 
       total_cost_nz = 0.0
+      vendor_id = self.drop_down_vendor_name.selected_value
+
       for line in lines:
         qty = float(line.get("qty_ordered", 0))
         part_id = line.get("part_id", "")
-        part = anvil.server.call("get_part", part_id) if part_id else {}
-        cost_nz = float(part.get("latest_cost", {}).get("cost_nz", 0.0))
-        line_total = qty * cost_nz
 
+        # Validate vendor match and fetch pricing
+        part = anvil.server.call("get_part", part_id) if part_id else {}
         default_vendor = part.get("default_vendor")
-        po_vendor = self.drop_down_vendor_name.selected_value
-        if default_vendor != po_vendor:
-          Notification(f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.", style="warning").show()
+        if default_vendor != vendor_id:
+          Notification(
+            f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.",
+            style="warning"
+          ).show()
           open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
           return
 
-        vendor_price = 0.0
-        vendor_currency = "NZD"
-        for v in part.get("vendor_part_numbers", []):
-          if v.get("vendor_id") == default_vendor:
-            vendor_price = float(v.get("vendor_price", 0.0))
-            vendor_currency = v.get("vendor_currency", "NZD")
-            break
+        vendor_info = anvil.server.call("get_part_vendor_info", part_id, vendor_id)
+        line_total = qty * vendor_info["latest_cost_nz"]
 
-        line["vendor_unit_cost"] = vendor_price
-        line["vendor_currency"] = vendor_currency
+        # Populate line fields
+        line["vendor_unit_cost"] = vendor_info["vendor_price"]
+        line["vendor_currency"] = vendor_info["vendor_currency"]
+        line["vendor_part_no"] = vendor_info["vendor_part_no"]
+        line["description"] = vendor_info["description"]
         line["total_cost_nz"] = round(line_total, 2)
+
         total_cost_nz += line_total
 
       purchase_order = {
@@ -180,7 +169,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "due_date": self.format_date(self.date_picker_date_due.date),
         "payment_method": self.drop_down_payment_method.selected_value,
         "paid": self.check_box_paid.checked,
-        "vendor_id": self.drop_down_vendor_name.selected_value,
+        "vendor_id": vendor_id,
         "vendor_name": self.get_selected_vendor_name(),
         "order_cost_nz": round(total_cost_nz, 2),
         "lines": lines,
@@ -198,6 +187,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     items = list(self.repeating_panel_lines.items)
     del items[row_index]
     self.repeating_panel_lines.items = items
+
 
 
 
