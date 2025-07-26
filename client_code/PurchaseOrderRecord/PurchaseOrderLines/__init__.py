@@ -47,6 +47,9 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
   def text_box_qty_ordered_lost_focus(self, **event_args):
     self.try_refresh_line()
 
+  def text_box_qty_ordered_pressed_enter(self, **event_args):
+    self.try_refresh_line()
+
   def text_box_qty_received_lost_focus(self, **event_args):
     try:
       self.item["qty_received"] = float(self.text_box_qty_received.text or "0")

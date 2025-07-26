@@ -13,7 +13,7 @@ components:
     name: label_description
     properties: {font_size: 12}
     type: Label
-  - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus}
+  - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus, pressed_enter: text_box_qty_ordered_pressed_enter}
     layout_properties: {column: qty_ordered}
     name: text_box_qty_ordered
     properties: {font_size: 12}

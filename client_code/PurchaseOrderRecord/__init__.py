@@ -42,7 +42,9 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.populate_form()
     self.repeating_panel_lines.set_event_handler("x-refresh-line-cost", self.refresh_line_cost)
     self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
-
+    if self.is_new and not self.repeating_panel_lines.items:
+      self.button_add_item_click()
+      
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
     self.drop_down_status.selected_value = self.purchase_order.get("status", "open")
@@ -114,22 +116,39 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
   def refresh_line_cost(self, row_index, part_id, qty_ordered, **event_args):
     try:
       vendor_id = self.drop_down_vendor_name.selected_value
+      if not vendor_id:
+        Notification("⚠️ Select a vendor before adding line items.", style="warning").show()
+        return
+  
+      part = anvil.server.call("get_part", part_id)
+      if not part:
+        Notification(f"⚠️ Part '{part_id}' not found.", style="warning").show()
+        return
+  
+      default_vendor = part.get("default_vendor")
+      if default_vendor != vendor_id:
+        Notification(
+          f"⚠️ Vendor mismatch for part '{part_id}'. "
+          f"Expected vendor: '{default_vendor or 'None'}'",
+          style="warning"
+        ).show()
+        return
+  
       vendor_info = anvil.server.call("get_part_vendor_info", part_id, vendor_id)
       line_total = qty_ordered * vendor_info["latest_cost_nz"] if qty_ordered else 0.0
-
-      updated_lines = list(self.repeating_panel_lines.items)
-      updated_lines[row_index] = {
-        **updated_lines[row_index],
-        "vendor_unit_cost": vendor_info["vendor_price"],
-        "vendor_currency": vendor_info["vendor_currency"],
-        "vendor_part_no": vendor_info["vendor_part_no"],
-        "description": vendor_info["description"],
-        "total_cost_nz": round(line_total, 2),
-      }
-      self.repeating_panel_lines.items = updated_lines
+  
+      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_info["vendor_price"]
+      self.repeating_panel_lines.items[row_index]["vendor_currency"] = vendor_info["vendor_currency"]
+      self.repeating_panel_lines.items[row_index]["vendor_part_no"] = vendor_info["vendor_part_no"]
+      self.repeating_panel_lines.items[row_index]["description"] = vendor_info["description"]
+      self.repeating_panel_lines.items[row_index]["total_cost_nz"] = round(line_total, 2)
+  
+      # ✅ Force UI update
+      self.repeating_panel_lines.items = self.repeating_panel_lines.items
 
     except Exception as e:
       Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
+
 
   def button_save_click(self, **event_args):
     try:
