@@ -44,6 +44,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
     if self.is_new and not self.repeating_panel_lines.items:
       self.button_add_item_click()
+    #self.set_grid_columns() - not working as-is, requires setting in PurchaseOrderLines as well: TODO
       
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
@@ -215,17 +216,42 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
   def set_grid_columns(self):
     self.label_part_id.grid_column = "A"
     self.label_vendor_part_no.grid_column = "B"
-    self.label_descrip
-    self.label_header_qty.grid_column = "C"
-    self.label_header_unit.grid_column = "D"
-    self.label_header_total.grid_column = "E"
+    self.label_description.grid_column = "C"
+    self.label_qty_ordered.grid_column = "D"
+    self.label_qty_received.grid_column = "E"
+    self.label_vendor_currency.grid_column = "F"
+    self.label_vendor_unit_price.grid_column = "G"
+    self.label_total_cost_nz.grid_column = "H"
+    self.label_edit_price.grid_column = "I"
+    self.label_view.grid_column = "J"
+    self.label_del.grid_column = "K"
 
     for row in self.repeating_panel_lines.get_components():
       row.text_box_part_id.grid_column = "A"
-      row.label_description.grid_column = "B"
-      row.text_box_qty_ordered.grid_column = "C"
-      row.label_vendor_unit_price.grid_column = "D"
-      row.label_total_cost_nz.grid_column = "E"
+      row.label_vendor_part_no.grid_column = "B"
+      row.label_description.grid_column = "C"
+      row.text_box_qty_ordered.grid_column = "D"
+      row.text_box_qty_received.grid_column = "E"
+      row.label_vendor_currency.grid_column = "F"
+      row.label_vendor_unit_price.grid_column = "G"
+      row.label_total_cost_nz.grid_column = "H"
+      row.button_edit_price.grid_column = "I"
+      row.button_view.grid_column = "J"
+      row.button_delete.grid_column = "K"
+
+    self.grid_panel_po_lines.col_widths = {
+      "A": "1*",     # Part ID
+      "B": "1*",     # Vendor Part No
+      "C": "2*",     # Description (wider column)
+      "D": "1*",     # Qty Ordered
+      "E": "1*",     # Qty Received
+      "F": "1*",     # Currency
+      "G": "1*",     # Unit Price
+      "H": "1*",     # Total Cost
+      "I": "1*",     # View Button
+      "J": "1*",     # Edit Button
+      "K": "1*"      # Delete Button
+    }
 
 
 
