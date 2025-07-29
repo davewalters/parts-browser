@@ -18,11 +18,10 @@ components:
     name: text_box_qty_ordered
     properties: {font_size: 12}
     type: TextBox
-  - event_bindings: {lost_focus: text_box_qty_received_lost_focus}
-    layout_properties: {column: qty_received}
-    name: text_box_qty_received
-    properties: {font_size: 12}
-    type: TextBox
+  - layout_properties: {column: qty_received}
+    name: label_qty_received
+    properties: {}
+    type: Label
   - layout_properties: {column: vendor_currency}
     name: label_vendor_currency
     properties: {font_size: 12}

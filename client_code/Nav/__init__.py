@@ -4,7 +4,7 @@ import anvil.server
 
 from .. PartRecords import PartRecords
 from .. VendorRecords import VendorRecords
-from .. PurchaseOrderRecord import PurchaseOrderRecord
+from .. PurchaseOrderRecords import PurchaseOrderRecords
 #from ..DesignBOMBrowser import DesignBOMBrowser
 
 class Nav(NavTemplate):
@@ -13,7 +13,7 @@ class Nav(NavTemplate):
     self.menu_items = [
       {"title": "Parts", "form_class": PartRecords},
       {"title": "Vendors", "form_class": VendorRecords},
-      {"title": "PurchaseOrder", "form_class": PurchaseOrderRecord},
+      {"title": "PurchaseOrders", "form_class": PurchaseOrderRecords},
     ]
     self.menu_panel.items = self.menu_items
     self.menu_panel.set_event_handler('x-load-form', self.load_form_event)

@@ -1,31 +1,37 @@
 components:
-- layout_properties: {grid_position: 'FXBUJP,DLEPLI', row_background: ''}
-  name: label_po
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'AEMKVG,JOCPYY'}
-  name: label_vendor
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'EXMVFL,LPUROI'}
-  name: label_order_date
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'QKCFKR,PXZKBQ'}
-  name: label_status
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'OSPZVH,RYAVOY'}
-  name: label_due_date
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'YMZRXF,PVILYA'}
-  name: label_total_cost_nz
-  properties: {font_size: 12}
-  type: Label
-- layout_properties: {grid_position: 'UZEITH,CUEBTV'}
-  name: button_show_detail
-  properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
-  type: Button
+- components:
+  - layout_properties: {column: po}
+    name: label_po
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: vendor}
+    name: label_vendor
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: order_date}
+    name: label_order_date
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_status
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: due_date}
+    name: label_due_date
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: total_cost_nz}
+    name: label_total_cost_nz
+    properties: {font_size: 12}
+    type: Label
+  - event_bindings: {click: button_show_details_click}
+    layout_properties: {column: show_detail}
+    name: button_show_details
+    properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'GINCZT,DNZYSU'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200'}
+  type: DataRowPanel
 container: {type: ColumnPanel}
 is_package: true

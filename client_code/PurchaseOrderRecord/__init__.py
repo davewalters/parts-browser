@@ -4,13 +4,28 @@ import anvil.server
 from datetime import date, datetime
 
 class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
-  def __init__(self, purchase_order_id=None, **properties):
+  def __init__(self, purchase_order_id=None,
+               filter_vendor="", 
+               filter_part="", 
+               filter_status="", 
+               filter_from_date=None, 
+               filter_to_date=None,
+               filter_overdue=False,
+               **properties):
     self.init_components(**properties)
     self.button_back.role = "mydefault-button"
     self.button_add_item.role = "new-button"
     self.button_save.role = "save-button"
     self.drop_down_status.items = ["open", "partial", "closed", "cancelled"]
     self.drop_down_payment_method.items = ["Visa", "PayPal", "Eftpos", "Account"]
+
+    # Save previous filter state for return navigation
+    self.prev_filter_vendor = filter_vendor
+    self.prev_filter_part = filter_part
+    self.prev_filter_status = filter_status
+    self.prev_filter_from_date = filter_from_date
+    self.prev_filter_to_date = filter_to_date
+    self.prev_filter_overdue = filter_overdue
     
     self.purchase_order = {}
     self.vendors = []
@@ -44,7 +59,6 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
     if self.is_new and not self.repeating_panel_lines.items:
       self.button_add_item_click()
-    #self.set_grid_columns() - not working as-is, requires setting in PurchaseOrderLines as well: TODO
       
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
@@ -97,7 +111,13 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       return "–"
 
   def button_back_click(self, **event_args):
-    open_form("PurchaseOrderRecords")
+    open_form("PurchaseOrderRecords",
+              filter_vendor=self.prev_filter_vendor,
+              filter_part=self.prev_filter_part,
+              filter_status=self.prev_filter_status,
+              filter_from_date=self.prev_filter_from_date,
+              filter_to_date=self.prev_filter_to_date,
+              filter_overdue = self.prev_filter_overdue)
 
   def button_add_item_click(self, **event_args):
     new_line = {
@@ -202,6 +222,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       }
 
       self.label_order_cost_nz.text = self.format_currency(purchase_order["order_cost_nz"])
+      self.repeating_panel_lines.items = list(lines)
+
       Notification("✅ Purchase order saved.", style="success").show()
       #open_form("PurchaseOrderRecords")
 
@@ -213,45 +235,6 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     del items[row_index]
     self.repeating_panel_lines.items = items
 
-  def set_grid_columns(self):
-    self.label_part_id.grid_column = "A"
-    self.label_vendor_part_no.grid_column = "B"
-    self.label_description.grid_column = "C"
-    self.label_qty_ordered.grid_column = "D"
-    self.label_qty_received.grid_column = "E"
-    self.label_vendor_currency.grid_column = "F"
-    self.label_vendor_unit_price.grid_column = "G"
-    self.label_total_cost_nz.grid_column = "H"
-    self.label_edit_price.grid_column = "I"
-    self.label_view.grid_column = "J"
-    self.label_del.grid_column = "K"
-
-    for row in self.repeating_panel_lines.get_components():
-      row.text_box_part_id.grid_column = "A"
-      row.label_vendor_part_no.grid_column = "B"
-      row.label_description.grid_column = "C"
-      row.text_box_qty_ordered.grid_column = "D"
-      row.text_box_qty_received.grid_column = "E"
-      row.label_vendor_currency.grid_column = "F"
-      row.label_vendor_unit_price.grid_column = "G"
-      row.label_total_cost_nz.grid_column = "H"
-      row.button_edit_price.grid_column = "I"
-      row.button_view.grid_column = "J"
-      row.button_delete.grid_column = "K"
-
-    self.grid_panel_po_lines.col_widths = {
-      "A": "1*",     # Part ID
-      "B": "1*",     # Vendor Part No
-      "C": "2*",     # Description (wider column)
-      "D": "1*",     # Qty Ordered
-      "E": "1*",     # Qty Received
-      "F": "1*",     # Currency
-      "G": "1*",     # Unit Price
-      "H": "1*",     # Total Cost
-      "I": "1*",     # View Button
-      "J": "1*",     # Edit Button
-      "K": "1*"      # Delete Button
-    }
 
 
 

@@ -11,85 +11,80 @@ components:
       type: Image
     - components:
       - components:
+        - components:
+          - layout_properties: {col_xs: 1, row: ANFIOO, width_xs: 1}
+            name: label_filter
+            properties:
+              align: center
+              font_size: 24
+              foreground: theme:Secondary 500
+              icon: fa:filter
+              icon_align: left_edge
+              spacing:
+                margin: ['0', null, '0', '0']
+                padding: ['0', null, '0', null]
+              spacing_above: none
+              spacing_below: none
+            type: Label
+          - layout_properties: {col_xs: 2, row: ANFIOO, width_xs: 3}
+            name: text_box_part_no
+            properties:
+              font_size: 12
+              margin: [null, null, '4', null]
+              placeholder: Part No e.g. 141- or ALPL
+              text: ''
+            type: TextBox
+          - layout_properties: {col_xs: 6, row: ANFIOO, width_xs: 3}
+            name: text_box_desc
+            properties: {font_size: 12, placeholder: Description e.g.  Hou, text: ''}
+            type: TextBox
+          - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 3}
+            name: label_count
+            properties: {font_size: 12, icon: 'fa:check-circle-o', text: 'row count:'}
+            type: Label
+          - layout_properties: {col_xs: 1, row: MKQRIP, width_xs: 1}
+            name: label_dd_type
+            properties: {font_size: 12, text: Type}
+            type: Label
+          - layout_properties: {col_xs: 2, row: MKQRIP, width_xs: 3}
+            name: drop_down_type
+            properties: {font_size: 12}
+            type: DropDown
+          - layout_properties: {col_xs: 5, row: MKQRIP, width_xs: 1}
+            name: label_dd_status
+            properties: {font_size: 12, text: Status}
+            type: Label
+          - layout_properties: {col_xs: 6, row: MKQRIP, width_xs: 3}
+            name: drop_down_status
+            properties: {font_size: 12}
+            type: DropDown
+          - event_bindings: {change: update_filter}
+            layout_properties: {col_xs: 9, row: MKQRIP, width_xs: 3}
+            name: check_box_designbom
+            properties: {font_size: 12, text: DesignBOM}
+            type: CheckBox
+          data_bindings: []
+          layout_properties: {col_xs: 0, row: BTIFCK, width_xs: 12}
+          name: grid_panel_1
+          properties:
+            role: null
+            spacing:
+              margin: ['4', null, '0', null]
+              padding: ['4', null, null, null]
+            spacing_above: none
+            spacing_below: none
+          type: GridPanel
         - event_bindings: {click: button_home_click}
-          layout_properties: {col_xs: 2, row: BTIFCK, width_xs: 2}
+          layout_properties: {col_xs: 3, row: SBGBXQ, width_xs: 3}
           name: button_home
-          properties: {font_size: 20, icon: 'fa:home', text: ''}
+          properties: {font_size: 14, icon: 'fa:home', text: ''}
           type: Button
         - data_bindings: []
           event_bindings: {click: button_new_part_click}
-          layout_properties: {col_xs: 6, row: BTIFCK, width_xs: 3}
+          layout_properties: {col_xs: 6, row: SBGBXQ, width_xs: 4}
           name: button_new_part
           properties: {background: '', icon: 'fa:plus-circle', role: null, text: New Part}
           type: Button
-        - components:
-          - components:
-            - layout_properties: {col_xs: 1, row: ANFIOO, width_xs: 1}
-              name: label_filter
-              properties:
-                align: center
-                font_size: 24
-                foreground: theme:Secondary 500
-                icon: fa:filter
-                icon_align: left_edge
-                spacing:
-                  margin: ['0', null, '0', '0']
-                  padding: ['0', null, '0', null]
-                spacing_above: none
-                spacing_below: none
-              type: Label
-            - layout_properties: {col_xs: 2, row: ANFIOO, width_xs: 3}
-              name: text_box_part_no
-              properties:
-                font_size: 12
-                margin: [null, null, '4', null]
-                placeholder: Part No e.g. 141- or ALPL
-                text: ''
-              type: TextBox
-            - layout_properties: {col_xs: 6, row: ANFIOO, width_xs: 3}
-              name: text_box_desc
-              properties: {font_size: 12, placeholder: Description e.g.  Hou, text: ''}
-              type: TextBox
-            - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 3}
-              name: label_count
-              properties: {font_size: 12, icon: 'fa:check-circle-o', text: 'row count:'}
-              type: Label
-            - layout_properties: {col_xs: 1, row: MKQRIP, width_xs: 1}
-              name: label_dd_type
-              properties: {font_size: 12, text: Type}
-              type: Label
-            - layout_properties: {col_xs: 2, row: MKQRIP, width_xs: 3}
-              name: drop_down_type
-              properties: {font_size: 12}
-              type: DropDown
-            - layout_properties: {col_xs: 5, row: MKQRIP, width_xs: 1}
-              name: label_dd_status
-              properties: {font_size: 12, text: Status}
-              type: Label
-            - layout_properties: {col_xs: 6, row: MKQRIP, width_xs: 3}
-              name: drop_down_status
-              properties: {font_size: 12}
-              type: DropDown
-            - event_bindings: {change: update_filter}
-              layout_properties: {col_xs: 9, row: MKQRIP, width_xs: 3}
-              name: check_box_designbom
-              properties: {font_size: 12, text: DesignBOM}
-              type: CheckBox
-            data_bindings: []
-            layout_properties: {grid_position: 'EBBRPC,USAONS', row_background: ''}
-            name: grid_panel_1
-            properties:
-              role: null
-              spacing:
-                margin: ['4', null, '0', null]
-                padding: ['4', null, null, null]
-              spacing_above: none
-              spacing_below: none
-            type: GridPanel
-          layout_properties: {col_xs: 0, row: OCJSBD, width_xs: 12}
-          name: column_panel_1
-          properties: {}
-          type: ColumnPanel
         layout_properties: {col_xs: 0, row: HHEJUB, width_xs: 12}
         name: grid_panel_2
         properties:

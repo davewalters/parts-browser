@@ -34,3 +34,5 @@ class ItemTemplate4(ItemTemplate4Template):
   def button_show_details_click(self, **event_args):
     self.parent.raise_event("x-show-detail", po=self.item)
 
+
+

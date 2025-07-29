@@ -9,7 +9,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
   def update_ui_from_item(self):
     self.text_box_part_id.text = self.item.get("part_id", "")
     self.text_box_qty_ordered.text = str(self.item.get("qty_ordered", ""))
-    self.text_box_qty_received.text = str(self.item.get("qty_received", ""))
+    self.label_qty_received.text = str(self.item.get("qty_received", ""))
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_description.text = self.item.get("description", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "NZD")
@@ -49,12 +49,6 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
 
   def text_box_qty_ordered_pressed_enter(self, **event_args):
     self.try_refresh_line()
-
-  def text_box_qty_received_lost_focus(self, **event_args):
-    try:
-      self.item["qty_received"] = float(self.text_box_qty_received.text or "0")
-    except ValueError:
-      Notification("⚠️ Invalid received quantity", style="warning").show()
 
   def button_edit_price_click(self, **event_args):
     if not self.item.get("part_id"):

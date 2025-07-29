@@ -8,7 +8,7 @@ components:
         type: Label
       - layout_properties: {col_xs: 2, row: TLSMDI, width_xs: 2}
         name: label_id
-        properties: {}
+        properties: {background: 'theme:Gray 600', bold: false, foreground: 'theme:White'}
         type: Label
       - layout_properties: {col_xs: 4, row: TLSMDI, width_xs: 1}
         name: label_title_status
@@ -156,7 +156,7 @@ components:
     type: GridPanel
   - layout_properties: {grid_position: 'QITAOS,GPRXMN'}
     name: text_area_notes
-    properties: {font_size: 12}
+    properties: {font_size: 12, text: 'Notes:'}
     type: TextArea
   layout_properties: {slot: default}
   name: content_panel
