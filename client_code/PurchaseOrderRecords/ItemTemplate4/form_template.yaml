@@ -1,3 +1,31 @@
-components: []
+components:
+- layout_properties: {grid_position: 'FXBUJP,DLEPLI', row_background: ''}
+  name: label_po
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'AEMKVG,JOCPYY'}
+  name: label_vendor
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'EXMVFL,LPUROI'}
+  name: label_order_date
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'QKCFKR,PXZKBQ'}
+  name: label_status
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'OSPZVH,RYAVOY'}
+  name: label_due_date
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'YMZRXF,PVILYA'}
+  name: label_total_cost_nz
+  properties: {font_size: 12}
+  type: Label
+- layout_properties: {grid_position: 'UZEITH,CUEBTV'}
+  name: button_show_detail
+  properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+  type: Button
 container: {type: ColumnPanel}
 is_package: true
