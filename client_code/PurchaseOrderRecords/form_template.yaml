@@ -1,0 +1,110 @@
+components:
+- components:
+  - components:
+    - layout_properties: {col_xs: 4, row: XWSBLI, width_xs: 2}
+      name: button_home
+      properties: {font_size: 20, icon: 'fa:home', text: ''}
+      type: Button
+    - layout_properties: {col_xs: 7, row: XWSBLI, width_xs: 2}
+      name: button_new_po
+      properties: {icon: 'fa:plus-circle', text: New PO}
+      type: Button
+    layout_properties: {grid_position: 'JYDCVP,WBLJVF'}
+    name: grid_panel_2
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 0, row: HGJZWF, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 24, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 1, row: HGJZWF, width_xs: 1}
+      name: label_name
+      properties: {font_size: 12, text: 'Vendor:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: HGJZWF, width_xs: 3}
+      name: drop_down_vendor
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 5, row: HGJZWF, width_xs: 1}
+      name: label_part
+      properties: {font_size: 12, text: 'Part No:'}
+      type: Label
+    - layout_properties: {col_xs: 6, row: HGJZWF, width_xs: 3}
+      name: text_box_part
+      properties: {font_size: 12, placeholder: Part No.}
+      type: TextBox
+    - layout_properties: {col_xs: 9, row: HGJZWF, width_xs: 1}
+      name: label_1
+      properties: {font_size: 12, text: 'Status:'}
+      type: Label
+    - layout_properties: {col_xs: 10, row: HGJZWF, width_xs: 2}
+      name: drop_down_status
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 1, row: PHRNGC, width_xs: 1}
+      name: label_from
+      properties: {font_size: 12, text: 'From:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: PHRNGC, width_xs: 3}
+      name: date_picker_from
+      properties: {font_size: 12}
+      type: DatePicker
+    - layout_properties: {col_xs: 5, row: PHRNGC, width_xs: 1}
+      name: label_to
+      properties: {font_size: 12, text: 'To:'}
+      type: Label
+    - layout_properties: {col_xs: 6, row: PHRNGC, width_xs: 3}
+      name: date_picker_to
+      properties: {font_size: 12}
+      type: DatePicker
+    layout_properties: {grid_position: 'PSZCCG,GEFWIS'}
+    name: grid_panel_1
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {}
+        name: label_header_po
+        properties: {font_size: 12, text: Purchase Order}
+        type: Label
+      - layout_properties: {column: 'null'}
+        name: label_header_vendor
+        properties: {font_size: 12, text: Vendor}
+        type: Label
+      - layout_properties: {column: 'null'}
+        name: label_header_status
+        properties: {text: Status}
+        type: Label
+      - layout_properties: {column: 'null'}
+        name: label_2
+        properties: {}
+        type: Label
+      layout_properties: {col_xs: 0, row: XHFCZR, width_xs: 12}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: RKMWTJ, width_xs: 12}
+      name: repeating_panel_1
+      properties: {item_template: PurchaseOrderRecords.ItemTemplate4}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'KIPIXD,MFXWQW'}
+    name: grid_panel_3
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Purchase Order Records}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
