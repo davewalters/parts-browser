@@ -19,8 +19,12 @@ components:
       name: button_generate
       properties: {text: Generate Inventory}
       type: Button
+    - layout_properties: {col_xs: 1, row: TADILP, width_xs: 2}
+      name: label_result
+      properties: {}
+      type: Label
     - event_bindings: {click: button_delete_click}
-      layout_properties: {col_xs: 4, row: TADILP, width_xs: 3}
+      layout_properties: {col_xs: 7, row: TADILP, width_xs: 3}
       name: button_delete
       properties: {text: Delete Inventory}
       type: Button
