@@ -1,0 +1,44 @@
+components:
+- layout_properties: {grid_position: 'WFKPJH,XLSKIJ'}
+  name: label_part_id
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'QFUBLX,KGBJFD'}
+  name: label_part_name
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'VEPAQJ,RLOXTP'}
+  name: label_kanban
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'WCKEIF,WOVRNX'}
+  name: label_committed
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'TKNNZM,ABYDDX'}
+  name: label_staged
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'PPGESB,BGEVSU'}
+  name: label_issued
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'REVTKO,GEBLRI'}
+  name: label_on_order
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'HUEMJR,FOVYXT'}
+  name: label_bin
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'AWHLFL,GWBHNF'}
+  name: label_owner
+  properties: {}
+  type: Label
+- event_bindings: {click: view_button_click}
+  layout_properties: {grid_position: 'PHPRWC,CHUBWC'}
+  name: button_details
+  properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+  type: Button
+container: {type: ColumnPanel}
+is_package: true

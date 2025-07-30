@@ -80,6 +80,14 @@ components:
       name: label_on_order
       properties: {text: On-Order}
       type: Label
+    - layout_properties: {column: bin}
+      name: label_bin
+      properties: {text: Bin}
+      type: Label
+    - layout_properties: {column: bin_owner}
+      name: label_owner
+      properties: {text: Bin Owner}
+      type: Label
     - layout_properties: {column: details}
       name: label_details
       properties: {}
@@ -91,7 +99,7 @@ components:
   - components:
     - layout_properties: {}
       name: repeating_panel_inventory
-      properties: {item_template: InventoryRecords.ItemTemplate5}
+      properties: {item_template: InventoryRecords.InventoryRow}
       type: RepeatingPanel
     layout_properties: {grid_position: 'RXOWKG,ABJZON'}
     name: data_row_panel_2
