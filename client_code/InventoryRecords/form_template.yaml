@@ -32,7 +32,7 @@ components:
         type: Label
       layout_properties: {col_xs: 2, row: YSHZDB, width_xs: 9}
       name: grid_panel_2
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - layout_properties: {col_xs: 4, row: ZGOLJT, width_xs: 2}
