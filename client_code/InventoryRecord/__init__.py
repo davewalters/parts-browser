@@ -11,6 +11,8 @@ class InventoryRecord(InventoryRecordTemplate):
                prev_filter_kanban=None,
                **properties):
     self.init_components(**properties)
+    print("📦 InventoryRecord loading for part_id:", inventory_part_id)
+
 
     # Store filter state
     self.prev_filter_part_id = prev_filter_part_id
@@ -21,10 +23,15 @@ class InventoryRecord(InventoryRecordTemplate):
     self.part_id = inventory_part_id
     self.rows = anvil.server.call('get_inventory_by_part', self.part_id)
 
+    if not self.rows:
+      alert(f"No inventory found for part: {self.part_id}")
+      self.label_part_id.text = self.part_id
+      self.label_part_name.text = "<not found>"
+      return
+
     # Extract part name from first row (joined part)
-    part_info = self.rows[0]["part"] if self.rows else {}
-    self.label_part_id.text = part_info.get("_id", "")
-    self.label_part_name.text = part_info.get("name", "")
+    self.label_part_id.text = self.rows[0]["part_id"]
+    self.label_part_name.text = self.rows[0].get("part_name", "<no name>")
 
     # Set kanban status (global per part)
     self.check_box_kanban.checked = all(r.get("is_kanban", False) for r in self.rows)

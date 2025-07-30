@@ -5,7 +5,17 @@ from datetime import datetime
 class InventoryBinRow(InventoryBinRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
+
+    self.label_bin.text = self.item.get("bin", "")
+    self.label_owner.text = self.item.get("owner", "")
+    self.label_on_hand.text = f"{self.item.get('qty_on_hand', 0):.1f}"
+    self.label_committed.text = f"{self.item.get('qty_committed', 0):.1f}"
+    self.label_staged.text = f"{self.item.get('qty_staged', 0):.1f}"
+    self.label_issued.text = f"{self.item.get('qty_issued', 0):.1f}"
+    self.label_on_order.text = f"{self.item.get('qty_on_order', 0):.1f}"
+
     self.button_transfer.set_event_handler("click", self.transfer_stock)
+
 
   def transfer_stock(self, **event_args):
     parent_form = self.parent.parent  # InventoryRecord
