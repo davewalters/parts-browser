@@ -5,6 +5,7 @@ import anvil.server
 from .. PartRecords import PartRecords
 from .. VendorRecords import VendorRecords
 from .. PurchaseOrderRecords import PurchaseOrderRecords
+from .. InventoryRecords import InventoryRecords
 from .. TestTools import TestTools
 
 class Nav(NavTemplate):
@@ -14,6 +15,7 @@ class Nav(NavTemplate):
       {"title": "Parts", "form_class": PartRecords},
       {"title": "Vendors", "form_class": VendorRecords},
       {"title": "PurchaseOrders", "form_class": PurchaseOrderRecords},
+      {"title": "Inventory", "form_class": InventoryRecords},
       {"title": "TestTools", "form_class": TestTools},
     ]
     self.menu_panel.items = self.menu_items
