@@ -14,7 +14,7 @@ components:
         name: label_title_description
         properties: {font_size: 12, text: 'Description:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: AWWEUF, width_xs: 5}
+      - layout_properties: {col_xs: 5, row: AWWEUF, width_xs: 3}
         name: label_part_name
         properties: {font_size: 12, text: ''}
         type: Label
@@ -43,29 +43,29 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 2, row: PBTEBE, width_xs: 2}
+      - layout_properties: {col_xs: 1, row: PBTEBE, width_xs: 3}
         name: label_title_source
-        properties: {align: center, font_size: 12, icon: 'fa:chevron-right', icon_align: right_edge, text: Source}
+        properties: {align: center, font_size: 16, icon: 'fa:chevron-right', icon_align: right_edge, text: Source Bin}
         type: Label
       - layout_properties: {col_xs: 5, row: PBTEBE, width_xs: 2}
         name: label_title_qty
-        properties: {align: center, font_size: 12, text: Transfer Qty}
+        properties: {align: center, font_size: 16, text: Transfer Qty}
         type: Label
-      - layout_properties: {col_xs: 8, row: PBTEBE, width_xs: 2}
+      - layout_properties: {col_xs: 8, row: PBTEBE, width_xs: 3}
         name: label_title_target
-        properties: {align: center, font_size: 11, icon: 'fa:chevron-right', icon_align: left_edge, text: Target}
+        properties: {align: center, font_size: 16, icon: 'fa:chevron-right', icon_align: left_edge, text: Target Bin}
         type: Label
-      - layout_properties: {col_xs: 2, row: ZTOACU, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: ZTOACU, width_xs: 3}
         name: drop_down_source_bin
-        properties: {font_size: 12}
+        properties: {font_size: 16}
         type: DropDown
       - layout_properties: {col_xs: 5, row: ZTOACU, width_xs: 2}
         name: text_box_transfer_qty
-        properties: {font_size: 12, placeholder: ''}
+        properties: {align: center, background: 'theme:Gray 600', font_size: 16, foreground: 'theme:White', placeholder: ''}
         type: TextBox
-      - layout_properties: {col_xs: 7, row: ZTOACU, width_xs: 3}
-        name: drop_down_target
-        properties: {font_size: 12}
+      - layout_properties: {col_xs: 8, row: ZTOACU, width_xs: 3}
+        name: drop_down_target_bin
+        properties: {font_size: 16}
         type: DropDown
       layout_properties: {col_xs: 0, row: HPWDJF, width_xs: 12}
       name: grid_panel_2

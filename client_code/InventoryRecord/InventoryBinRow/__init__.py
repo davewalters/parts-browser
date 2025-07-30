@@ -1,5 +1,6 @@
 from ._anvil_designer import InventoryBinRowTemplate
 from anvil import *
+from datetime import datetime
 
 class InventoryBinRow(InventoryBinRowTemplate):
   def __init__(self, **properties):

@@ -74,7 +74,7 @@ components:
       name: label_on_order
       properties: {text: On-Order}
       type: Label
-    - layout_properties: {column: bin}
+    - layout_properties: {column: details}
       name: label_details
       properties: {}
       type: Label

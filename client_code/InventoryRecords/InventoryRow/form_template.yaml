@@ -12,6 +12,10 @@ components:
     name: label_kanban
     properties: {}
     type: Label
+  - layout_properties: {column: on_hand}
+    name: label_on_hand
+    properties: {}
+    type: Label
   - layout_properties: {column: committed}
     name: label_committed
     properties: {}
@@ -24,12 +28,12 @@ components:
     name: label_issued
     properties: {}
     type: Label
-  - layout_properties: {column: on_order}
+  - layout_properties: {column: on-order}
     name: label_on_order
     properties: {}
     type: Label
   - event_bindings: {click: view_button_click}
-    layout_properties: {column: details}
+    layout_properties: {column: ''}
     name: button_view
     properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
     type: Button
