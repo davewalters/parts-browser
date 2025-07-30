@@ -6,27 +6,21 @@ components:
         name: label_filter
         properties: {font_size: 21, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
         type: Label
-      - layout_properties: {col_xs: 1, row: EDPVRC, width_xs: 3}
+      - event_bindings: {}
+        layout_properties: {col_xs: 1, row: EDPVRC, width_xs: 3}
         name: text_box_part_id
         properties: {font_size: 12, placeholder: Part No. e.g. 138-}
         type: TextBox
-      - layout_properties: {col_xs: 4, row: EDPVRC, width_xs: 3}
+      - event_bindings: {}
+        layout_properties: {col_xs: 4, row: EDPVRC, width_xs: 3}
         name: text_box_part_name
         properties: {font_size: 12, placeholder: Description e.g. Hous}
         type: TextBox
-      - layout_properties: {col_xs: 8, row: EDPVRC, width_xs: 4}
-        name: drop_down_bin
-        properties: {font_size: 12}
-        type: DropDown
-      - layout_properties: {col_xs: 1, row: PAXDMG, width_xs: 2}
+      - layout_properties: {col_xs: 8, row: EDPVRC, width_xs: 2}
         name: check_box_kanban
         properties: {font_size: 12, text: Kanban}
         type: CheckBox
-      - layout_properties: {col_xs: 8, row: PAXDMG, width_xs: 4}
-        name: drop_down_owner
-        properties: {font_size: 12}
-        type: DropDown
-      - layout_properties: {col_xs: 4, row: LJCZCD, width_xs: 3}
+      - layout_properties: {col_xs: 3, row: YDWOCR, width_xs: 5}
         name: label_count
         properties: {font_size: 12, icon: 'fa:check-circle-o'}
         type: Label
@@ -81,14 +75,6 @@ components:
       properties: {text: On-Order}
       type: Label
     - layout_properties: {column: bin}
-      name: label_bin
-      properties: {text: Bin}
-      type: Label
-    - layout_properties: {column: bin_owner}
-      name: label_owner
-      properties: {text: Bin Owner}
-      type: Label
-    - layout_properties: {column: details}
       name: label_details
       properties: {}
       type: Label
