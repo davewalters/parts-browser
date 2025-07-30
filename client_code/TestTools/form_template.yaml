@@ -1,0 +1,46 @@
+components:
+- components:
+  - components:
+    - event_bindings: {click: button_home_click}
+      layout_properties: {col_xs: 4, row: JPONHM, width_xs: 3}
+      name: button_home
+      properties: {icon: 'fa:home', text: ''}
+      type: Button
+    - layout_properties: {col_xs: 1, row: BBXWYA, width_xs: 3}
+      name: label_title_inventory
+      properties: {text: 'Inventory Testing:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: BBXWYA, width_xs: 3}
+      name: text_box_prefix
+      properties: {font_size: 14, placeholder: Part No. prefix}
+      type: TextBox
+    - event_bindings: {click: button_generate_click}
+      layout_properties: {col_xs: 6, row: BBXWYA, width_xs: 3}
+      name: button_generate
+      properties: {text: Generate Inventory}
+      type: Button
+    - event_bindings: {click: button_delete_click}
+      layout_properties: {col_xs: 4, row: TADILP, width_xs: 3}
+      name: button_delete
+      properties: {text: Delete Inventory}
+      type: Button
+    layout_properties: {grid_position: 'YSDUYF,EXPYAU'}
+    name: grid_panel_1
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Test Tools}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
