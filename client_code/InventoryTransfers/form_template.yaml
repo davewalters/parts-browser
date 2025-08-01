@@ -2,41 +2,10 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 0, row: AWWEUF, width_xs: 1}
-        name: label_title_part_id
-        properties: {font_size: 12, text: 'Part No:'}
-        type: Label
-      - layout_properties: {col_xs: 1, row: AWWEUF, width_xs: 3}
-        name: label_part_id
-        properties: {font_size: 12}
-        type: Label
-      - layout_properties: {col_xs: 4, row: AWWEUF, width_xs: 1}
-        name: label_title_description
-        properties: {font_size: 12, text: 'Description:'}
-        type: Label
-      - layout_properties: {col_xs: 5, row: AWWEUF, width_xs: 3}
-        name: label_part_name
-        properties: {font_size: 12, text: ''}
-        type: Label
-      - event_bindings: {change: check_box_kanban_change}
-        layout_properties: {col_xs: 10, row: AWWEUF, width_xs: 2}
-        name: check_box_kanban
-        properties: {font_size: 12, text: Kanban}
-        type: CheckBox
-      layout_properties: {col_xs: 0, row: GRFRHC, width_xs: 12}
-      name: grid_panel_1
-      properties: {}
-      type: GridPanel
-    - components:
       - event_bindings: {click: back_button_click}
-        layout_properties: {col_xs: 1, row: OMXKAV, width_xs: 2}
+        layout_properties: {col_xs: 5, row: OMXKAV, width_xs: 2}
         name: button_back
         properties: {icon: 'fa:arrow-left', text: ''}
-        type: Button
-      - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 7, row: OMXKAV, width_xs: 4}
-        name: button_save
-        properties: {icon: 'fa:save', text: Save}
         type: Button
       layout_properties: {col_xs: 3, row: INWMBI, width_xs: 6}
       name: grid_panel_5
@@ -60,7 +29,7 @@ components:
         properties: {font_size: 16}
         type: DropDown
       - layout_properties: {col_xs: 5, row: ZTOACU, width_xs: 2}
-        name: text_box_transfer_qty
+        name: text_box_qty
         properties: {align: center, background: 'theme:Gray 600', font_size: 16, foreground: 'theme:White', placeholder: ''}
         type: TextBox
       - layout_properties: {col_xs: 8, row: ZTOACU, width_xs: 3}
@@ -77,32 +46,32 @@ components:
     type: GridPanel
   - components:
     - components:
-      - layout_properties: {column: owner}
-        name: label_owner
-        properties: {text: Bin Owner}
+      - layout_properties: {column: part_id}
+        name: label_hdr_part_id
+        properties: {text: Part No.}
         type: Label
-      - layout_properties: {column: bin}
-        name: label_bin
-        properties: {text: Bin}
+      - layout_properties: {column: description}
+        name: label_hdr_description
+        properties: {text: Description}
         type: Label
       - layout_properties: {column: on_order}
-        name: label_on_order
+        name: label_hdr_on_order
         properties: {text: On-order}
         type: Label
       - layout_properties: {column: on_hand}
-        name: label_on_hand
+        name: label_hdr_on_hand
         properties: {text: On-hand}
         type: Label
       - layout_properties: {column: committed}
-        name: label_committed
+        name: label_hdr_committed
         properties: {text: Committed}
         type: Label
       - layout_properties: {column: staged}
-        name: label_staged
+        name: label_hdr_staged
         properties: {text: Staged}
         type: Label
       - layout_properties: {column: issued}
-        name: label_issued
+        name: label_hdr_issued
         properties: {text: Issued}
         type: Label
       - layout_properties: {column: transfer}
@@ -113,7 +82,39 @@ components:
       name: data_row_panel_header
       properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
       type: DataRowPanel
-    - components: []
+    - components:
+      - layout_properties: {column: part_id}
+        name: label_part_id
+        properties: {}
+        type: Label
+      - layout_properties: {column: description}
+        name: label_part_name
+        properties: {}
+        type: Label
+      - layout_properties: {column: on_order}
+        name: label_qty_on_order
+        properties: {}
+        type: Label
+      - layout_properties: {column: on_hand}
+        name: label_qty_on_hand
+        properties: {}
+        type: Label
+      - layout_properties: {column: committed}
+        name: label_qty_committed
+        properties: {}
+        type: Label
+      - layout_properties: {column: staged}
+        name: label_qty_staged
+        properties: {}
+        type: Label
+      - layout_properties: {column: issued}
+        name: label_qty_issued
+        properties: {}
+        type: Label
+      - layout_properties: {column: transfer}
+        name: button_transfer
+        properties: {icon: 'fa:exchange', text: ''}
+        type: Button
       layout_properties: {col_xs: 0, row: ZZKOIJ, width_xs: 12}
       name: data_row_panel_1
       properties: {}
