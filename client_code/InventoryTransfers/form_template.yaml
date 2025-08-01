@@ -113,11 +113,7 @@ components:
       name: data_row_panel_header
       properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
       type: DataRowPanel
-    - components:
-      - layout_properties: {}
-        name: repeating_panel_bins
-        properties: {item_template: InventoryRecord.InventoryBinRow}
-        type: RepeatingPanel
+    - components: []
       layout_properties: {col_xs: 0, row: ZZKOIJ, width_xs: 12}
       name: data_row_panel_1
       properties: {}
@@ -136,7 +132,7 @@ components:
   type: FlowPanel
 - layout_properties: {slot: title}
   name: label_title
-  properties: {text: Inventory Record}
+  properties: {text: Inventory Transfers}
   type: Label
 container:
   properties: {html: '@theme:standard-page.html'}
