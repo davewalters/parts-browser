@@ -2,43 +2,43 @@ components:
 - components:
   - components:
     - components:
-      - event_bindings: {click: back_button_click}
-        layout_properties: {col_xs: 5, row: OMXKAV, width_xs: 2}
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 4, row: OMXKAV, width_xs: 5}
         name: button_back
-        properties: {icon: 'fa:arrow-left', text: ''}
+        properties: {align: center, icon: 'fa:arrow-left', text: ''}
         type: Button
-      layout_properties: {col_xs: 3, row: INWMBI, width_xs: 6}
+      layout_properties: {col_xs: 4, row: INWMBI, width_xs: 4}
       name: grid_panel_5
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 1, row: PBTEBE, width_xs: 3}
+      - layout_properties: {col_xs: 2, row: PBTEBE, width_xs: 3}
         name: label_title_source
-        properties: {align: center, font_size: 16, icon: 'fa:chevron-right', icon_align: right_edge, text: Source Bin}
+        properties: {align: center, font_size: 14, icon: 'fa:chevron-right', icon_align: right_edge, text: Source}
         type: Label
       - layout_properties: {col_xs: 5, row: PBTEBE, width_xs: 2}
         name: label_title_qty
-        properties: {align: center, font_size: 16, text: Transfer Qty}
+        properties: {align: center, font_size: 14, text: Transfer Qty}
         type: Label
-      - layout_properties: {col_xs: 8, row: PBTEBE, width_xs: 3}
+      - layout_properties: {col_xs: 7, row: PBTEBE, width_xs: 3}
         name: label_title_target
-        properties: {align: center, font_size: 16, icon: 'fa:chevron-right', icon_align: left_edge, text: Target Bin}
+        properties: {align: center, font_size: 14, icon: 'fa:chevron-right', icon_align: left_edge, text: Target}
         type: Label
-      - layout_properties: {col_xs: 1, row: ZTOACU, width_xs: 3}
-        name: drop_down_source_bin
-        properties: {font_size: 16}
+      - layout_properties: {col_xs: 2, row: ZTOACU, width_xs: 2}
+        name: drop_down_source
+        properties: {font_size: 12}
         type: DropDown
       - layout_properties: {col_xs: 5, row: ZTOACU, width_xs: 2}
         name: text_box_qty
-        properties: {align: center, background: 'theme:Gray 600', font_size: 16, foreground: 'theme:White', placeholder: ''}
+        properties: {align: center, background: '', font_size: 14, foreground: '', placeholder: '0'}
         type: TextBox
-      - layout_properties: {col_xs: 8, row: ZTOACU, width_xs: 3}
-        name: drop_down_target_bin
-        properties: {font_size: 16}
+      - layout_properties: {col_xs: 8, row: ZTOACU, width_xs: 2}
+        name: drop_down_target
+        properties: {font_size: 12}
         type: DropDown
       layout_properties: {col_xs: 0, row: HPWDJF, width_xs: 12}
       name: grid_panel_2
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: GridPanel
     layout_properties: {grid_position: 'CHEYMQ,HRKUBV'}
     name: grid_panel_3
@@ -56,27 +56,27 @@ components:
         type: Label
       - layout_properties: {column: on_order}
         name: label_hdr_on_order
-        properties: {text: On-order}
+        properties: {align: center, text: On-order}
         type: Label
       - layout_properties: {column: on_hand}
         name: label_hdr_on_hand
-        properties: {text: On-hand}
+        properties: {align: center, text: On-hand}
         type: Label
       - layout_properties: {column: committed}
         name: label_hdr_committed
-        properties: {text: Committed}
+        properties: {align: center, text: Committed}
         type: Label
       - layout_properties: {column: staged}
         name: label_hdr_staged
-        properties: {text: Staged}
+        properties: {align: center, text: Staged}
         type: Label
       - layout_properties: {column: issued}
         name: label_hdr_issued
-        properties: {text: Issued}
+        properties: {align: center, text: Issued}
         type: Label
       - layout_properties: {column: transfer}
         name: label_button_transfer
-        properties: {}
+        properties: {align: center}
         type: Label
       layout_properties: {col_xs: 0, row: XMHUQM, width_xs: 12}
       name: data_row_panel_header
@@ -89,35 +89,36 @@ components:
         type: Label
       - layout_properties: {column: description}
         name: label_part_name
-        properties: {}
+        properties: {align: left}
         type: Label
       - layout_properties: {column: on_order}
         name: label_qty_on_order
-        properties: {}
+        properties: {align: center}
         type: Label
       - layout_properties: {column: on_hand}
         name: label_qty_on_hand
-        properties: {}
+        properties: {align: center}
         type: Label
       - layout_properties: {column: committed}
         name: label_qty_committed
-        properties: {}
+        properties: {align: center}
         type: Label
       - layout_properties: {column: staged}
         name: label_qty_staged
-        properties: {}
+        properties: {align: center}
         type: Label
       - layout_properties: {column: issued}
         name: label_qty_issued
-        properties: {}
+        properties: {align: center}
         type: Label
-      - layout_properties: {column: transfer}
+      - event_bindings: {click: button_transfer_click}
+        layout_properties: {column: transfer}
         name: button_transfer
         properties: {icon: 'fa:exchange', text: ''}
         type: Button
       layout_properties: {col_xs: 0, row: ZZKOIJ, width_xs: 12}
       name: data_row_panel_1
-      properties: {}
+      properties: {background: 'theme:Gray 200'}
       type: DataRowPanel
     layout_properties: {grid_position: 'CLHINT,QZRMBN'}
     name: grid_panel_4

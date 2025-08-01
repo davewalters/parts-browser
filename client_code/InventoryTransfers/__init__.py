@@ -4,9 +4,16 @@ import anvil.server
 from datetime import datetime
 
 class InventoryTransfers(InventoryTransfersTemplate):
-  def __init__(self, inventory_part_id=None, **properties):
-    self.init_components(**properties)
+  def __init__(self, inventory_part_id=None,
+               prev_filter_part_id="",
+               prev_filter_part_name="",
+               prev_filter_kanban="",
+               **kwargs):
+    self.init_components(**kwargs)
     self.part_id = inventory_part_id
+    self.prev_filter_part_id = prev_filter_part_id
+    self.prev_filter_part_name = prev_filter_part_name
+    self.prev_filter_kanban = prev_filter_kanban
     self.status_fields = [
       "qty_on_order", "qty_on_hand", "qty_committed", "qty_staged", "qty_issued"
     ]
@@ -36,6 +43,10 @@ class InventoryTransfers(InventoryTransfersTemplate):
       alert(f"Transfer failed: {e}")
 
   def button_back_click(self, **event_args):
-    open_form("InventoryRecords")
+    open_form("InventoryRecords",
+              filter_part_id = self.prev_filter_part_id,
+              filter_part_name = self.prev_filter_part_name,
+              filter_kanban = self.prev_filter_kanban
+             )
 
 

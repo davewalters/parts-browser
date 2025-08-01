@@ -49,7 +49,7 @@ class InventoryRecords(InventoryRecordsTemplate):
       self.repeating_panel_inventory.items = []
 
   def show_detail(self, part_summary, **event_args):
-    open_form("InventoryRecord",
+    open_form("InventoryTransfers",
               inventory_part_id=part_summary["part_id"],
               prev_filter_part_id=self.prev_filter_part_id,
               prev_filter_part_name=self.prev_filter_part_name,
