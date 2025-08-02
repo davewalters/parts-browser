@@ -8,9 +8,9 @@ class InventoryBins(InventoryBinsTemplate):
     self.button_home.role = "mydefault-button"
     self.button_add_bin.role = "new-button"
     self.repeating_panel_bins.role = "scrolling-panel"
-
+    self.repeating_panel_bins.set_event_handler("x-refresh-bins", lambda **e: self.load_bins())
     self.load_bins()
-
+    
   def load_bins(self):
     self.rows = anvil.server.call("get_inventory_bins_full")
     self.repeating_panel_bins.items = self.rows
@@ -30,4 +30,6 @@ class InventoryBins(InventoryBinsTemplate):
 
   def button_home_click(self, **event_args):
     open_form("Nav")
+
+  
 

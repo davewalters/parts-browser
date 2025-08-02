@@ -1,0 +1,44 @@
+components:
+- components:
+  - layout_properties: {column: bin_id}
+    name: text_box_bin_id
+    properties: {font_size: 12}
+    type: TextBox
+  - layout_properties: {column: part_id}
+    name: label_part_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: part_name}
+    name: label_part_name
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: location}
+    name: text_box_location
+    properties: {align: center, font_size: 12}
+    type: TextBox
+  - layout_properties: {column: lot_traced}
+    name: check_box_lot_traced
+    properties: {align: center, font_size: 12, text: ''}
+    type: CheckBox
+  - layout_properties: {column: serials}
+    name: text_area_serials
+    properties: {auto_expand: true, font_size: 12}
+    type: TextArea
+  - layout_properties: {column: qty}
+    name: text_box_qty
+    properties: {align: center, font_size: 12}
+    type: TextBox
+  - layout_properties: {column: owner}
+    name: drop_down_owner
+    properties: {align: full, font_size: 12}
+    type: DropDown
+  - layout_properties: {column: delete}
+    name: button_delete
+    properties: {font_size: 12, icon: 'fa:trash', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'RMIHAC,WXCTYR'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200'}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true
