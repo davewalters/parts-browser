@@ -36,5 +36,6 @@ class InventoryBins(InventoryBinsTemplate):
     }
     self.repeating_panel_bins.items = self.repeating_panel_bins.items + [new_row]
 
-  
+  def button_home_click(self, **event_args):
+    open_form("Nav")
 

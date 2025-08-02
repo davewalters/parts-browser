@@ -24,6 +24,20 @@ class TestTools(TestToolsTemplate):
     except Exception as e:
       self.label_result.text = f"⚠️ Error: {e}"
 
+  def button_generate_bins_click(self, **event_args):
+    try:
+      count = anvil.server.call("generate_inventory_bins_from_inventory")
+      self.label_result.text = f"✅ {count} inventory bins created."
+    except Exception as e:
+      self.label_result.text = f"⚠️ Error: {e}"
+  
+  def button_delete_bins_click(self, **event_args):
+    try:
+      count = anvil.server.call("delete_all_inventory_bins")
+      self.label_result.text = f"🗑️ {count} inventory bins deleted."
+    except Exception as e:
+      self.label_result.text = f"⚠️ Error: {e}"
+
   def button_home_click(self, **event_args):
     open_form("Nav")
 

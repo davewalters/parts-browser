@@ -13,9 +13,9 @@ components:
     properties: {font_size: 12}
     type: Label
   - layout_properties: {column: location}
-    name: text_box_location
-    properties: {align: center, font_size: 12}
-    type: TextBox
+    name: drop_down_location
+    properties: {font_size: 12}
+    type: DropDown
   - layout_properties: {column: lot_traced}
     name: check_box_lot_traced
     properties: {align: center, font_size: 12, text: ''}

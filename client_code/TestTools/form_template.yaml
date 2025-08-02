@@ -15,18 +15,28 @@ components:
       properties: {font_size: 14, placeholder: Part No. prefix}
       type: TextBox
     - event_bindings: {click: button_generate_click}
-      layout_properties: {col_xs: 6, row: BBXWYA, width_xs: 3}
+      layout_properties: {col_xs: 6, row: BBXWYA, width_xs: 2}
       name: button_generate
       properties: {text: Generate Inventory}
+      type: Button
+    - event_bindings: {click: button_delete_click}
+      layout_properties: {col_xs: 9, row: BBXWYA, width_xs: 2}
+      name: button_delete
+      properties: {text: Delete Inventory}
       type: Button
     - layout_properties: {col_xs: 1, row: TADILP, width_xs: 2}
       name: label_result
       properties: {}
       type: Label
-    - event_bindings: {click: button_delete_click}
-      layout_properties: {col_xs: 7, row: TADILP, width_xs: 3}
-      name: button_delete
-      properties: {text: Delete Inventory}
+    - event_bindings: {click: button_generate_bins_click}
+      layout_properties: {col_xs: 7, row: TADILP, width_xs: 2}
+      name: button_generate_bins
+      properties: {text: Generate Bins}
+      type: Button
+    - event_bindings: {click: button_delete_bins_click}
+      layout_properties: {col_xs: 9, row: TADILP, width_xs: 2}
+      name: button_delete_bins
+      properties: {text: Delete Bins}
       type: Button
     layout_properties: {grid_position: 'YSDUYF,EXPYAU'}
     name: grid_panel_1
