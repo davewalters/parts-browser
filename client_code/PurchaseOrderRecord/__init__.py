@@ -224,11 +224,11 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "lines": lines
       }
   
-      # ✅ Save and re-fetch the updated PO with computed cost + status
+      # Save and re-fetch the updated PO with computed cost + status
       updated_status = anvil.server.call("save_purchase_order", purchase_order)
       self.purchase_order = anvil.server.call("get_purchase_order", purchase_order["_id"])
   
-      # ✅ Refresh all form fields and line items from saved version
+      # Refresh all form fields and line items from saved version
       self.populate_form()
   
       Notification(f"✅ Purchase order saved with status: {updated_status}", style="success").show()
