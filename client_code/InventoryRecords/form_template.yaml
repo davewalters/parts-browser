@@ -29,7 +29,8 @@ components:
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 4, row: ZGOLJT, width_xs: 2}
+      - event_bindings: {click: button_home_click}
+        layout_properties: {col_xs: 4, row: ZGOLJT, width_xs: 2}
         name: button_home
         properties: {icon: 'fa:home', text: ''}
         type: Button
