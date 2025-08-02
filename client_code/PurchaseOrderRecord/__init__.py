@@ -200,13 +200,16 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       if not lines:
         raise ValueError("At least one line item is required.")
   
+      self.receipt_lines()  # ✅ Process any UI-sourced qty_received or receipt checkboxes
+  
       vendor_id = self.drop_down_vendor_name.selected_value
       if not vendor_id:
-        raise ValueError("Vendor must be selected.")
+        raise ValueError("Vendor must be selected before saving.")
   
-      # Capture previous qty_received for each line to support delta logic
       for line in lines:
-        line["_prev_qty_received"] = float(line.get("qty_received", 0.0))
+        qty_ordered = float(line.get("qty_ordered", 0))
+        qty_received = float(line.get("qty_received", 0))
+        line["_prev_qty_received"] = line.get("qty_received", 0.0)  # Track prior state for deltas
   
       purchase_order = {
         "_id": self.label_id.text.strip(),
@@ -217,24 +220,22 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "paid": self.check_box_paid.checked,
         "vendor_id": vendor_id,
         "vendor_name": self.get_selected_vendor_name(),
-        "order_cost_nz": 0.0,  # server will compute
-        "lines": lines,
-        "notes": self.text_area_notes.text
+        "notes": self.text_area_notes.text,
+        "lines": lines
       }
   
-      new_status = anvil.server.call("save_purchase_order", purchase_order)
+      # ✅ Save and re-fetch the updated PO with computed cost + status
+      updated_status = anvil.server.call("save_purchase_order", purchase_order)
+      self.purchase_order = anvil.server.call("get_purchase_order", purchase_order["_id"])
   
-      # Update UI
-      self.purchase_order["status"] = new_status
-      self.purchase_order["lines"] = purchase_order["lines"]
-      self.label_order_cost_nz.text = self.format_currency(purchase_order["order_cost_nz"])
-      self.drop_down_status.selected_value = new_status
-      self.repeating_panel_lines.items = list(purchase_order["lines"])
+      # ✅ Refresh all form fields and line items from saved version
+      self.populate_form()
   
-      Notification("✅ Purchase order saved.", style="success").show()
+      Notification(f"✅ Purchase order saved with status: {updated_status}", style="success").show()
   
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
 
 
   def delete_line_item(self, row_index, **event_args):
