@@ -95,7 +95,7 @@ components:
       name: data_row_panel_2
       properties: {}
       type: DataRowPanel
-    layout_properties: {grid_position: 'XVKBIH,PIYLRX'}
+    layout_properties: {full_width_row: true, grid_position: 'XVKBIH,PIYLRX'}
     name: grid_panel_2
     properties: {}
     type: GridPanel

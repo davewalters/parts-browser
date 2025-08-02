@@ -14,7 +14,7 @@ class InventoryBinRow(InventoryBinRowTemplate):
     self.button_delete.set_event_handler("click", self.delete_bin)
 
     self.drop_down_owner.items = ["Manufacturing", "Warehouse"]
-    self.drop_down_location.items = ["STORE", "WIP", "FINISHEDGOODS"]
+    self.drop_down_location.items = ["INWARDS_GOODS", "WIP", "FINISHED_GOODS"]
     self.refresh_ui()
 
   def refresh_ui(self):
