@@ -16,23 +16,28 @@ components:
   - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus, pressed_enter: text_box_qty_ordered_pressed_enter}
     layout_properties: {column: qty_ordered}
     name: text_box_qty_ordered
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: TextBox
+  - event_bindings: {change: check_box_received_all_change}
+    layout_properties: {column: received_all}
+    name: check_box_received_all
+    properties: {align: center, font_size: 12, foreground: 'theme:Secondary 500', text: ''}
+    type: CheckBox
   - layout_properties: {column: qty_received}
-    name: label_qty_received
-    properties: {}
-    type: Label
+    name: text_box_qty_received
+    properties: {align: center, font_size: 12, foreground: 'theme:Secondary 500', placeholder: qty}
+    type: TextBox
   - layout_properties: {column: vendor_currency}
     name: label_vendor_currency
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: Label
-  - layout_properties: {column: vendor_unit_price}
+  - layout_properties: {column: unit_price}
     name: label_vendor_unit_price
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: Label
   - layout_properties: {column: total_cost_nz}
     name: label_total_cost_nz
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: Label
   - event_bindings: {click: button_edit_price_click}
     layout_properties: {column: edit_price}

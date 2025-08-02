@@ -13,6 +13,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
                filter_overdue=False,
                **properties):
     self.init_components(**properties)
+    self.check_box_receive_all.set_event_handler("change", self.toggle_receive_all_lines)
     self.button_back.role = "mydefault-button"
     self.button_add_item.role = "new-button"
     self.button_save.role = "save-button"
@@ -59,7 +60,17 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     self.repeating_panel_lines.set_event_handler("x-delete-po-line", self.delete_line_item)
     if self.is_new and not self.repeating_panel_lines.items:
       self.button_add_item_click()
-      
+
+  def toggle_receive_all_lines(self, **event_args):
+    checked = self.check_box_receive_all.checked
+    for i, line in enumerate(self.repeating_panel_lines.items):
+      if checked and line.get("qty_received", 0) < line.get("qty_ordered", 0):
+        line["qty_received"] = line["qty_ordered"]
+        line["receipt_checked"] = True
+      elif not checked:
+        line["receipt_checked"] = False
+    self.repeating_panel_lines.items = self.repeating_panel_lines.items
+
   def populate_form(self):
     self.label_id.text = self.purchase_order.get("_id", "")
     self.drop_down_status.selected_value = self.purchase_order.get("status", "open")
@@ -125,6 +136,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "vendor_part_no": "",
       "description": "",
       "qty_ordered": 0.0,
+      "received_all": False,
       "qty_received": 0.0,
       "vendor_unit_cost": 0.0,
       "vendor_currency": "NZD",
@@ -170,43 +182,32 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     except Exception as e:
       Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
 
+  def receipt_lines(self):
+    any_changes = False
+    for i, line in enumerate(self.repeating_panel_lines.items):
+      if line.get("receipt_checked"):
+        qty_received = float(line.get("qty_received", 0))
+        delta = anvil.server.call("receipt_purchase_order_line", self.purchase_order["_id"], i, qty_received)
+        if delta > 0:
+          any_changes = True
+          line["qty_received"] = qty_received
+    return any_changes
 
+  
   def button_save_click(self, **event_args):
     try:
       lines = self.repeating_panel_lines.items
       if not lines:
         raise ValueError("At least one line item is required.")
-
-      total_cost_nz = 0.0
+  
       vendor_id = self.drop_down_vendor_name.selected_value
-
+      if not vendor_id:
+        raise ValueError("Vendor must be selected.")
+  
+      # Capture previous qty_received for each line to support delta logic
       for line in lines:
-        qty = float(line.get("qty_ordered", 0))
-        part_id = line.get("part_id", "")
-
-        part = anvil.server.call("get_part", part_id) if part_id else {}
-        default_vendor = part.get("default_vendor")
-        if default_vendor != vendor_id:
-          Notification(
-            f"⚠️ Default vendor for part '{part_id}' is missing or does not match the purchase order vendor.",
-            style="warning"
-          ).show()
-          open_form("PartVendorRecords", part_id=part_id, back_to_po=True, purchase_order_id=self.label_id.text)
-          return
-
-        vendor_info = anvil.server.call("get_part_vendor_info", part_id, vendor_id)
-        line_total = qty * vendor_info["latest_cost_nz"]
-
-        line.update({
-          "vendor_unit_cost": vendor_info["vendor_price"],
-          "vendor_currency": vendor_info["vendor_currency"],
-          "vendor_part_no": vendor_info["vendor_part_no"],
-          "description": vendor_info["description"],
-          "total_cost_nz": round(line_total, 2)
-        })
-
-        total_cost_nz += line_total
-
+        line["_prev_qty_received"] = float(line.get("qty_received", 0.0))
+  
       purchase_order = {
         "_id": self.label_id.text.strip(),
         "status": self.drop_down_status.selected_value,
@@ -216,19 +217,25 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "paid": self.check_box_paid.checked,
         "vendor_id": vendor_id,
         "vendor_name": self.get_selected_vendor_name(),
-        "order_cost_nz": round(total_cost_nz, 2),
+        "order_cost_nz": 0.0,  # server will compute
         "lines": lines,
         "notes": self.text_area_notes.text
       }
-
+  
+      new_status = anvil.server.call("save_purchase_order", purchase_order)
+  
+      # Update UI
+      self.purchase_order["status"] = new_status
+      self.purchase_order["lines"] = purchase_order["lines"]
       self.label_order_cost_nz.text = self.format_currency(purchase_order["order_cost_nz"])
-      self.repeating_panel_lines.items = list(lines)
-
+      self.drop_down_status.selected_value = new_status
+      self.repeating_panel_lines.items = list(purchase_order["lines"])
+  
       Notification("✅ Purchase order saved.", style="success").show()
-      #open_form("PurchaseOrderRecords")
-
+  
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
 
   def delete_line_item(self, row_index, **event_args):
     items = list(self.repeating_panel_lines.items)

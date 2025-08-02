@@ -9,7 +9,8 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
   def update_ui_from_item(self):
     self.text_box_part_id.text = self.item.get("part_id", "")
     self.text_box_qty_ordered.text = str(self.item.get("qty_ordered", ""))
-    self.label_qty_received.text = str(self.item.get("qty_received", ""))
+    self.text_box_qty_received.text = str(self.item.get("qty_received", ""))
+    self.check_box_received_all.checked = float(self.item.get("qty_received", 0)) >= float(self.item.get("qty_ordered", 0))
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_description.text = self.item.get("description", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "NZD")
@@ -81,6 +82,27 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
         row_index = panel.items.index(self.item)
         panel.raise_event("x-delete-po-line", row_index=row_index)
 
+  def check_box_received_all_change(self, **event_args):
+    if self.check_box_received_all.checked:
+      try:
+        qty_ordered = float(self.text_box_qty_ordered.text or "0")
+        self.text_box_qty_received.text = str(qty_ordered)
+        self.item["qty_received"] = qty_ordered
+      except ValueError:
+        self.text_box_qty_received.text = "0"
+        self.item["qty_received"] = 0
+
+  def text_box_qty_received_lost_focus(self, **event_args):
+    try:
+      qty = float(self.text_box_qty_received.text or "0")
+      self.item["qty_received"] = qty
+    except ValueError:
+      self.item["qty_received"] = 0
+      self.text_box_qty_received.text = "0"
+
+  def text_box_qty_received_pressed_enter(self, **event_args):
+    self.text_box_qty_received_lost_focus()
+
   def refresh_data_bindings(self):
     self.update_ui_from_item()
 
@@ -89,6 +111,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
       return f"{float(value):.2f}"
     except (ValueError, TypeError):
       return "–"
+
 
 
 
