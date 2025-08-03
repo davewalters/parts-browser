@@ -9,13 +9,20 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
   def update_ui_from_item(self):
     self.text_box_part_id.text = self.item.get("part_id", "")
     self.text_box_qty_ordered.text = str(self.item.get("qty_ordered", ""))
-    self.text_box_qty_received.text = str(self.item.get("qty_received", ""))
-    self.check_box_received_all.checked = float(self.item.get("qty_received", 0)) >= float(self.item.get("qty_ordered", 0))
+
+    # Ensure qty_received is initialized to 0.0 if missing or None
+    qty_received = float(self.item.get("qty_received") or 0.0)
+    qty_ordered = float(self.item.get("qty_ordered") or 0.0)
+
+    self.text_box_qty_received.text = str(qty_received)
+    self.check_box_received_all.checked = qty_received >= qty_ordered
+
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_description.text = self.item.get("description", "")
     self.label_vendor_currency.text = self.item.get("vendor_currency", "NZD")
     self.label_vendor_unit_price.text = self.format_currency(self.item.get("vendor_unit_cost", 0))
     self.label_total_cost_nz.text = self.format_currency(self.item.get("total_cost_nz", 0))
+
 
   def get_repeating_panel(self):
     parent = self.parent
