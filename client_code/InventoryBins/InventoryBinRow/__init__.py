@@ -23,7 +23,7 @@ class InventoryBinRow(InventoryBinRowTemplate):
     self.label_part_name.text = self.item.get("part_name", "")
     self.text_box_qty.text = str(self.item.get("qty", 0))
     self.drop_down_owner.selected_value = self.item.get("owner", "Manufacturing")
-    self.drop_down_location.selected_value = self.item.get("location", "Store")
+    self.drop_down_location.selected_value = self.item.get("location", "INWARDS_GOODS")
     self.text_area_serials.text = "\n".join(self.item.get("serial_numbers", []))
 
   def save_changes(self, **event_args):
