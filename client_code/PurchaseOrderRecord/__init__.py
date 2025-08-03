@@ -87,6 +87,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
 
     for line in self.purchase_order["lines"]:
       line["purchase_order_id"] = self.purchase_order["_id"]
+      line["_prev_qty_ordered"] = float(line.get("qty_ordered", 0))
+      line["_prev_qty_received"] = float(line.get("qty_received", 0))
     self.repeating_panel_lines.items = list(self.purchase_order["lines"])
 
   def load_vendor_dropdown(self):
@@ -138,6 +140,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "qty_ordered": 0.0,
       "received_all": False,
       "qty_received": 0.0,
+      "_prev_qty_ordered": 0.0,
+      "_prev_qty_received": 0.0,
       "vendor_unit_cost": 0.0,
       "vendor_currency": "NZD",
       "total_cost_nz": 0.0,
@@ -209,7 +213,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       for line in lines:
         qty_ordered = float(line.get("qty_ordered", 0))
         qty_received = float(line.get("qty_received", 0))
-        line["_prev_qty_received"] = line.get("qty_received", 0.0)  # Track prior state for deltas
+        line["_prev_qty_ordered"] = float(line.get("_prev_qty_ordered", qty_ordered))
+        line["_prev_qty_received"] = float(line.get("_prev_qty_received", qty_received))
   
       purchase_order = {
         "_id": self.label_id.text.strip(),
