@@ -76,7 +76,7 @@ components:
         type: Label
       - layout_properties: {column: transfer}
         name: label_button_transfer
-        properties: {align: center}
+        properties: {align: center, text: Transfer Stock}
         type: Label
       layout_properties: {col_xs: 0, row: XMHUQM, width_xs: 12}
       name: data_row_panel_header

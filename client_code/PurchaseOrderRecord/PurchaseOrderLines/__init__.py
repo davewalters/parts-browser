@@ -15,7 +15,7 @@ class PurchaseOrderLines(PurchaseOrderLinesTemplate):
     qty_ordered = float(self.item.get("qty_ordered") or 0.0)
 
     self.text_box_qty_received.text = str(qty_received)
-    self.check_box_received_all.checked = qty_received >= qty_ordered
+    self.check_box_received_all.checked = qty_ordered > 0 and qty_received >= qty_ordered
 
     self.label_vendor_part_no.text = self.item.get("vendor_part_no", "")
     self.label_description.text = self.item.get("description", "")

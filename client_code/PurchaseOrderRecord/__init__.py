@@ -138,10 +138,10 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "vendor_part_no": "",
       "description": "",
       "qty_ordered": 0.0,
+      "prev_qty_ordered": 0.0,
       "received_all": False,
       "qty_received": 0.0,
-      "_prev_qty_ordered": 0.0,
-      "_prev_qty_received": 0.0,
+      "prev_qty_received": 0.0,
       "vendor_unit_cost": 0.0,
       "vendor_currency": "NZD",
       "total_cost_nz": 0.0,
@@ -149,6 +149,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       "purchase_order_id": self.label_id.text
     }
     self.repeating_panel_lines.items = [new_line] + self.repeating_panel_lines.items
+
 
   def refresh_line_cost(self, row_index, part_id, qty_ordered, **event_args):
     try:
@@ -164,25 +165,28 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
   
       default_vendor = part.get("default_vendor")
       if default_vendor != vendor_id:
-        Notification(
-          f"⚠️ Vendor mismatch for part '{part_id}'. "
-          f"Expected vendor: '{default_vendor or 'None'}'",
-          style="warning"
-        ).show()
+        Notification(f"⚠️ Vendor mismatch for part '{part_id}'. Expected vendor: '{default_vendor or 'None'}'", style="warning").show()
         return
   
       vendor_info = anvil.server.call("get_part_vendor_info", part_id, vendor_id)
       line_total = qty_ordered * vendor_info["latest_cost_nz"] if qty_ordered else 0.0
   
-      self.repeating_panel_lines.items[row_index]["vendor_unit_cost"] = vendor_info["vendor_price"]
-      self.repeating_panel_lines.items[row_index]["vendor_currency"] = vendor_info["vendor_currency"]
-      self.repeating_panel_lines.items[row_index]["vendor_part_no"] = vendor_info["vendor_part_no"]
-      self.repeating_panel_lines.items[row_index]["description"] = vendor_info["description"]
-      self.repeating_panel_lines.items[row_index]["total_cost_nz"] = round(line_total, 2)
+      line = self.repeating_panel_lines.items[row_index]
+      prev_qty_ordered = line.get("prev_qty_ordered", line.get("qty_ordered", 0.0))
+      prev_qty_received = line.get("prev_qty_received", line.get("qty_received", 0.0))
   
-      # ✅ Force UI update
+      line.update({
+        "vendor_unit_cost": vendor_info["vendor_price"],
+        "vendor_currency": vendor_info["vendor_currency"],
+        "vendor_part_no": vendor_info["vendor_part_no"],
+        "description": vendor_info["description"],
+        "total_cost_nz": round(line_total, 2),
+        "prev_qty_ordered": prev_qty_ordered,
+        "prev_qty_received": prev_qty_received
+      })
+  
       self.repeating_panel_lines.items = self.repeating_panel_lines.items
-
+  
     except Exception as e:
       Notification(f"⚠️ Failed to refresh cost: {e}", style="warning").show()
 
@@ -204,7 +208,7 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       if not lines:
         raise ValueError("At least one line item is required.")
   
-      self.receipt_lines()  # ✅ Process any UI-sourced qty_received or receipt checkboxes
+      self.receipt_lines()
   
       vendor_id = self.drop_down_vendor_name.selected_value
       if not vendor_id:
@@ -213,8 +217,8 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
       for line in lines:
         qty_ordered = float(line.get("qty_ordered", 0))
         qty_received = float(line.get("qty_received", 0))
-        line["_prev_qty_ordered"] = float(line.get("_prev_qty_ordered", qty_ordered))
-        line["_prev_qty_received"] = float(line.get("_prev_qty_received", qty_received))
+        line["prev_qty_ordered"] = float(line.get("prev_qty_ordered", qty_ordered))
+        line["prev_qty_received"] = float(line.get("prev_qty_received", qty_received))
   
       purchase_order = {
         "_id": self.label_id.text.strip(),
@@ -228,20 +232,17 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "notes": self.text_area_notes.text,
         "lines": lines
       }
-  
-      # Save and re-fetch the updated PO with computed cost + status
+      print("calling debug_save_purchase_order")
+      anvil.server.call("debug_save_purchase_order", purchase_order)
+      print("called debug_save_purchase_order")
+
       updated_status = anvil.server.call("save_purchase_order", purchase_order)
       self.purchase_order = anvil.server.call("get_purchase_order", purchase_order["_id"])
-  
-      # Refresh all form fields and line items from saved version
       self.populate_form()
-  
       Notification(f"✅ Purchase order saved with status: {updated_status}", style="success").show()
   
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
-
-
 
   def delete_line_item(self, row_index, **event_args):
     items = list(self.repeating_panel_lines.items)
