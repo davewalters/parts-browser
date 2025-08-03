@@ -194,32 +194,56 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
     any_changes = False
     for i, line in enumerate(self.repeating_panel_lines.items):
       if line.get("receipt_checked"):
+        part_id = line.get("part_id")
         qty_received = float(line.get("qty_received", 0))
-        delta = anvil.server.call("receipt_purchase_order_line", self.purchase_order["_id"], i, qty_received)
+        prev_qty_received = float(line.get("prev_qty_received", 0))
+        delta = qty_received - prev_qty_received
+
         if delta > 0:
+          # Record the transfer from qty_on_order → qty_on_hand
+          anvil.server.call("transfer_inventory_status", part_id, "qty_on_order", "qty_on_hand", delta)
+  
+          # Update the line to reflect the received quantity
+          line["prev_qty_received"] = qty_received
+          line["receipt_checked"] = False  # Uncheck after processing
           any_changes = True
-          line["qty_received"] = qty_received
     return any_changes
 
-  
   def button_save_click(self, **event_args):
     try:
       lines = self.repeating_panel_lines.items
       if not lines:
         raise ValueError("At least one line item is required.")
   
-      self.receipt_lines()
+      self.receipt_lines()  # ✅ Apply any receipt checkboxes
   
       vendor_id = self.drop_down_vendor_name.selected_value
       if not vendor_id:
         raise ValueError("Vendor must be selected before saving.")
   
       for line in lines:
+        # Default fallback values
         qty_ordered = float(line.get("qty_ordered", 0))
         qty_received = float(line.get("qty_received", 0))
-        line["prev_qty_ordered"] = float(line.get("prev_qty_ordered", qty_ordered))
-        line["prev_qty_received"] = float(line.get("prev_qty_received", qty_received))
+        prev_qty_ordered = float(line.get("prev_qty_ordered", 0))
+        prev_qty_received = float(line.get("prev_qty_received", 0))
+        part_id = line.get("part_id")
   
+        delta_ordered = qty_ordered - prev_qty_ordered
+        delta_received = qty_received - prev_qty_received
+  
+        # Save updated prev values back into the line (in case of re-edit)
+        line["prev_qty_ordered"] = qty_ordered
+        line["prev_qty_received"] = qty_received
+  
+        # Apply inventory transfers
+        if abs(delta_ordered) > 1e-6:
+          anvil.server.call("transfer_inventory_status", part_id, None, "qty_on_order", delta_ordered)
+  
+        if delta_received > 0:
+          anvil.server.call("transfer_inventory_status", part_id, "qty_on_order", "qty_on_hand", delta_received)
+  
+      # Prepare PO for save
       purchase_order = {
         "_id": self.label_id.text.strip(),
         "status": self.drop_down_status.selected_value,
@@ -232,17 +256,16 @@ class PurchaseOrderRecord(PurchaseOrderRecordTemplate):
         "notes": self.text_area_notes.text,
         "lines": lines
       }
-      print("calling debug_save_purchase_order")
-      anvil.server.call("debug_save_purchase_order", purchase_order)
-      print("called debug_save_purchase_order")
-
+  
       updated_status = anvil.server.call("save_purchase_order", purchase_order)
       self.purchase_order = anvil.server.call("get_purchase_order", purchase_order["_id"])
       self.populate_form()
+  
       Notification(f"✅ Purchase order saved with status: {updated_status}", style="success").show()
   
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
 
   def delete_line_item(self, row_index, **event_args):
     items = list(self.repeating_panel_lines.items)
