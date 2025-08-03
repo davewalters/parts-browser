@@ -15,7 +15,7 @@ class InventoryTransfers(InventoryTransfersTemplate):
     self.prev_filter_part_name = prev_filter_part_name
     self.prev_filter_kanban = prev_filter_kanban
     self.status_fields = [
-      "qty_on_order", "qty_on_hand", "qty_committed", "qty_staged", "qty_issued"
+      "qty_on_order", "qty_on_hand", "qty_committed", "qty_picked", "qty_issued"
     ]
   
     self.drop_down_source.items = self.status_fields

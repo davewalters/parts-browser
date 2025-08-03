@@ -55,6 +55,10 @@ components:
       name: label_kanban
       properties: {text: Kanban}
       type: Label
+    - layout_properties: {column: on-order}
+      name: label_on_order
+      properties: {text: On-Order}
+      type: Label
     - layout_properties: {column: on-hand}
       name: label_on_hand
       properties: {text: On-Hand}
@@ -63,17 +67,13 @@ components:
       name: label_committed
       properties: {text: Committed}
       type: Label
-    - layout_properties: {column: staged}
-      name: label_staged
-      properties: {text: Staged}
+    - layout_properties: {column: picked}
+      name: label_picked
+      properties: {text: Picked}
       type: Label
     - layout_properties: {column: issued}
       name: label_issued
       properties: {text: Issued}
-      type: Label
-    - layout_properties: {column: on-order}
-      name: label_on_order
-      properties: {text: On-Order}
       type: Label
     - layout_properties: {column: details}
       name: label_details

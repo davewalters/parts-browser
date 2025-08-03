@@ -12,7 +12,11 @@ components:
     name: label_kanban
     properties: {}
     type: Label
-  - layout_properties: {column: on_hand}
+  - layout_properties: {column: on-order}
+    name: label_on_order
+    properties: {}
+    type: Label
+  - layout_properties: {column: on-hand}
     name: label_on_hand
     properties: {}
     type: Label
@@ -20,20 +24,16 @@ components:
     name: label_committed
     properties: {}
     type: Label
-  - layout_properties: {column: staged}
-    name: label_staged
+  - layout_properties: {column: picked}
+    name: label_picked
     properties: {}
     type: Label
   - layout_properties: {column: issued}
     name: label_issued
     properties: {}
     type: Label
-  - layout_properties: {column: on-order}
-    name: label_on_order
-    properties: {}
-    type: Label
   - event_bindings: {click: view_button_click}
-    layout_properties: {column: ''}
+    layout_properties: {column: details}
     name: button_view
     properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
     type: Button

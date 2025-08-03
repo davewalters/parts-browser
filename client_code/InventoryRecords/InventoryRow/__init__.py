@@ -11,7 +11,7 @@ class InventoryRow(InventoryRowTemplate):
 
     self.label_on_hand.text = str(self.item.get('qty_on_hand', 0))
     self.label_committed.text = str(self.item.get('qty_committed', 0))
-    self.label_staged.text = str(self.item.get('qty_staged', 0))
+    self.label_picked.text = str(self.item.get('qty_picked', 0))
     self.label_issued.text = str(self.item.get('qty_issued', 0))
     self.label_on_order.text = str(self.item.get('qty_on_order', 0))
 

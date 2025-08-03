@@ -67,8 +67,8 @@ components:
         properties: {align: center, text: Committed}
         type: Label
       - layout_properties: {column: staged}
-        name: label_hdr_staged
-        properties: {align: center, text: Staged}
+        name: label_hdr_picked
+        properties: {align: center, text: Picked}
         type: Label
       - layout_properties: {column: issued}
         name: label_hdr_issued
@@ -104,7 +104,7 @@ components:
         properties: {align: center}
         type: Label
       - layout_properties: {column: staged}
-        name: label_qty_staged
+        name: label_qty_picked
         properties: {align: center}
         type: Label
       - layout_properties: {column: issued}
