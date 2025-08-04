@@ -8,6 +8,8 @@ unique_ids:
     DesignBOMRecord.DesignBOMRow: '1752573894266664589033044.5187'
     InventoryBins: '1754097300817314042843512.5702'
     InventoryBins.InventoryBinRow: '1754097495610390148441030.0107'
+    InventoryJournalViewer: '1754339933135413464029129.82025'
+    InventoryJournalViewer.ItemTemplate5: '1754340224543727837839287.735'
     InventoryRecords: '1753830435193571958910006.3407'
     InventoryRecords.InventoryRow: '1753830639815522695508154.49774'
     InventoryTransfers: '1753843500382495961556326.1742'
@@ -28,8 +30,6 @@ unique_ids:
     VendorRecord: '1751880206306501648000146.48193'
     VendorRecords: '1751857443470862083059973.3711'
     VendorRecords.ItemTemplate2: '1751857729937623899630071.331'
-    inventoryJournalViewer: '1754339933135413464029129.82025'
-    inventoryJournalViewer.ItemTemplate5: '1754340224543727837839287.735'
   modules:
     config: '1752056469777477982658001.0764'
   scripts: {}

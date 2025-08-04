@@ -38,7 +38,7 @@ components:
     - components:
       - layout_properties: {}
         name: repeating_panel_1
-        properties: {item_template: inventoryJournalViewer.ItemTemplate5}
+        properties: {item_template: InventoryJournalViewer.ItemTemplate5}
         type: RepeatingPanel
       layout_properties: {col_xs: 0, row: CXMHZZ, width_xs: 12}
       name: data_row_panel_1
