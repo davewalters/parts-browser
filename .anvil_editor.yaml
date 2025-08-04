@@ -28,6 +28,8 @@ unique_ids:
     VendorRecord: '1751880206306501648000146.48193'
     VendorRecords: '1751857443470862083059973.3711'
     VendorRecords.ItemTemplate2: '1751857729937623899630071.331'
+    inventoryJournalViewer: '1754339933135413464029129.82025'
+    inventoryJournalViewer.ItemTemplate5: '1754340224543727837839287.735'
   modules:
     config: '1752056469777477982658001.0764'
   scripts: {}
