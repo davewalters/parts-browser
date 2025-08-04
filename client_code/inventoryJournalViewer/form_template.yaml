@@ -27,9 +27,9 @@ components:
     type: GridPanel
   - components:
     - components:
-      - layout_properties: {}
-        name: label_1
-        properties: {}
+      - layout_properties: {column: timestamp}
+        name: label_timestamp
+        properties: {text: Timestamp}
         type: Label
       layout_properties: {col_xs: 0, row: BEVWKF, width_xs: 12}
       name: data_row_panel_hdr
