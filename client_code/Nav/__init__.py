@@ -7,6 +7,7 @@ from .. VendorRecords import VendorRecords
 from .. PurchaseOrderRecords import PurchaseOrderRecords
 from .. InventoryRecords import InventoryRecords
 from .. InventoryBins import InventoryBins
+from .. InventoryJournalViewer import InventoryJournalViewer
 from .. TestTools import TestTools
 
 class Nav(NavTemplate):
@@ -19,6 +20,7 @@ class Nav(NavTemplate):
       {"title": "InventoryRecords", "form_class": InventoryRecords},
       {"title": "InventoryBins", "form_class": InventoryBins},
       {"title": "TestTools", "form_class": TestTools},
+      {"title": "InventoryJournalViewer", "form_class": InventoryJournalViewer},
     ]
     self.menu_panel.items = self.menu_items
     self.menu_panel.set_event_handler('x-load-form', self.load_form_event)
