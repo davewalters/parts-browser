@@ -1,8 +1,8 @@
-from ._anvil_designer import InventoryBinsJournalViewerTemplate
+from ._anvil_designer import InventoryBinsJournalTemplate
 from anvil import *
 import anvil.server
 
-class InventoryBinsJournalViewer(InventoryBinsJournalViewerTemplate):
+class InventoryBinsJournal(InventoryBinsJournalTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
 
