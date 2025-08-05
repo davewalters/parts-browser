@@ -2,45 +2,41 @@ from ._anvil_designer import InventoryJournalRowTemplate
 from anvil import *
 
 class InventoryJournalRow(InventoryJournalRowTemplate):
-  running_balance = None  # Shared class-level state
-
   def __init__(self, **properties):
     self.init_components(**properties)
     self.display_fields()
 
   def display_fields(self):
-    self.label_timestamp.text = self.item["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
-    self.label_part_id.text = self.item["part_id"]
-    #self.label_notes.text = self.item.get("notes", "")
+    self.label_timestamp.text = self.item.get("formatted_timestamp", "")
+    self.label_part_id.text = self.item.get("part_id", "")
 
-    delta = self.item.get("delta", {})
-    delta_on_hand = delta.get("qty_on_hand", 0)
+    # Show deltas using colored labels
+    self.set_label_value(self.label_on_order, self.item.get("qty_on_order", 0))
+    self.set_label_value(self.label_on_hand, self.item.get("qty_on_hand", 0))
+    self.set_label_value(self.label_committed, self.item.get("qty_committed", 0))
+    self.set_label_value(self.label_picked, self.item.get("qty_picked", 0))
+    self.set_label_value(self.label_issued, self.item.get("qty_issued", 0))
+    
 
-    # Initialize running balance only once at top row
-    if InventoryJournalRow.running_balance is None:
-      InventoryJournalRow.running_balance = self.item.get("running_balance", delta_on_hand)
-    else:
-      InventoryJournalRow.running_balance -= delta_on_hand
-
-    # Show deltas
-    self.set_label_value(self.label_on_hand, delta_on_hand)
-    self.set_label_value(self.label_committed, delta.get("qty_committed"))
-    self.set_label_value(self.label_picked, delta.get("qty_picked"))
-    self.set_label_value(self.label_issued, delta.get("qty_issued"))
-    self.set_label_value(self.label_on_order, delta.get("qty_on_order"))
-
-    # Show running balance (formatted like deltas)
-    self.label_running_balance.text = f"{InventoryJournalRow.running_balance}"
+    # Show running balance (already formatted by server)
+    self.label_running_balance.text = self.item.get("formatted_balance", "")
+    running_value = self.item.get("running_balance", 0)
     self.label_running_balance.foreground = (
-      "secondary500" if InventoryJournalRow.running_balance > 0 else
-      "primary500" if InventoryJournalRow.running_balance < 0 else None
+      "secondary500" if running_value > 0 else
+      "primary500" if running_value < 0 else None
     )
 
   def set_label_value(self, label, value):
-    if value is None or value == 0:
-      label.text = ""
+    if value is None:
+      label.text = "0"
       label.foreground = None
     else:
-      label.text = f"{value:+}"
-      label.foreground = "secondary500" if value > 0 else "primary500"
+      label.text = f"{value:d}" if isinstance(value, int) else f"{value:.2f}"
+      label.foreground = (
+        "#03A9F4" if value > 0 else
+        "#FF9800" if value < 0 else
+        None
+      )
+
+
 

@@ -12,6 +12,10 @@ components:
     name: label_on_order
     properties: {align: center, font_size: 12}
     type: Label
+  - layout_properties: {column: on_hand}
+    name: label_on_hand
+    properties: {align: center, font_size: 12}
+    type: Label
   - layout_properties: {column: committed}
     name: label_committed
     properties: {align: center, font_size: 12}

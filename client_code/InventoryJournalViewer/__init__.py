@@ -9,7 +9,7 @@ class InventoryJournalViewer(InventoryJournalViewerTemplate):
     self.text_box_part_id.set_event_handler("lost_focus", self.update_filter)
     self.text_box_part_name.set_event_handler("lost_focus", self.update_filter)
     self.check_box_kanban.set_event_handler("change", self.update_filter)
-    self.button_home.role = "mydefault-button"
+
     self.update_filter()
 
   def update_filter(self, **event_args):
@@ -24,11 +24,18 @@ class InventoryJournalViewer(InventoryJournalViewerTemplate):
       is_kanban=is_kanban
     )
 
-    from ..InventoryJournalRow import InventoryJournalRow
-    InventoryJournalRow.running_balance = None
+    for entry in journal_entries:
+      entry["formatted_timestamp"] = entry["timestamp"].strftime("%Y-%m-%d %H:%M:%S")
+      entry["formatted_balance"] = f"{entry.get('running_balance', 0):.2f}"
+
+      delta = entry.get("delta", {})
+      # Show zero rather than blank for all fields
+      for field in ["qty_on_hand", "qty_committed", "qty_picked", "qty_issued", "qty_on_order"]:
+        entry[field] = delta.get(field, 0)
 
     self.repeating_panel_entries.items = journal_entries
     self.label_row_count.text = f"{len(journal_entries)} row(s)"
+
 
   def button_home_click(self, **event_args):
     open_form("Nav")
