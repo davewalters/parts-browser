@@ -1,7 +1,7 @@
-from ._anvil_designer import InventoryJournalRowTemplate
+from ._anvil_designer import InventoryStatusRowTemplate
 from anvil import *
 
-class InventoryJournalRow(InventoryJournalRowTemplate):
+class InventoryStatusRow(InventoryStatusRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     self.display_fields()

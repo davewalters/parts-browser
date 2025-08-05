@@ -1,0 +1,99 @@
+components:
+- components:
+  - components:
+    - layout_properties: {col_xs: 1, row: LAXOJS, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: LAXOJS, width_xs: 3}
+      name: text_box_part_id
+      properties: {font_size: 12, placeholder: Part No. e.g.138-}
+      type: TextBox
+    - layout_properties: {col_xs: 5, row: LAXOJS, width_xs: 3}
+      name: text_box_part_name
+      properties: {font_size: 12, placeholder: Description e.g. Hou}
+      type: TextBox
+    - layout_properties: {col_xs: 8, row: LAXOJS, width_xs: 2}
+      name: check_box_kanban
+      properties: {font_size: 12, text: Kanban}
+      type: CheckBox
+    - layout_properties: {col_xs: 4, row: UNQWXB, width_xs: 5}
+      name: label_row_count
+      properties: {font_size: 12, icon: 'fa:check-circle-o'}
+      type: Label
+    layout_properties: {grid_position: 'OOCRAQ,FUDAGW'}
+    name: grid_panel_filters
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - event_bindings: {click: button_home_click}
+      layout_properties: {col_xs: 5, row: NCJLPP, width_xs: 1}
+      name: button_home
+      properties: {icon: 'fa:home', text: ''}
+      type: Button
+    layout_properties: {grid_position: 'ALFUFL,QRVEUK'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: timestamp}
+        name: label_hdr_timestamp
+        properties: {text: Timestamp}
+        type: Label
+      - layout_properties: {column: part_id}
+        name: label_hdr_part_id
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: on_order}
+        name: label_hdr_on_order
+        properties: {align: center, text: On-Order}
+        type: Label
+      - layout_properties: {column: on_hand}
+        name: label_hdr_on_hand
+        properties: {align: center, text: On-Hand}
+        type: Label
+      - layout_properties: {column: committed}
+        name: label_hdr_committed
+        properties: {align: center, text: Committed}
+        type: Label
+      - layout_properties: {column: picked}
+        name: label_hdr_picked
+        properties: {align: center, text: Picked}
+        type: Label
+      - layout_properties: {column: issued}
+        name: label_hdr_issued
+        properties: {align: center, text: Issued}
+        type: Label
+      - layout_properties: {column: balance}
+        name: label_hdr_running_balance
+        properties: {align: center, text: Running Balance}
+        type: Label
+      layout_properties: {col_xs: 0, row: BEVWKF, width_xs: 12}
+      name: data_row_panel_hdr
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: AOAEOD, width_xs: 12}
+      name: repeating_panel_entries
+      properties: {background: '', item_template: InventoryStatusJournal.InventoryStatusRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'CALSAN,IECMXP'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Inventory Bins Journal}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true

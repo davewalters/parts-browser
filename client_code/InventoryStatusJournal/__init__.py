@@ -1,13 +1,13 @@
-from ._anvil_designer import InventoryJournalViewerTemplate
+from ._anvil_designer import InventoryStatusJournalTemplate
 from anvil import *
 import anvil.server
 
-class InventoryJournalViewer(InventoryJournalViewerTemplate):
+class InventoryStatusJournal(InventoryStatusJournalTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
 
-    self.text_box_part_id.set_event_handler("lost_focus", self.update_filter)
-    self.text_box_part_name.set_event_handler("lost_focus", self.update_filter)
+    self.text_box_part_id.set_event_handler("pressed_enter", self.update_filter)
+    self.text_box_part_name.set_event_handler("pressed_enter", self.update_filter)
     self.check_box_kanban.set_event_handler("change", self.update_filter)
 
     self.update_filter()
