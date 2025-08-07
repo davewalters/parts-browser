@@ -23,3 +23,4 @@ class InventoryBinsJournalRow(InventoryBinsJournalRowTemplate):
       "secondary500" if balance > 0 else
       "primary500" if balance < 0 else None
     )
+

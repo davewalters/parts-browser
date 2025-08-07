@@ -8,6 +8,7 @@ from .. PurchaseOrderRecords import PurchaseOrderRecords
 from .. InventoryRecords import InventoryRecords
 from .. InventoryBins import InventoryBins
 from .. InventoryStatusJournal import InventoryStatusJournal
+from .. InventoryBinsJournal import InventoryBinsJournal
 from .. TestTools import TestTools
 
 class Nav(NavTemplate):
@@ -20,6 +21,7 @@ class Nav(NavTemplate):
       {"title": "InventoryRecords", "form_class": InventoryRecords},
       {"title": "InventoryBins", "form_class": InventoryBins},
       {"title": "InventoryStatusJournal", "form_class": InventoryStatusJournal},
+      {"title": "InventoryBinsJournal", "form_class": InventoryBinsJournal},
       {"title": "TestTools", "form_class": TestTools},      
     ]
     self.menu_panel.items = self.menu_items
