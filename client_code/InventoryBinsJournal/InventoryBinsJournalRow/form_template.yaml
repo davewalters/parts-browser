@@ -8,12 +8,16 @@ components:
     name: label_part_id
     properties: {}
     type: Label
+  - layout_properties: {column: bin_id}
+    name: label_bin_id
+    properties: {align: center}
+    type: Label
   - layout_properties: {column: location}
     name: label_location
     properties: {align: center}
     type: Label
-  - layout_properties: {column: bin_id}
-    name: label_bin_id
+  - layout_properties: {column: owner}
+    name: label_owner
     properties: {align: center}
     type: Label
   - layout_properties: {column: quantity}

@@ -56,7 +56,7 @@ class InventoryBinsJournal(InventoryBinsJournalTemplate):
           "formatted_balance": f"{float(e.get('running_balance', 0) or 0):.2f}",
           "qty": delta.get("qty", 0),
           # These make it easy to bind in the row without KeyErrors
-          "bin_id": e.get("bin_id", ""),          # <- prevent KeyError if missing
+          "bin_id": e.get("_id", ""),          # <- prevent KeyError if missing
           "source_bin_id": e.get("source_bin_id", ""),
           "target_bin_id": e.get("target_bin_id", ""),
         })
