@@ -15,9 +15,11 @@ class InventoryRow(InventoryRowTemplate):
     self.label_issued.text = str(self.item.get('qty_issued', 0))
     self.label_on_order.text = str(self.item.get('qty_on_order', 0))
 
-    self.button_view.set_event_handler("click", self.view_button_click)
+    self.button_status_transfers.set_event_handler("click", self.button_status_transfers_click)
+    self.button_bin_transfers.set_event_handler("click", self.button_bin_transfers_click)
 
+  def button_status_transfers_click(self, **event_args):
+    self.parent.raise_event("x-status_transfer", part_summary=self.item)
 
-  def view_button_click(self, **event_args):
-    self.parent.raise_event("x-show-detail", part_summary=self.item)
-
+  def button_bin_transfers_click(self, **event_args):
+    self.parent.raise_event("x-bin_transfer", part_summary=self.item)

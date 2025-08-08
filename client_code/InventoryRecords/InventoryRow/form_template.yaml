@@ -32,10 +32,14 @@ components:
     name: label_issued
     properties: {}
     type: Label
-  - event_bindings: {click: view_button_click}
-    layout_properties: {column: details}
-    name: button_view
+  - event_bindings: {}
+    layout_properties: {column: status_transfers}
+    name: button_status_transfers
     properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+    type: Button
+  - layout_properties: {column: bin_transfers}
+    name: button_bin_transfers
+    properties: {icon: 'fa:cart-arrow-down', text: ''}
     type: Button
   layout_properties: {grid_position: 'XUTEUL,VRQEXE'}
   name: data_row_panel_1

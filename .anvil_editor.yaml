@@ -6,6 +6,8 @@ unique_ids:
   forms:
     DesignBOMRecord: '1752572963420880471196300.3734'
     DesignBOMRecord.DesignBOMRow: '1752573894266664589033044.5187'
+    InventoryBinTransfers: '1754622683650307415940002.45795'
+    InventoryBinTransfers.InventoryBinTransferRows: '1754623173759216124034825.16763'
     InventoryBins: '1754097300817314042843512.5702'
     InventoryBins.InventoryBinRow: '1754097495610390148441030.0107'
     InventoryBinsJournal: '1754422769852430037176259.6076'

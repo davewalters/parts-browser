@@ -53,31 +53,35 @@ components:
       type: Label
     - layout_properties: {column: kanban}
       name: label_kanban
-      properties: {text: Kanban}
+      properties: {align: center, text: Kanban}
       type: Label
     - layout_properties: {column: on-order}
       name: label_on_order
-      properties: {text: On-Order}
+      properties: {align: center, text: On-Order}
       type: Label
     - layout_properties: {column: on-hand}
       name: label_on_hand
-      properties: {text: On-Hand}
+      properties: {align: center, text: On-Hand}
       type: Label
     - layout_properties: {column: committed}
       name: label_committed
-      properties: {text: Committed}
+      properties: {align: center, text: Committed}
       type: Label
     - layout_properties: {column: picked}
       name: label_picked
-      properties: {text: Picked}
+      properties: {align: center, text: Picked}
       type: Label
     - layout_properties: {column: issued}
       name: label_issued
-      properties: {text: Issued}
+      properties: {align: center, text: Issued}
       type: Label
-    - layout_properties: {column: details}
-      name: label_details
-      properties: {}
+    - layout_properties: {column: status_transfers}
+      name: label_status_transfers
+      properties: {align: center, text: Status Transfers}
+      type: Label
+    - layout_properties: {column: bin_transfers}
+      name: label_bin_transfers
+      properties: {align: center, text: Bin Transfers}
       type: Label
     layout_properties: {grid_position: 'ZRWBKV,XWSSPE'}
     name: data_row_panel_header
