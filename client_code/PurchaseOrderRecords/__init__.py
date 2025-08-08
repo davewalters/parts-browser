@@ -39,7 +39,7 @@ class PurchaseOrderRecords(PurchaseOrderRecordsTemplate):
     self.check_box_overdue_only.checked = filter_overdue
 
     self.drop_down_vendor.set_event_handler("change", self.update_filter)
-    self.text_box_part.set_event_handler("change", self.update_filter)
+    self.text_box_part.set_event_handler("pressed_enter", self.update_filter)
     self.drop_down_status.set_event_handler("change", self.update_filter)
     self.date_picker_from.set_event_handler("change", self.update_filter)
     self.date_picker_to.set_event_handler("change", self.update_filter)

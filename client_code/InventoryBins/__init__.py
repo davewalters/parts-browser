@@ -7,8 +7,8 @@ class InventoryBins(InventoryBinsTemplate):
     self.init_components(**properties)
     self.repeating_panel_bins.role = "scrolling-panel"
 
-    self.text_box_filter_part_id.set_event_handler("change", self.update_filter)
-    self.text_box_filter_part_name.set_event_handler("change", self.update_filter)
+    self.text_box_filter_part_id.set_event_handler("pressed_enter", self.update_filter)
+    self.text_box_filter_part_name.set_event_handler("pressed_enter", self.update_filter)
 
     self.update_filter()
 

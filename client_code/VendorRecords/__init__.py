@@ -18,8 +18,8 @@ class VendorRecords(VendorRecordsTemplate):
     self.text_box_vendor_id.text = filter_vendor_id
     self.text_box_company_name.text = filter_company_name
 
-    self.text_box_vendor_id.set_event_handler('change', self.update_filter)
-    self.text_box_company_name.set_event_handler('change', self.update_filter)
+    self.text_box_vendor_id.set_event_handler('pressed_enter', self.update_filter)
+    self.text_box_company_name.set_event_handler('pressed_enter', self.update_filter)
     self.repeating_panel_1.set_event_handler("x-show-detail", self.show_detail)
 
     self.update_filter()

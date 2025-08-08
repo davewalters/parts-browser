@@ -26,8 +26,8 @@ class PartRecords(PartRecordsTemplate):
     self.check_box_designbom.checked = filter_designbom
 
 
-    self.text_box_part_no.set_event_handler('change', self.update_filter)
-    self.text_box_desc.set_event_handler('change', self.update_filter)
+    self.text_box_part_no.set_event_handler('pressed_enter', self.update_filter)
+    self.text_box_desc.set_event_handler('pressed_enter', self.update_filter)
     self.drop_down_type.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
     self.check_box_designbom.set_event_handler('change', self.update_filter)

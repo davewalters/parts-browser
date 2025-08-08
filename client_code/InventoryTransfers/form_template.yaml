@@ -30,7 +30,7 @@ components:
         type: DropDown
       - layout_properties: {col_xs: 5, row: ZTOACU, width_xs: 2}
         name: text_box_qty
-        properties: {align: center, background: '', font_size: 14, foreground: '', placeholder: '0'}
+        properties: {align: center, background: '', font_size: 14, foreground: '', placeholder: ''}
         type: TextBox
       - layout_properties: {col_xs: 8, row: ZTOACU, width_xs: 2}
         name: drop_down_target

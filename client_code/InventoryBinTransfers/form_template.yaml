@@ -12,7 +12,7 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 0, row: FRRDBV, width_xs: 2}
+      - layout_properties: {col_xs: 1, row: FRRDBV, width_xs: 1}
         name: label_hdr_part_id
         properties: {text: 'Part No:'}
         type: Label
@@ -20,15 +20,15 @@ components:
         name: label_part_id
         properties: {}
         type: Label
-      - layout_properties: {col_xs: 4, row: FRRDBV, width_xs: 2}
+      - layout_properties: {col_xs: 5, row: FRRDBV, width_xs: 2}
         name: label_hdr_description
         properties: {text: 'Description:'}
         type: Label
-      - layout_properties: {col_xs: 6, row: FRRDBV, width_xs: 6}
+      - layout_properties: {col_xs: 7, row: FRRDBV, width_xs: 4}
         name: label_part_name
         properties: {}
         type: Label
-      layout_properties: {col_xs: 2, row: DSGDQL, width_xs: 9}
+      layout_properties: {col_xs: 0, row: DSGDQL, width_xs: 12}
       name: grid_panel_1
       properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
       type: GridPanel
@@ -51,14 +51,14 @@ components:
         type: DropDown
       - layout_properties: {col_xs: 4, row: ZTOACU, width_xs: 2}
         name: text_box_qty
-        properties: {align: center, background: '', font_size: 14, foreground: '', placeholder: '0'}
+        properties: {align: center, background: '', font_size: 14, foreground: '', placeholder: ''}
         type: TextBox
       - layout_properties: {col_xs: 7, row: ZTOACU, width_xs: 2}
         name: drop_down_target_bin
         properties: {font_size: 12}
         type: DropDown
       - event_bindings: {click: button_transfer_click}
-        layout_properties: {col_xs: 10, row: ZTOACU, width_xs: 1}
+        layout_properties: {col_xs: 9, row: ZTOACU, width_xs: 2}
         name: button_transfer
         properties: {icon: 'fa:exchange', text: ''}
         type: Button

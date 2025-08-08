@@ -19,7 +19,7 @@ class Nav(NavTemplate):
       {"title": "Vendors", "form_class": VendorRecords},
       {"title": "PurchaseOrders", "form_class": PurchaseOrderRecords},
       {"title": "InventoryRecords", "form_class": InventoryRecords},
-      {"title": "InventoryBins", "form_class": InventoryBins},
+      #{"title": "InventoryBins", "form_class": InventoryBins},
       {"title": "InventoryStatusJournal", "form_class": InventoryStatusJournal},
       {"title": "InventoryBinsJournal", "form_class": InventoryBinsJournal},
       {"title": "TestTools", "form_class": TestTools},      

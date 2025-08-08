@@ -45,25 +45,29 @@ components:
         name: label_hdr_part_id
         properties: {text: Part No.}
         type: Label
-      - layout_properties: {column: bin_id}
-        name: label_hdr_bin_id
-        properties: {align: center, text: Bin ID}
+      - layout_properties: {column: part_name}
+        name: label_part_name
+        properties: {text: Description}
         type: Label
-      - layout_properties: {column: location}
-        name: label_hdr_location
-        properties: {align: center, text: Location}
+      - layout_properties: {column: source_bin_id}
+        name: label_hdr_source_bin_id
+        properties: {align: center, text: Source Bin ID}
         type: Label
-      - layout_properties: {column: owner}
-        name: label_hdr_owner
-        properties: {align: center, text: Owner}
+      - layout_properties: {column: source_bin_qty}
+        name: label_source_bin_qty
+        properties: {align: center, text: Source Bin Transfer Qty}
         type: Label
-      - layout_properties: {column: quantity}
-        name: label_qty
-        properties: {align: center, text: Qty}
+      - layout_properties: {column: target_bin_id}
+        name: label_target_bin_id
+        properties: {align: center, text: Target Bin ID}
         type: Label
-      - layout_properties: {column: balance}
-        name: label_hdr_running_balance
-        properties: {align: center, text: Running Balance}
+      - layout_properties: {column: target_bin_qty}
+        name: label_target_bin_qty
+        properties: {align: center, text: Target Bin Transfer Qty}
+        type: Label
+      - layout_properties: {column: transfer_qty}
+        name: label_transfer_qty
+        properties: {align: center, text: Transfer Qty}
         type: Label
       layout_properties: {col_xs: 0, row: BEVWKF, width_xs: 12}
       name: data_row_panel_hdr

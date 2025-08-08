@@ -8,24 +8,28 @@ components:
     name: label_part_id
     properties: {}
     type: Label
-  - layout_properties: {column: bin_id}
-    name: label_bin_id
+  - layout_properties: {column: part_name}
+    name: label_part_name
+    properties: {}
+    type: Label
+  - layout_properties: {column: source_bin_id}
+    name: label_source_bin_id
     properties: {align: center}
     type: Label
-  - layout_properties: {column: location}
-    name: label_location
+  - layout_properties: {column: source_bin_qty}
+    name: label_source_bin_qty
     properties: {align: center}
     type: Label
-  - layout_properties: {column: owner}
-    name: label_owner
+  - layout_properties: {column: target_bin_id}
+    name: label_target_bin_id
     properties: {align: center}
     type: Label
-  - layout_properties: {column: quantity}
-    name: label_qty
+  - layout_properties: {column: target_bin_qty}
+    name: label_target_bin_qty
     properties: {align: center}
     type: Label
-  - layout_properties: {column: balance}
-    name: label_running_balance
+  - layout_properties: {column: transfer_qty}
+    name: label_transfer_qty
     properties: {align: center}
     type: Label
   layout_properties: {grid_position: 'ZCEJAD,YFDNVE'}

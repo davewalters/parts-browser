@@ -10,27 +10,27 @@ components:
     type: Label
   - layout_properties: {column: kanban}
     name: label_kanban
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: on-order}
     name: label_on_order
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: on-hand}
     name: label_on_hand
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: committed}
     name: label_committed
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: picked}
     name: label_picked
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: issued}
     name: label_issued
-    properties: {}
+    properties: {align: center}
     type: Label
   - event_bindings: {}
     layout_properties: {column: status_transfers}
@@ -43,7 +43,7 @@ components:
     type: Button
   layout_properties: {grid_position: 'XUTEUL,VRQEXE'}
   name: data_row_panel_1
-  properties: {}
+  properties: {background: 'theme:Gray 200'}
   type: DataRowPanel
 container: {type: ColumnPanel}
 is_package: true
