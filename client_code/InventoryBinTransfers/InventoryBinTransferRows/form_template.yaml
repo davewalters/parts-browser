@@ -8,6 +8,10 @@ components:
     name: label_location
     properties: {align: center}
     type: Label
+  - layout_properties: {column: owner}
+    name: label_owner
+    properties: {align: center}
+    type: Label
   - layout_properties: {column: qty}
     name: label_qty
     properties: {align: center}
