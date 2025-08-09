@@ -1,5 +1,100 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - components:
+    - components:
+      - layout_properties: {col_xs: 1, row: CIMTMQ, width_xs: 3}
+        name: label_customer_id
+        properties: {font_size: 12, text: 'Customer ID:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: CIMTMQ, width_xs: 5}
+        name: text_customer_id
+        properties: {background: 'theme:Gray 200', font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: WLTCRM, width_xs: 3}
+        name: label_name
+        properties: {font_size: 12, text: 'Name:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: WLTCRM, width_xs: 5}
+        name: text_name
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: KNPQXZ, width_xs: 3}
+        name: label_legal_name
+        properties: {font_size: 12, text: 'Legal Name:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: KNPQXZ, width_xs: 7}
+        name: text_legal_name
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: AAAGIE, width_xs: 3}
+        name: label_email
+        properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: AAAGIE, width_xs: 7}
+        name: text_email
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: GVXPRZ, width_xs: 3}
+        name: label_website
+        properties: {font_size: 12, icon: 'fa:globe', text: 'Website:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: GVXPRZ, width_xs: 7}
+        name: text_website
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: EANXXI, width_xs: 3}
+        name: label_phone_raw
+        properties: {font_size: 12, icon: 'fa:phone', text: 'Phone No (raw):'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: EANXXI, width_xs: 4}
+        name: text_phone_raw
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: TRVMUV, width_xs: 3}
+        name: label_phone_e164
+        properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: TRVMUV, width_xs: 4}
+        name: text_phone_e164
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: YZVPSE, width_xs: 3}
+        name: label_tax_country
+        properties: {font_size: 12, text: 'Tax Country:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: YZVPSE, width_xs: 2}
+        name: drop_down_tax_country_code
+        properties: {font_size: 11}
+        type: DropDown
+      - layout_properties: {col_xs: 1, row: MZNMOL, width_xs: 3}
+        name: label_tax_type
+        properties: {font_size: 12, text: 'Tax Type:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: MZNMOL, width_xs: 3}
+        name: drop_down_tax_type
+        properties: {font_size: 11}
+        type: DropDown
+      - layout_properties: {col_xs: 7, row: MZNMOL, width_xs: 3}
+        name: check_box_is_default_tax_type
+        properties: {font_size: 12, text: use for billing}
+        type: CheckBox
+      - layout_properties: {col_xs: 1, row: YBCISX, width_xs: 3}
+        name: label_tax_number
+        properties: {font_size: 12, text: 'Tax ID Number:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: YBCISX, width_xs: 5}
+        name: text_tax_id_number
+        properties: {font_size: 12}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: EWWRBD, width_xs: 7}
+      name: grid_panel_core
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    layout_properties: {grid_position: 'OPBTIG,GZDYZS'}
+    name: grid_panel_container
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel
