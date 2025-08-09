@@ -28,10 +28,6 @@ components:
     name: label_target_bin_qty
     properties: {align: center}
     type: Label
-  - layout_properties: {column: transfer_qty}
-    name: label_transfer_qty
-    properties: {align: center}
-    type: Label
   layout_properties: {grid_position: 'ZCEJAD,YFDNVE'}
   name: data_row_panel_1
   properties: {background: 'theme:Gray 200', font_size: 12}

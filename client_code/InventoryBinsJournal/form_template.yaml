@@ -65,10 +65,6 @@ components:
         name: label_target_bin_qty
         properties: {align: center, text: Target Bin Transfer Qty}
         type: Label
-      - layout_properties: {column: transfer_qty}
-        name: label_transfer_qty
-        properties: {align: center, text: Transfer Qty}
-        type: Label
       layout_properties: {col_xs: 0, row: BEVWKF, width_xs: 12}
       name: data_row_panel_hdr
       properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}

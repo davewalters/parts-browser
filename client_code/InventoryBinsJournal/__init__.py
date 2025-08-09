@@ -1,4 +1,3 @@
-# client code: InventoryBinsJournal
 from ._anvil_designer import InventoryBinsJournalTemplate
 from anvil import *
 import anvil.server
@@ -7,7 +6,6 @@ class InventoryBinsJournal(InventoryBinsJournalTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
 
-    # Update on change for consistency with other forms
     self.text_box_part_id.set_event_handler("pressed_enter", self.update_filter)
     self.text_box_part_name.set_event_handler("pressed_enter", self.update_filter)
     self.check_box_kanban.set_event_handler("change", self.update_filter)
@@ -27,24 +25,30 @@ class InventoryBinsJournal(InventoryBinsJournalTemplate):
         is_kanban=is_kanban
       )
 
-      # Pre-format for the row template
+      # Format for display
       for e in entries:
         ts = e.get("timestamp")
-        e["formatted_timestamp"] = ts.strftime("%Y-%m-%d %H:%M:%S") if ts else ""
-        # Ensure numeric columns exist
-        e["qty"] = e.get("qty", 0) or 0
-        e["running_balance_source"] = e.get("running_balance_source", None)
-        e["running_balance_target"] = e.get("running_balance_target", None)
-        e["source_bin_id"] = e.get("source_bin_id", "")
-        e["target_bin_id"] = e.get("target_bin_id", "")
+        try:
+          e["formatted_timestamp"] = ts.strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+          e["formatted_timestamp"] = str(ts)
+
+        # Always show zeros for empty deltas
+        e["src_delta"] = float(e.get("src_delta") or 0.0)
+        e["tgt_delta"] = float(e.get("tgt_delta") or 0.0)
+
+        # Ensure strings for bins
+        e["source_bin_id"] = e.get("source_bin_id") or ""
+        e["target_bin_id"] = e.get("target_bin_id") or ""
 
       self.repeating_panel_entries.items = entries
       self.label_row_count.text = f"{len(entries)} row(s)"
-    except Exception as err:
+    except Exception as ex:
+      self.label_row_count.text = f"Error: {ex}"
       self.repeating_panel_entries.items = []
-      self.label_row_count.text = f"Error: {err}"
 
   def button_home_click(self, **event_args):
     open_form("Nav")
+
 
 

@@ -1,4 +1,3 @@
-# client code: InventoryBinsJournalRow
 from ._anvil_designer import InventoryBinsJournalRowTemplate
 from anvil import *
 
@@ -8,28 +7,29 @@ class InventoryBinsJournalRow(InventoryBinsJournalRowTemplate):
     self.display_fields()
 
   def display_fields(self):
-    self.label_timestamp.text = self.item.get("formatted_timestamp", "")
-    self.label_part_id.text = self.item.get("part_id", "")
-    self.label_part_name.text = self.item.get("part_name", "")
-    
-    self.label_source_bin_id.text = self.item.get("source_bin_id", "")
-    source_bin_qty = self.item.get("running_balance_source", None)
-    self.label_source_bin_qty.text = self._format_balance(source_bin_qty)
-    
-    self.label_target_bin_id.text = self.item.get("target_bin_id", "")
-    target_bin_qty = self.item.get("running_balance_target", None)
-    self.label_target_bin_qty.text = self._format_balance(target_bin_qty)
+    item = self.item or {}
+    self.label_timestamp.text = item.get("formatted_timestamp", "")
+    self.label_part_id.text = item.get("part_id", "")
+    self.label_part_name.text = item.get("part_name", "")
+    self.label_source_bin_id.text = item.get("source_bin_id", "")
+    self.label_target_bin_id.text = item.get("target_bin_id", "")
 
-    transfer_qty = self.item.get("qty", 0) or 0
-    self.label_transfer_qty.text = f"{transfer_qty:+.2f}" if isinstance(transfer_qty, (int, float)) else "0"
-    self.label_transfer_qty.foreground = "#0D9488" if transfer_qty > 0 else ("#DC2626" if transfer_qty < 0 else None)
+    # Show deltas as signed numbers; always show zeros if no change
+    self.set_delta(self.label_source_bin_qty, item.get("src_delta", 0.0))
+    self.set_delta(self.label_target_bin_qty, item.get("tgt_delta", 0.0))
 
-  def _format_balance(self, val):
-    if val is None:
-      return ""
+  def set_delta(self, label, val):
     try:
-      return f"{float(val):.2f}"
+      v = float(val or 0.0)
     except (TypeError, ValueError):
-      return "0.00"
+      v = 0.0
+    label.text = f"{v:+.2f}"
+    # Color: +ve blue, -ve orange, zero default
+    label.foreground = (
+      "#1976D2" if v > 0 else
+      "#E65100" if v < 0 else
+      None
+    )
+
 
 
