@@ -111,6 +111,10 @@ components:
         name: text_contact_name
         properties: {font_size: 12}
         type: TextBox
+      - layout_properties: {col_xs: 1, row: MYVOAB, width_xs: 10}
+        name: label_spacer
+        properties: {font_size: 12}
+        type: Label
       - layout_properties: {col_xs: 1, row: QEOXAD, width_xs: 4}
         name: label_contact_email
         properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
@@ -119,6 +123,10 @@ components:
         name: text_contact_email
         properties: {font_size: 12}
         type: TextBox
+      - layout_properties: {col_xs: 1, row: HBHIIX, width_xs: 10}
+        name: label_spacer2
+        properties: {font_size: 12}
+        type: Label
       - layout_properties: {col_xs: 1, row: GABLKC, width_xs: 4}
         name: label_contact_phone_raw
         properties: {font_size: 11, icon: 'fa:phone', text: 'Phone (raw):'}
@@ -147,7 +155,7 @@ components:
         name: text_area_1
         properties:
           font_size: 12
-          height: 241.727294921875
+          height: 141.90911865234375
           text: |
             Notes:
         type: TextArea
@@ -155,7 +163,84 @@ components:
       name: grid_panel_contact
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
-    layout_properties: {grid_position: 'IPRHWR,UOWEAY'}
+    - components:
+      - layout_properties: {col_xs: 1, row: FWOGVS, width_xs: 4}
+        name: label_billing
+        properties: {font_size: 12, icon: 'fa:credit-card', text: Billing Details}
+        type: Label
+      - layout_properties: {col_xs: 1, row: SPOBLN, width_xs: 3}
+        name: label_billing_name
+        properties: {font_size: 12, text: 'Attention:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: SPOBLN, width_xs: 7}
+        name: text_billing_name_line
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: ANZFVU, width_xs: 3}
+        name: label_billing_organisation
+        properties: {font_size: 12, text: 'Organisation:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: ANZFVU, width_xs: 7}
+        name: text_billing_organisation
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: NYSVCQ, width_xs: 3}
+        name: label_addr1
+        properties: {font_size: 12, text: 'Address 1:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: NYSVCQ, width_xs: 7}
+        name: text_billing_addr1
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: YSQGML, width_xs: 3}
+        name: label_addr2
+        properties: {font_size: 12, text: 'Address 2:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: YSQGML, width_xs: 7}
+        name: text_billing_addr2
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: ZRKGLE, width_xs: 3}
+        name: label_locality
+        properties: {font_size: 12, text: 'Locality:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: ZRKGLE, width_xs: 7}
+        name: text_billing_locality
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: PSVTST, width_xs: 3}
+        name: label_admin_area
+        properties: {font_size: 12, text: 'Admin Area:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: PSVTST, width_xs: 7}
+        name: text_billing_admin_area
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: WPZJHZ, width_xs: 3}
+        name: label_postal_code
+        properties: {font_size: 12, text: 'Postal Code:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: WPZJHZ, width_xs: 3}
+        name: text_billing_postal_code
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: UQOHFB, width_xs: 3}
+        name: label_billing_country_code
+        properties: {font_size: 12, text: 'Country Code:'}
+        type: Label
+      - layout_properties: {col_xs: 4, row: UQOHFB, width_xs: 3}
+        name: text_billing_country_code
+        properties: {font_size: 12}
+        type: TextBox
+      layout_properties: {col_xs: 0, row: IGSAGB, width_xs: 6}
+      name: grid_panel_billing
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    - layout_properties: {col_xs: 7, row: IGSAGB, width_xs: 5}
+      name: grid_panel_shipping
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    layout_properties: {grid_position: 'QEKCWD,VTNHML'}
     name: grid_panel_container
     properties: {}
     type: GridPanel
