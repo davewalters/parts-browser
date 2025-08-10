@@ -21,11 +21,11 @@ components:
       properties: {}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 1, row: CIMTMQ, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: CIMTMQ, width_xs: 4}
         name: label_customer_id
         properties: {font_size: 14, icon: 'fa:id-badge', text: 'Customer ID:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: CIMTMQ, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: CIMTMQ, width_xs: 6}
         name: text_customer_id
         properties: {background: 'theme:Gray 200', font_size: 12}
         type: TextBox
@@ -33,7 +33,7 @@ components:
         name: label_name
         properties: {font_size: 12, text: 'Name:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: WLTCRM, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: WLTCRM, width_xs: 6}
         name: text_name
         properties: {font_size: 12}
         type: TextBox
@@ -41,15 +41,15 @@ components:
         name: label_legal_name
         properties: {font_size: 12, text: 'Legal Name:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: KNPQXZ, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: KNPQXZ, width_xs: 6}
         name: text_legal_name
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: AAAGIE, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: XNWKFD, width_xs: 4}
         name: label_email
         properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: AAAGIE, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: XNWKFD, width_xs: 6}
         name: text_email
         properties: {font_size: 12}
         type: TextBox
@@ -57,23 +57,23 @@ components:
         name: label_website
         properties: {font_size: 12, icon: 'fa:globe', text: 'Website:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: GVXPRZ, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: GVXPRZ, width_xs: 6}
         name: text_website
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: EANXXI, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: CHPPJR, width_xs: 4}
         name: label_phone_raw
         properties: {font_size: 12, icon: 'fa:phone', text: 'Phone (raw):'}
         type: Label
-      - layout_properties: {col_xs: 4, row: EANXXI, width_xs: 5}
+      - layout_properties: {col_xs: 5, row: CHPPJR, width_xs: 5}
         name: text_phone_raw
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: TRVMUV, width_xs: 3}
+      - layout_properties: {col_xs: 1, row: NLRVSB, width_xs: 4}
         name: label_phone_e164
         properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
         type: Label
-      - layout_properties: {col_xs: 4, row: TRVMUV, width_xs: 5}
+      - layout_properties: {col_xs: 5, row: NLRVSB, width_xs: 5}
         name: text_phone_e164
         properties: {font_size: 12}
         type: TextBox
@@ -81,7 +81,7 @@ components:
         name: label_tax_country
         properties: {font_size: 12, text: 'Tax Country:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: YZVPSE, width_xs: 3}
+      - layout_properties: {col_xs: 5, row: YZVPSE, width_xs: 3}
         name: drop_down_tax_country_code
         properties: {font_size: 11}
         type: DropDown
@@ -89,11 +89,11 @@ components:
         name: label_tax_type
         properties: {font_size: 12, text: 'Tax Type:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: MZNMOL, width_xs: 3}
+      - layout_properties: {col_xs: 5, row: MZNMOL, width_xs: 3}
         name: drop_down_tax_type
         properties: {font_size: 11}
         type: DropDown
-      - layout_properties: {col_xs: 7, row: MZNMOL, width_xs: 4}
+      - layout_properties: {col_xs: 8, row: MZNMOL, width_xs: 4}
         name: check_tax_is_default
         properties: {font_size: 12, text: use for billing}
         type: CheckBox
@@ -101,7 +101,7 @@ components:
         name: label_tax_number
         properties: {font_size: 12, text: 'Tax ID Number:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: YBCISX, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: YBCISX, width_xs: 6}
         name: text_tax_id_number
         properties: {font_size: 12}
         type: TextBox
@@ -109,11 +109,11 @@ components:
         name: label_currency
         properties: {font_size: 12, text: 'Currency:'}
         type: Label
-      - layout_properties: {col_xs: 4, row: FTKIMF, width_xs: 3}
+      - layout_properties: {col_xs: 5, row: FTKIMF, width_xs: 3}
         name: drop_down_currency
         properties: {font_size: 11}
         type: DropDown
-      layout_properties: {col_xs: 0, row: EWWRBD, width_xs: 7}
+      layout_properties: {col_xs: 0, row: EWWRBD, width_xs: 6}
       name: grid_panel_core
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
@@ -150,7 +150,7 @@ components:
         name: label_contact_phone_raw
         properties: {font_size: 11, icon: 'fa:phone', text: 'Phone (raw):'}
         type: Label
-      - layout_properties: {col_xs: 5, row: GABLKC, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: GABLKC, width_xs: 5}
         name: text_contact_phone_raw
         properties: {font_size: 12}
         type: TextBox
@@ -158,7 +158,7 @@ components:
         name: label_contact_phone_e164
         properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
         type: Label
-      - layout_properties: {col_xs: 5, row: BWDEDV, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: BWDEDV, width_xs: 5}
         name: text_contact_phone_e164
         properties: {font_size: 12}
         type: TextBox
@@ -166,7 +166,7 @@ components:
         name: label_contact_role
         properties: {font_size: 12, text: 'Role:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: JNHSCY, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: JNHSCY, width_xs: 5}
         name: text_contact_role
         properties: {font_size: 12}
         type: TextBox
@@ -174,11 +174,11 @@ components:
         name: text_notes
         properties:
           font_size: 12
-          height: 141.90911865234375
+          height: 137.3636474609375
           text: |
             Notes:
         type: TextArea
-      layout_properties: {col_xs: 7, row: EWWRBD, width_xs: 5}
+      layout_properties: {col_xs: 6, row: EWWRBD, width_xs: 6}
       name: grid_panel_contact
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
@@ -249,7 +249,7 @@ components:
         type: TextBox
       - layout_properties: {col_xs: 1, row: ZRKGLE, width_xs: 2}
         name: label_billing_locality
-        properties: {font_size: 12, text: 'Locality:'}
+        properties: {font_size: 12, text: 'City/Town:'}
         type: Label
       - layout_properties: {col_xs: 3, row: ZRKGLE, width_xs: 3}
         name: text_b_locality
