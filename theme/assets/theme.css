@@ -884,3 +884,13 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   text-transform: unset !important;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
 }
+
+/* Sticky header for long forms */
+.sticky-header {
+  position: sticky;
+  top: 0;                 /* sticks to top */
+  z-index: 1000;          /* stays above content */
+  background: var(--color-foreground-1, #fff);  /* ensure solid bg over content */
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}

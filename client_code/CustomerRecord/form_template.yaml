@@ -2,6 +2,25 @@ components:
 - components:
   - components:
     - components:
+      - layout_properties: {col_xs: 0, row: AMBEZG, width_xs: 3}
+        name: button_back
+        properties: {icon: 'fa:arrow-left', text: ''}
+        type: Button
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 4, row: AMBEZG, width_xs: 3}
+        name: button_save
+        properties: {icon: 'fa:save', text: Save}
+        type: Button
+      - event_bindings: {click: button_delete_click}
+        layout_properties: {col_xs: 9, row: AMBEZG, width_xs: 3}
+        name: button_delete
+        properties: {icon: 'fa:trash', text: Delete}
+        type: Button
+      layout_properties: {col_xs: 2, row: HKDZVO, width_xs: 8}
+      name: header_panel
+      properties: {}
+      type: GridPanel
+    - components:
       - layout_properties: {col_xs: 1, row: CIMTMQ, width_xs: 3}
         name: label_customer_id
         properties: {font_size: 14, icon: 'fa:id-badge', text: 'Customer ID:'}
@@ -75,7 +94,7 @@ components:
         properties: {font_size: 11}
         type: DropDown
       - layout_properties: {col_xs: 7, row: MZNMOL, width_xs: 4}
-        name: check_box_is_default_tax_type
+        name: check_tax_is_default
         properties: {font_size: 12, text: use for billing}
         type: CheckBox
       - layout_properties: {col_xs: 1, row: YBCISX, width_xs: 3}
@@ -152,7 +171,7 @@ components:
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: HPDJAK, width_xs: 10}
-        name: text_area_1
+        name: text_notes
         properties:
           font_size: 12
           height: 141.90911865234375
@@ -185,11 +204,11 @@ components:
         properties: {font_size: 12, text: 'Attention:'}
         type: Label
       - layout_properties: {col_xs: 3, row: SPOBLN, width_xs: 3}
-        name: text_billing_name_line
+        name: text_b_name_line
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: SPOBLN, width_xs: 3}
-        name: text_shipping_name_line
+        name: text_s_name_line
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: ANZFVU, width_xs: 2}
@@ -197,11 +216,11 @@ components:
         properties: {font_size: 12, text: 'Organisation:'}
         type: Label
       - layout_properties: {col_xs: 3, row: ANZFVU, width_xs: 3}
-        name: text_billing_organisation
+        name: text_b_org
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: ANZFVU, width_xs: 3}
-        name: text_shipping_organisation
+        name: text_s_org
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: NYSVCQ, width_xs: 2}
@@ -209,11 +228,11 @@ components:
         properties: {font_size: 12, text: 'Address 1:'}
         type: Label
       - layout_properties: {col_xs: 3, row: NYSVCQ, width_xs: 3}
-        name: text_billing_addr1
+        name: text_b_addr1
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: NYSVCQ, width_xs: 3}
-        name: text_shipping_addr1
+        name: text_s_addr1
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: YSQGML, width_xs: 2}
@@ -221,11 +240,11 @@ components:
         properties: {font_size: 12, text: 'Address 2:'}
         type: Label
       - layout_properties: {col_xs: 3, row: YSQGML, width_xs: 3}
-        name: text_billing_addr2
+        name: text_b_addr2
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: YSQGML, width_xs: 3}
-        name: text_shipping_addr2
+        name: text_s_addr2
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: ZRKGLE, width_xs: 2}
@@ -233,11 +252,11 @@ components:
         properties: {font_size: 12, text: 'Locality:'}
         type: Label
       - layout_properties: {col_xs: 3, row: ZRKGLE, width_xs: 3}
-        name: text_billing_locality
+        name: text_b_locality
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: ZRKGLE, width_xs: 3}
-        name: text_shipping_locality
+        name: text_s_locality
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: PSVTST, width_xs: 2}
@@ -245,11 +264,11 @@ components:
         properties: {font_size: 12, text: 'State/Province:'}
         type: Label
       - layout_properties: {col_xs: 3, row: PSVTST, width_xs: 3}
-        name: text_billing_admin_area
+        name: text_b_admin_area
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: PSVTST, width_xs: 3}
-        name: text_shipping_admin_area
+        name: text_s_admin_area
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: WPZJHZ, width_xs: 2}
@@ -257,11 +276,11 @@ components:
         properties: {font_size: 12, text: 'Postal Code:'}
         type: Label
       - layout_properties: {col_xs: 3, row: WPZJHZ, width_xs: 2}
-        name: text_billing_postal_code
+        name: text_b_postal_code
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 7, row: WPZJHZ, width_xs: 2}
-        name: text_shipping_postal_code
+        name: text_s_postal_code
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: UQOHFB, width_xs: 2}
