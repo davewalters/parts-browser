@@ -1,3 +1,25 @@
-components: []
-container: {type: ColumnPanel}
+components:
+- layout_properties: {grid_position: 'KPGFJM,QIWMXQ'}
+  name: label_customer_id
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'OPVECD,EOBKUM'}
+  name: label_name
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'NXYYCC,SEAHBJ'}
+  name: label_email
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'AYYLOJ,HBPVWS'}
+  name: label_address
+  properties: {}
+  type: Label
+- layout_properties: {grid_position: 'QOYNWY,XZPYDF'}
+  name: button_1
+  properties: {icon: 'fa:arrow-right', text: ''}
+  type: Button
+container:
+  properties: {background: 'theme:Gray 200'}
+  type: ColumnPanel
 is_package: true
