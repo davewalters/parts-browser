@@ -170,13 +170,17 @@ components:
         name: text_contact_role
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: HPDJAK, width_xs: 10}
+      - layout_properties: {col_xs: 1, row: CDWRMZ, width_xs: 2}
+        name: label_notes
+        properties: {font_size: 12, text: 'Notes:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: CDWRMZ, width_xs: 8}
         name: text_notes
         properties:
           font_size: 12
-          height: 137.3636474609375
-          text: |
-            Notes:
+          height: 118.00006103515625
+          text: |2+
+
         type: TextArea
       layout_properties: {col_xs: 6, row: EWWRBD, width_xs: 6}
       name: grid_panel_contact
