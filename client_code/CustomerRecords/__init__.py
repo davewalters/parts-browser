@@ -1,14 +1,13 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import CustomerRecordsTemplate
-from ..CustomerRecord import CustomerRecord
 
 class CustomerRecords(CustomerRecordsTemplate):
   def __init__(self, name_filter: str = "", **properties):
     self.init_components(**properties)
 
     # Optional roles to match your project styles
-    self.button_new.role = "new-button"
+    self.button_add_customer.role = "new-button"
 
     # Seed filter
     self.text_box_name_filter.text = name_filter or ""
@@ -25,8 +24,11 @@ class CustomerRecords(CustomerRecordsTemplate):
     """Called on pressed_enter or lost_focus of the name filter."""
     self._load_data()
 
-  def button_new_click(self, **event_args):
-    open_form(CustomerRecord(is_new=True))
+  def button_add_customer_click(self, **event_args):
+    open_form("CustomerRecord",is_new=True)
+
+  def button_home_click(self, **event_args):
+    open_form("Nav")
 
   # ---- Data ----
   def _load_data(self):

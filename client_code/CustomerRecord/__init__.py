@@ -2,6 +2,7 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import CustomerRecordTemplate
+from .. CustomerRecords import CustomerRecords
 
 _TAX_TYPES = ["GST", "VAT", "SalesTax", "ABN", "EIN", "Other"]
 _COUNTRIES = ["NZ", "AU", "GB", "IE", "DE", "FR", "NL", "US", "CA", "CN", "JP"]

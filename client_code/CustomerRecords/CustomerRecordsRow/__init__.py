@@ -1,13 +1,10 @@
 from anvil import *
 from ._anvil_designer import CustomerRecordsRowTemplate
-from ..CustomerRecord import CustomerRecord
 
 class CustomerRecordsRow(CustomerRecordsRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     self.button_details.role = "mydefault-button"
-
-  def form_show(self, **event_args):
     self.label_customer_id.text = self.item.get("customer_id","")
     self.label_name.text = self.item.get("name","") or ""
     self.label_email.text = self.item.get("email","") or ""
@@ -30,5 +27,8 @@ class CustomerRecordsRow(CustomerRecordsRowTemplate):
     return ", ".join([p for p in parts if p])
 
   def button_details_click(self, **event_args):
-    open_form(CustomerRecord(customer_id=self.item.get("customer_id"), is_new=False))
+    open_form("CustomerRecord",
+              customer_id=self.item.get("customer_id"),
+              is_new=False,
+             )
 

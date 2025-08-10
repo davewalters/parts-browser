@@ -3,7 +3,7 @@ from anvil import *
 import anvil.server
 
 from .. PartRecords import PartRecords
-from .. CustomerRecord import CustomerRecord
+from .. CustomerRecords import CustomerRecords
 from .. VendorRecords import VendorRecords
 from .. PurchaseOrderRecords import PurchaseOrderRecords
 from .. InventoryRecords import InventoryRecords
@@ -17,7 +17,7 @@ class Nav(NavTemplate):
     self.init_components(**properties)
     self.menu_items = [
       {"title": "Parts", "form_class": PartRecords},
-      {"title": "CustomerRecord", "form_class": CustomerRecord},
+      {"title": "Customers", "form_class": CustomerRecords},
       {"title": "Vendors", "form_class": VendorRecords},
       {"title": "PurchaseOrders", "form_class": PurchaseOrderRecords},
       {"title": "InventoryRecords", "form_class": InventoryRecords},
