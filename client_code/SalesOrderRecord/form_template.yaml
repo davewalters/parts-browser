@@ -1,0 +1,61 @@
+components:
+- components:
+  - components:
+    - components:
+      - layout_properties: {col_xs: 0, row: VXCQZS, width_xs: 2}
+        name: button_back
+        properties: {icon: 'fa:arrow-left', text: ''}
+        type: Button
+      - layout_properties: {col_xs: 2, row: VXCQZS, width_xs: 3}
+        name: button_save
+        properties: {icon: 'fa:save', text: Save}
+        type: Button
+      - layout_properties: {col_xs: 5, row: VXCQZS, width_xs: 3}
+        name: button_confirm
+        properties: {icon: 'fa:check-circle', text: Confirm}
+        type: Button
+      - layout_properties: {col_xs: 9, row: VXCQZS, width_xs: 3}
+        name: button_cancel
+        properties: {icon: 'fa:ban', text: Cancel}
+        type: Button
+      layout_properties: {col_xs: 2, row: QCLDVN, width_xs: 8}
+      name: grid_panel_header
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 1, row: GFBFQQ, width_xs: 2}
+        name: label_title_so_id
+        properties: {font_size: 12, text: 'Sales Order ID:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: GFBFQQ, width_xs: 2}
+        name: label_so_id
+        properties: {font_size: 12}
+        type: Label
+      - layout_properties: {col_xs: 1, row: WGNKXV, width_xs: 2}
+        name: label_title_cust_id
+        properties: {font_size: 12, text: 'Customer ID:'}
+        type: Label
+      layout_properties: {col_xs: 1, row: GRIROQ, width_xs: 10}
+      name: grid_panel_1
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    layout_properties: {grid_position: 'UFNZNT,CVOUOZ'}
+    name: grid_panel_container
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Sales Order Record}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
