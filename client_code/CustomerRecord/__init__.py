@@ -191,7 +191,7 @@ class CustomerRecord(CustomerRecordTemplate):
 
   # ---------- Events ----------
   def button_back_click(self, **event_args):
-    open_form("Nav")
+    open_form("CustomerRecords")
 
   def button_delete_click(self, **event_args):
     try:

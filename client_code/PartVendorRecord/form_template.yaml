@@ -98,7 +98,7 @@ components:
       type: GridPanel
     - components:
       - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 2}
+        layout_properties: {col_xs: 1, row: LWTNGS, width_xs: 3}
         name: button_back
         properties: {icon: 'fa:arrow-left', text: ''}
         type: Button

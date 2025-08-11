@@ -2,29 +2,29 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 3, row: IMJEZT, width_xs: 1}
+      - layout_properties: {col_xs: 1, row: IMJEZT, width_xs: 2}
         name: label_filter
         properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
         type: Label
-      - layout_properties: {col_xs: 4, row: IMJEZT, width_xs: 2}
+      - layout_properties: {col_xs: 2, row: IMJEZT, width_xs: 4}
         name: label_customer_name
         properties: {font_size: 12, text: 'Customer Name:'}
         type: Label
-      - layout_properties: {col_xs: 6, row: IMJEZT, width_xs: 3}
+      - layout_properties: {col_xs: 6, row: IMJEZT, width_xs: 4}
         name: text_box_name_filter
         properties: {font_size: 12, placeholder: e.g Desig}
         type: TextBox
-      - layout_properties: {col_xs: 5, row: ILWGBH, width_xs: 3}
+      - layout_properties: {col_xs: 5, row: ILWGBH, width_xs: 6}
         name: label_count
         properties: {font_size: 12, icon: 'fa:check-circle-o'}
         type: Label
-      layout_properties: {col_xs: 2, row: ROGZGS, width_xs: 9}
+      layout_properties: {col_xs: 3, row: ROGZGS, width_xs: 6}
       name: grid_panel_filter
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
       - event_bindings: {click: button_home_click}
-        layout_properties: {col_xs: 2, row: RHUBFQ, width_xs: 2}
+        layout_properties: {col_xs: 0, row: RHUBFQ, width_xs: 3}
         name: button_home
         properties: {icon: 'fa:home', text: ''}
         type: Button

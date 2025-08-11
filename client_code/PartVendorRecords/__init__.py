@@ -97,7 +97,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
   def button_cancel_click(self, **event_args):
     if self.back_to_po:
       open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
-    return
+      return
     if self.back_to_bom:
       open_form("DesignBOMRecord",
                 assembly_part_id=self.assembly_part_id,

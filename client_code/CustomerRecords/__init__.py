@@ -6,13 +6,9 @@ class CustomerRecords(CustomerRecordsTemplate):
   def __init__(self, name_filter: str = "", **properties):
     self.init_components(**properties)
 
-    # Optional roles to match your project styles
     self.button_add_customer.role = "new-button"
-
-    # Seed filter
+    self.button_home.role = "mydefault-button"
     self.text_box_name_filter.text = name_filter or ""
-
-    # Wire the usual update_filter pattern
     self.text_box_name_filter.set_event_handler("pressed_enter", self.update_filter)
     self.text_box_name_filter.set_event_handler("lost_focus", self.update_filter)
 
@@ -34,6 +30,6 @@ class CustomerRecords(CustomerRecordsTemplate):
   def _load_data(self):
     name_sub = (self.text_box_name_filter.text or "").strip()
     rows = anvil.server.call("list_customers_by_name", name_sub)
-    self.label_count.text = f"{len(rows)}"
+    self.label_count.text = f"{len(rows)} customer(s) returned"
     self.repeating_panel_customers.items = rows
 
