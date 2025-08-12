@@ -14,7 +14,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.button_save.role = "save-button"
     self.button_confirm.role = "primary-color"
     self.button_cancel.role = "delete-button"
-
+    self.button_add_line.role = "new-button"
     # Internal map: customer_name -> customer_id
     self._cust_map = {}
 
