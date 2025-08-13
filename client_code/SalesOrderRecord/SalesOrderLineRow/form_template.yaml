@@ -24,10 +24,19 @@ components:
     name: label_line_price
     properties: {}
     type: Label
+  - layout_properties: {column: line_tax}
+    name: label_line_tax
+    properties: {}
+    type: Label
   - layout_properties: {column: ship_date}
     name: label_ship_date
     properties: {align: center}
     type: Label
+  - event_bindings: {click: button_delete_click}
+    layout_properties: {column: delete_line}
+    name: button_1
+    properties: {icon: 'fa:trash-o', text: ''}
+    type: Button
   layout_properties: {grid_position: 'TXUNZR,YKEQHX'}
   name: data_row_panel_1
   properties: {background: 'theme:Gray 200', font_size: 12}
