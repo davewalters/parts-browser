@@ -6,11 +6,11 @@ components:
         name: button_back
         properties: {icon: 'fa:arrow-left', text: ''}
         type: Button
-      - layout_properties: {col_xs: 2, row: VXCQZS, width_xs: 3}
+      - layout_properties: {col_xs: 3, row: VXCQZS, width_xs: 3}
         name: button_save
         properties: {icon: 'fa:save', text: Save}
         type: Button
-      - layout_properties: {col_xs: 5, row: VXCQZS, width_xs: 3}
+      - layout_properties: {col_xs: 6, row: VXCQZS, width_xs: 3}
         name: button_confirm
         properties: {icon: 'fa:check-circle', text: Confirm}
         type: Button
@@ -148,7 +148,7 @@ components:
       - layout_properties: {col_xs: 1, row: QERFRF, width_xs: 3}
         name: label_title_total
         properties:
-          font_size: 12
+          font_size: 14
           spacing:
             margin: ['2', null, '2', null]
             padding: ['4', null, '4', null]
@@ -158,8 +158,8 @@ components:
         name: label_grand
         properties:
           background: theme:Gray 300
-          bold: true
-          font_size: 12
+          bold: false
+          font_size: 14
           foreground: theme:White
           spacing:
             margin: ['2', null, '2', null]
@@ -194,24 +194,28 @@ components:
           type: Label
         - layout_properties: {column: unit_price}
           name: label_hdr_unit_price
-          properties: {align: center, text: Unit Price}
+          properties: {align: left, text: Unit Price}
           type: Label
         - layout_properties: {column: qty}
           name: label_hdr_qty
           properties: {align: center, text: Qty}
           type: Label
-        - layout_properties: {column: total_price}
+        - layout_properties: {column: line_price}
           name: label_hdr_total_price
-          properties: {align: center, text: Total Price}
+          properties: {align: left, text: Line Price}
           type: Label
         - layout_properties: {column: ship_date}
           name: label_hdr_ship_date
-          properties: {align: center, text: Requested Ship Date}
+          properties: {align: left, text: Requested Ship Date}
           type: Label
         layout_properties: {col_xs: 0, row: PBJHHJ, width_xs: 12}
         name: data_row_panel_1
         properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
         type: DataRowPanel
+      - layout_properties: {col_xs: 0, row: XFTQLK, width_xs: 12}
+        name: repeating_panel_lines
+        properties: {item_template: SalesOrderRecord.SalesOrderLineRow}
+        type: RepeatingPanel
       layout_properties: {col_xs: 1, row: GKUILA, width_xs: 10}
       name: grid_panel_hdr_lines
       properties: {background: '', foreground: ''}
