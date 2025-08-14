@@ -2,19 +2,23 @@ components:
 - components:
   - components:
     - components:
-      - layout_properties: {col_xs: 0, row: VXCQZS, width_xs: 2}
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 0, row: VXCQZS, width_xs: 2}
         name: button_back
         properties: {icon: 'fa:arrow-left', text: ''}
         type: Button
-      - layout_properties: {col_xs: 3, row: VXCQZS, width_xs: 3}
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 3, row: VXCQZS, width_xs: 3}
         name: button_save
         properties: {icon: 'fa:save', text: Save}
         type: Button
-      - layout_properties: {col_xs: 6, row: VXCQZS, width_xs: 3}
+      - event_bindings: {click: button_confirm_click}
+        layout_properties: {col_xs: 6, row: VXCQZS, width_xs: 3}
         name: button_confirm
         properties: {icon: 'fa:check-circle', text: Confirm}
         type: Button
-      - layout_properties: {col_xs: 9, row: VXCQZS, width_xs: 3}
+      - event_bindings: {click: button_cancel_click}
+        layout_properties: {col_xs: 9, row: VXCQZS, width_xs: 3}
         name: button_cancel
         properties: {icon: 'fa:ban', text: Cancel Order}
         type: Button
@@ -178,7 +182,8 @@ components:
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
-      - layout_properties: {col_xs: 4, row: TMWFMT, width_xs: 8}
+      - event_bindings: {click: button_add_line_click}
+        layout_properties: {col_xs: 4, row: TMWFMT, width_xs: 8}
         name: button_add_line
         properties: {icon: 'fa:plus-circle', text: Add Item}
         type: Button
