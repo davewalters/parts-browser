@@ -8,30 +8,43 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
   def __init__(self, **props):
     self.init_components(**props)
 
-    # roles (optional)
+    # Roles (optional)
     self.button_new_so.role = "new-button"
     self.button_back.role = "mydefault-button"
 
-    # initialise filters
+    # Filter widgets
     self.drop_down_status.items = ["", "draft", "confirmed", "cancelled"]
     self.drop_down_status.selected_value = ""
 
-    self.date_to.date = date.today()                   # end date defaults to today
-    self.date_from.date = date.today().replace(day=1)  # optional: first of month
+    # End date initialises to today (bonus)
+    self.date_to.date = date.today()
+    self.date_from.date = date.today().replace(day=1)  # optional
 
-    # load once
-    self.update_filter()
+    self.update_filter()  # initial load
 
-  # ------------- Core filter/update -------------
+  # ---------- Utilities ----------
+  def format_date(self, d):
+    """Render server 'order_date' which may be a datetime or ISO string."""
+    try:
+      if isinstance(d, (datetime, date)):
+        return d.strftime("%Y-%m-%d")
+      if isinstance(d, str):
+        # ISO: '2025-08-15T08:20:34.123456+00:00' -> '2025-08-15'
+        return d.split("T")[0]
+    except:
+      return "–"
+    return "–"
+
+  # ---------- Filter/apply ----------
   def update_filter(self, **e):
     so_prefix = (self.text_box_so_id_prefix.text or "").strip()
     cust = (self.text_box_customer.text or "").strip()
     status = self.drop_down_status.selected_value or ""
 
-    fd = self.date_from.date
-    td = self.date_to.date
+    fd = self.date_from.date      # date or None
+    td = self.date_to.date        # date or None
 
-    # Call uplink; returns {"ok":..., "data": ...}
+    # Call uplink (server converts these dates to day-bounds datetimes)
     resp = anvil.server.call(
       "so_list",
       so_id_prefix=so_prefix,
@@ -41,23 +54,27 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
       to_date=td.isoformat() if td else None,
       limit=500
     )
-    if not resp["ok"]:
-      Notification(resp["error"], style="warning").show()
+    if not resp or not resp.get("ok", False):
+      Notification((resp or {}).get("error", "Load failed."), style="warning").show()
       return
 
     rows = resp["data"] or []
+
+    # Post-process for display-only fields that want formatted dates
+    # (You can also format in the row form; doing it here keeps the row simple.)
+    for r in rows:
+      r["_order_date_display"] = self.format_date(r.get("order_date"))
+
     self.repeating_panel_orders.items = rows
     self.label_count.text = f"{len(rows)}"
 
-  # ------------- Filter events -------------
-  # TextBoxes update on Enter
+  # ---------- Filter events ----------
   def text_box_so_id_prefix_pressed_enter(self, **event_args):
     self.update_filter()
 
   def text_box_customer_pressed_enter(self, **event_args):
     self.update_filter()
 
-  # DropDown & DatePickers update on change
   def drop_down_status_change(self, **event_args):
     self.update_filter()
 
@@ -67,15 +84,17 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
   def date_to_change(self, **event_args):
     self.update_filter()
 
-  # ------------- Actions -------------
+  # ---------- Actions ----------
   def button_new_so_click(self, **event_args):
+    # Minimal draft (server sets order_date = created_at UTC)
     resp = anvil.server.call("so_create", {"notes": ""})
-    if not resp["ok"]:
-      Notification(resp["error"], style="warning").show()
+    if not resp or not resp.get("ok", False):
+      Notification((resp or {}).get("error", "Create failed."), style="warning").show()
       return
     new_so = resp["data"]
     open_form("SalesOrderRecord", order_id=new_so["_id"])
 
   def button_back_click(self, **event_args):
     open_form("Nav")
+
 
