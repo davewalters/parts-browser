@@ -16,7 +16,7 @@ components:
         type: Button
       - layout_properties: {col_xs: 9, row: VXCQZS, width_xs: 3}
         name: button_cancel
-        properties: {icon: 'fa:ban', text: Cancel}
+        properties: {icon: 'fa:ban', text: Cancel Order}
         type: Button
       layout_properties: {col_xs: 2, row: QCLDVN, width_xs: 8}
       name: grid_panel_header
@@ -111,7 +111,7 @@ components:
           text: 'Sub-Total:'
         type: Label
       - layout_properties: {col_xs: 4, row: YQYUJU, width_xs: 6}
-        name: label_sub_total
+        name: label_subtotal
         properties:
           font_size: 12
           spacing:

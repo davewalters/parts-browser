@@ -11,7 +11,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
     self.button_back.role = "mydefault-button"
     self.button_save.role = "save-button"
-    self.button_confirm.role = "primary-color"
+    self.button_confirm.role = "new-button"
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
     
@@ -54,7 +54,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       self.label_ship_to.text = ""
 
   def _load(self):
-    self.order = anvil.server.call("get_sales_order", self.order_id)
+    self.order = anvil.server.call("so_get", self.order_id)
     if not self.order:
       Notification("Sales order not found.", style="warning").show()
       return

@@ -19,8 +19,11 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
     # End date initialises to today (bonus)
     self.date_to.date = date.today()
     self.date_from.date = date.today().replace(day=1)  # optional
-
+    
     self.update_filter()  # initial load
+
+    resp = anvil.server.call("so_probe")
+    print(resp)
 
   # ---------- Utilities ----------
   def format_date(self, d):
