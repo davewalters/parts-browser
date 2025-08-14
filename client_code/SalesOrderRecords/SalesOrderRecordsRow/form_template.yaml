@@ -1,0 +1,36 @@
+components:
+- components:
+  - layout_properties: {column: order_id}
+    name: label_so_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: cust_id}
+    name: label_customer_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: cust_name}
+    name: label_customer_name
+    properties: {}
+    type: Label
+  - layout_properties: {column: order_date}
+    name: label_order_date
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_status
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: order_value}
+    name: label_grand_total
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: details}
+    name: button_1
+    properties: {icon: 'fa:arrow-right', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'SNLFTN,QDMCUQ'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true

@@ -20,13 +20,12 @@ class Nav(NavTemplate):
       {"title": "Parts", "form_class": PartRecords},
       {"title": "Customers", "form_class": CustomerRecords},
       {"title": "Vendors", "form_class": VendorRecords},
-      {"title": "PurchaseOrders", "form_class": PurchaseOrderRecords},
-      {"title": "InventoryRecords", "form_class": InventoryRecords},
-      #{"title": "InventoryBins", "form_class": InventoryBins},
-      {"title": "InventoryStatusJournal", "form_class": InventoryStatusJournal},
-      {"title": "InventoryBinsJournal", "form_class": InventoryBinsJournal},
-      {"title": "SalesOrders", "form_class": SalesOrderRecords},
-      {"title": "TestTools", "form_class": TestTools},      
+      {"title": "Purchase Orders", "form_class": PurchaseOrderRecords},
+      {"title": "Inventory", "form_class": InventoryRecords},
+      {"title": "Inventory Status Journal", "form_class": InventoryStatusJournal},
+      {"title": "Inventory Bins Journal", "form_class": InventoryBinsJournal},
+      {"title": "Sales Orders", "form_class": SalesOrderRecords},
+      {"title": "Test Tools", "form_class": TestTools},      
     ]
     self.menu_panel.items = self.menu_items
     self.menu_panel.set_event_handler('x-load-form', self.load_form_event)

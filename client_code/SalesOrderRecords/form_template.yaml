@@ -1,0 +1,121 @@
+components:
+- components:
+  - components:
+    - components:
+      - layout_properties: {col_xs: 1, row: PMFWDC, width_xs: 1}
+        name: label_filter
+        properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: PMFWDC, width_xs: 2}
+        name: text_box_so_id_prefix
+        properties: {font_size: 12, placeholder: Sales Order ID}
+        type: TextBox
+      - layout_properties: {col_xs: 6, row: PMFWDC, width_xs: 5}
+        name: text_box_customer
+        properties: {font_size: 12, placeholder: Customer Name}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: JPUSLF, width_xs: 1}
+        name: label_title_from
+        properties: {font_size: 12, text: 'From:'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: JPUSLF, width_xs: 4}
+        name: date_from
+        properties: {font_size: 12}
+        type: DatePicker
+      - layout_properties: {col_xs: 6, row: JPUSLF, width_xs: 1}
+        name: label_title_to
+        properties: {font_size: 12, text: 'To:'}
+        type: Label
+      - layout_properties: {col_xs: 7, row: JPUSLF, width_xs: 4}
+        name: date_to
+        properties: {font_size: 12}
+        type: DatePicker
+      - layout_properties: {col_xs: 3, row: GPPLAI, width_xs: 2}
+        name: label_title_status
+        properties: {font_size: 12, text: 'Order Status:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: GPPLAI, width_xs: 4}
+        name: drop_down_status
+        properties: {font_size: 12}
+        type: DropDown
+      layout_properties: {col_xs: 1, row: DAUUJJ, width_xs: 10}
+      name: grid_panel_filter
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    - components:
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 1, row: DZOKYF, width_xs: 3}
+        name: button_back
+        properties: {icon: 'fa:arrow-left', text: ''}
+        type: Button
+      - event_bindings: {click: button_new_so_click}
+        layout_properties: {col_xs: 5, row: DZOKYF, width_xs: 7}
+        name: button_new_so
+        properties: {icon: 'fa:plus-circle', text: New Sales Order}
+        type: Button
+      layout_properties: {col_xs: 3, row: ONTZEH, width_xs: 6}
+      name: grid_panel_buttons
+      properties: {}
+      type: GridPanel
+    - components:
+      - components:
+        - layout_properties: {column: order_id}
+          name: label_hdr_so_id
+          properties: {font_size: 12, text: Sales Order ID}
+          type: Label
+        - layout_properties: {column: cust_id}
+          name: label_hdr_customer_id
+          properties: {font_size: 12, text: Customer ID}
+          type: Label
+        - layout_properties: {column: cust_name}
+          name: label_hdr_customer_name
+          properties: {font_size: 12, text: Customer Name}
+          type: Label
+        - layout_properties: {column: order_date}
+          name: label_hdr_order_date
+          properties: {align: center, font_size: 12, text: Order Date}
+          type: Label
+        - layout_properties: {column: status}
+          name: label_hdr_status
+          properties: {align: center, font_size: 12, text: Status}
+          type: Label
+        - layout_properties: {column: order_value}
+          name: label_hdr_total
+          properties: {align: center, font_size: 12, text: Order Value NZD}
+          type: Label
+        - layout_properties: {column: details}
+          name: label_hdr_details
+          properties: {align: center, font_size: 12, text: Details}
+          type: Label
+        layout_properties: {col_xs: 0, row: KRSIHS, width_xs: 12}
+        name: data_row_panel_header
+        properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
+        type: DataRowPanel
+      - layout_properties: {col_xs: 0, row: XWUCFN, width_xs: 12}
+        name: repeating_panel_orders
+        properties: {item_template: SalesOrderRecords.SalesOrderRecordsRow}
+        type: RepeatingPanel
+      layout_properties: {col_xs: 0, row: ASBRWC, width_xs: 12}
+      name: grid_panel_data
+      properties: {}
+      type: GridPanel
+    layout_properties: {grid_position: 'ORGRKV,ABMQPC'}
+    name: grid_panel_container
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Sales Orders}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
