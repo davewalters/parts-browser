@@ -17,8 +17,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
 
-    # IMPORTANT: ensure your repeating panel uses this row template
-    self.repeating_panel_lines.item_template = "SaleOrderRecord.SalesOrderLineRow"
     # Row -> Parent events
     self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
     self.repeating_panel_lines.set_event_handler("x-delete-so-line", self._delete_so_line)
