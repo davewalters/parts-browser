@@ -11,6 +11,7 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
     # Roles (optional)
     self.button_new_so.role = "new-button"
     self.button_back.role = "mydefault-button"
+    self.repeating_panel_orders.role = "scrolling-panel"
 
     # Filter widgets
     self.drop_down_status.items = ["", "draft", "confirmed", "cancelled"]

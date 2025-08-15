@@ -17,9 +17,8 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.button_confirm.role = "new-button"
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
+    self.repeating_panel_lines.role = "scrolling-panel"
 
-    # Ensure the row template name matches your designer
-    #self.repeating_panel_lines.item_template = "SalesOrderLineRow"
     self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
     self.repeating_panel_lines.set_event_handler("x-delete-so-line", self._delete_so_line)
 
