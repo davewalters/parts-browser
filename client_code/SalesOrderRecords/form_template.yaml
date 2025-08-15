@@ -30,14 +30,18 @@ components:
         name: date_to
         properties: {font_size: 12}
         type: DatePicker
-      - layout_properties: {col_xs: 3, row: GPPLAI, width_xs: 2}
+      - layout_properties: {col_xs: 1, row: GPPLAI, width_xs: 2}
         name: label_title_status
         properties: {font_size: 12, text: 'Order Status:'}
         type: Label
-      - layout_properties: {col_xs: 5, row: GPPLAI, width_xs: 4}
+      - layout_properties: {col_xs: 3, row: GPPLAI, width_xs: 3}
         name: drop_down_status
         properties: {font_size: 12}
         type: DropDown
+      - layout_properties: {col_xs: 7, row: GPPLAI, width_xs: 4}
+        name: label_count
+        properties: {font_size: 12, icon: 'fa:check-circle-o'}
+        type: Label
       layout_properties: {col_xs: 1, row: DAUUJJ, width_xs: 10}
       name: grid_panel_filter
       properties: {background: 'theme:Gray 200'}

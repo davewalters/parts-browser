@@ -69,7 +69,7 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
       r["_order_date_display"] = self.format_date(r.get("order_date"))
 
     self.repeating_panel_orders.items = rows
-    self.label_count.text = f"{len(rows)}"
+    self.label_count.text = f"{len(rows)} sales order(s) returned"
 
   # ---------- Filter events ----------
   def text_box_so_id_prefix_pressed_enter(self, **event_args):

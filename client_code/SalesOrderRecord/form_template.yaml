@@ -31,7 +31,7 @@ components:
         name: label_title_so_id
         properties: {font_size: 12, text: 'Sales Order ID:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: GFBFQQ, width_xs: 1}
+      - layout_properties: {col_xs: 3, row: GFBFQQ, width_xs: 2}
         name: label_so_id
         properties: {font_size: 12}
         type: Label
@@ -47,7 +47,7 @@ components:
         name: label_title_order_date
         properties: {font_size: 12, text: 'Order Date:'}
         type: Label
-      - layout_properties: {col_xs: 9, row: GFBFQQ, width_xs: 1}
+      - layout_properties: {col_xs: 9, row: GFBFQQ, width_xs: 2}
         name: label_order_date
         properties: {font_size: 12}
         type: Label
@@ -63,7 +63,8 @@ components:
         name: label_title_cust_name
         properties: {font_size: 12, text: 'Customer Name:'}
         type: Label
-      - layout_properties: {col_xs: 7, row: WGNKXV, width_xs: 4}
+      - event_bindings: {change: drop_down_customer_change}
+        layout_properties: {col_xs: 7, row: WGNKXV, width_xs: 4}
         name: drop_down_customer
         properties: {font_size: 11}
         type: DropDown
