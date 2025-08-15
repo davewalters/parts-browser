@@ -4,7 +4,8 @@ components:
     name: label_line_no
     properties: {}
     type: Label
-  - layout_properties: {column: part_id}
+  - event_bindings: {lost_focus: text_box_part_id_lost_focus, pressed_enter: text_box_part_id_pressed_enter}
+    layout_properties: {column: part_id}
     name: text_box_part_id
     properties: {font_size: 12}
     type: TextBox
@@ -20,8 +21,9 @@ components:
     name: label_unit_price
     properties: {align: left}
     type: Label
-  - layout_properties: {column: qty}
-    name: text_box_qty
+  - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus, pressed_enter: Text_box_qty_ordered_pressed_enter}
+    layout_properties: {column: qty}
+    name: text_box_qty_ordered
     properties: {align: center, font_size: 12}
     type: TextBox
   - layout_properties: {column: line_price}
