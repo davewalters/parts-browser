@@ -8,16 +8,17 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.init_components(**props)
     self.order_id = order_id
     self.order = {}
-    self._cust_map = {}  # name -> id
+    # name -> business customer_id (e.g., "C0001")
+    self._cust_map = {}
 
-    # Roles to match your app’s style (optional)
+    # Roles (optional)
     self.button_back.role = "mydefault-button"
     self.button_save.role = "save-button"
     self.button_confirm.role = "new-button"
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
 
-    # Repeating panel events (row -> parent)
+    # Row→parent events
     self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
     self.repeating_panel_lines.set_event_handler("x-delete-so-line", self._delete_so_line)
 
@@ -35,14 +36,12 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     return "–"
 
   def _call(self, name, *args, **kwargs):
-    """Server call that expects the {'ok':..., 'data':...} envelope."""
     resp = anvil.server.call(name, *args, **kwargs)
     if not resp or not resp.get("ok", False):
       raise RuntimeError((resp or {}).get("error", f"{name} failed"))
     return resp["data"]
 
   def _set_editable(self, editable: bool):
-    """Gate for all editables in header & lines."""
     widgets = [
       getattr(self, "drop_down_customer", None),
       getattr(self, "text_area_notes", None),
@@ -52,7 +51,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       if w is not None and hasattr(w, "enabled"):
         w.enabled = editable
 
-    # Pass editability into each line item so rows can enable/disable text boxes
+    # propagate to rows
     items = list(self.repeating_panel_lines.items or [])
     for it in items:
       it["_editable"] = editable
@@ -64,20 +63,22 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         self.label_ship_to.text = ""
         return
       cust = self._call("so_get_customer_by_id", customer_id) or {}
-      # expects a pre-formatted shipping address string
+      # show formatted address; show business id in header
       self.label_ship_to.text = cust.get("shipping_address", "") or ""
+      # ensure header shows business customer_id (e.g., C0001)
+      self.label_customer_id.text = cust.get("customer_id", customer_id)
     except Exception as ex:
       print(f"ship_to load failed: {ex}")
       self.label_ship_to.text = ""
 
   # ---------- load & bind ----------
   def _load(self):
-    # Fetch order doc
     self.order = self._call("so_get", self.order_id) or {}
 
-    # Populate customer choices first (name dropdown -> id label)
-    choices = self._call("so_get_customer_choices") or []   # [{_id, customer_name}]
-    self._cust_map = {c.get("customer_name",""): c.get("_id","") for c in choices}
+    # Build dropdown: map name -> business customer_id (not Mongo _id)
+    # Expecting each choice to include {"customer_id": "...", "customer_name": "..."}
+    choices = self._call("so_get_customer_choices") or []
+    self._cust_map = {c.get("customer_name",""): c.get("customer_id","") for c in choices}
     self.drop_down_customer.items = list(self._cust_map.keys())
 
     # Header
@@ -87,13 +88,14 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
     cur_name = self.order.get("customer_name") or ""
     self.drop_down_customer.selected_value = cur_name if cur_name in self._cust_map else None
-    self.label_customer_id.text = self._cust_map.get(cur_name, self.order.get("customer_id",""))
 
+    # Prefer business id from map; fallback to stored customer_id
+    self.label_customer_id.text = self._cust_map.get(cur_name, self.order.get("customer_id",""))
     self._refresh_ship_to(self.label_customer_id.text)
 
     self.text_area_notes.text = self.order.get("notes","")
 
-    # Lines into repeating panel (rows are partly editable)
+    # Lines
     lines = list(self.order.get("lines", []) or [])
     is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
     for ln in lines:
@@ -113,9 +115,10 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   def drop_down_customer_change(self, **e):
     name = self.drop_down_customer.selected_value or ""
     cust_id = self._cust_map.get(name, "")
+    # show business id; refresh ship‑to from live record
     self.label_customer_id.text = cust_id
     self._refresh_ship_to(cust_id)
-    # persist on Save, not immediately
+    # Persist on Save
 
   def _save_header(self):
     payload = {"notes": self.text_area_notes.text or ""}
@@ -124,12 +127,15 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     if name and cust_id:
       payload["customer_name"] = name
       payload["customer_id"] = cust_id
-    # returns updated order
     self.order = self._call("so_update", self.order_id, payload)
 
   def button_save_click(self, **e):
     try:
+      # Persist header
       self._save_header()
+      # Persist any editable lines that have part & qty
+      self._persist_all_rows()
+      # Reload order
       self._load()
       Notification("Saved.", style="success").show()
     except Exception as ex:
@@ -137,6 +143,8 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
   def button_confirm_click(self, **e):
     try:
+      # make sure latest rows are saved first
+      self._persist_all_rows()
       self.order = self._call("so_confirm", self.order_id)
       self._load()
       Notification("Order confirmed.", style="success").show()
@@ -154,11 +162,11 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   def button_back_click(self, **e):
     open_form("SalesOrderRecords")
 
-  # ---------- add/delete/refresh line from rows ----------
+  # ---------- lines: add/delete/refresh ----------
   def button_add_line_click(self, **e):
-    """Adds a blank line on the client; server save happens when user fills fields."""
     items = list(self.repeating_panel_lines.items or [])
     next_line_no = (max([int(x.get("line_no", 0) or 0) for x in items], default=0) + 1)
+    is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
     items.insert(0, {
       "line_no": next_line_no,
       "part_id": "",
@@ -167,14 +175,13 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       "qty_ordered": 0.0,
       "unit_price": 0.0,
       "line_tax": 0.0,
-      "_editable": ((self.order.get("status") or "").strip().lower() == "draft")
+      "_editable": is_draft
     })
     self.repeating_panel_lines.items = items
 
   def _delete_so_line(self, row_index=None, line_no=None, **e):
     try:
       if line_no is None:
-        # fallback if only index was provided
         items = list(self.repeating_panel_lines.items or [])
         if 0 <= (row_index or -1) < len(items):
           line_no = items[row_index].get("line_no")
@@ -187,37 +194,66 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     except Exception as ex:
       Notification(f"Delete failed: {ex}", style="warning").show()
 
+  def _persist_all_rows(self):
+    """Persist all editable rows that have a part and qty > 0."""
+    items = list(self.repeating_panel_lines.items or [])
+    for it in items:
+      if not it.get("_editable"):
+        continue
+      part_id = (it.get("part_id") or "").strip()
+      try:
+        qty = float(it.get("qty_ordered") or 0)
+      except Exception:
+        qty = 0.0
+      if part_id and qty > 0:
+        payload = {
+          "line_no": int(it.get("line_no") or 0) or None,
+          "part_id": part_id,
+          "qty_ordered": qty
+        }
+        self._call("so_upsert_line", self.order_id, payload)
+
   def _refresh_so_line(self, row_index, part_id, qty_ordered, line_no=None, **e):
-    """
-    Row requests: lookup part, compute price/tax line, and persist line.
-    """
+    """Row requested a refresh after user edited part/qty."""
     try:
-      # Snap from parts
+      items = list(self.repeating_panel_lines.items or [])
+      if not (0 <= row_index < len(items)):
+        return
+
+      # 1) Update row labels immediately from part snapshot for fast UX
       snap = self._call("so_get_part_snapshot", part_id) if part_id else {}
-      desc = snap.get("description","")
-      uom  = snap.get("uom","ea")
+      desc = snap.get("description", "")
+      uom  = snap.get("uom", "ea")
       price= float(snap.get("sell_price", 0.0) or 0.0)
 
-      # Let server do the authoritative upsert + totals recompute
+      row = dict(items[row_index])  # copy so we can update safely
+      row["part_id"]    = part_id
+      row["qty_ordered"]= float(qty_ordered or 0)
+      row["description"]= desc
+      row["uom"]        = uom
+      row["unit_price"] = price
+      # naive local totals (authoritative totals come from server)
+      row["line_tax"]   = float(row.get("line_tax", 0.0) or 0.0)  # keep for display; server will recompute
+      items[row_index]  = row
+      self.repeating_panel_lines.items = items  # rebind so labels change immediately
+
+      # 2) Persist server-side (authoritative), recompute totals, and rebind
       line_payload = {
         "line_no": int(line_no) if line_no is not None else None,
         "part_id": part_id,
-        "qty_ordered": float(qty_ordered or 0),
-        # read-only computed server-side too, but we pass the snapshot to keep UI snappy
-        "description": desc,
-        "uom": uom,
-        "unit_price": price,
+        "qty_ordered": float(qty_ordered or 0)
       }
-      updated = self._call("so_upsert_line", self.order_id, line_payload)  # returns updated order
+      updated_order = self._call("so_upsert_line", self.order_id, line_payload)
+      self.order = updated_order
 
-      # Bind refreshed order (lines + totals)
-      self.order = updated
+      # Rebind lines with correct computed tax/totals and editability
       lines = list(self.order.get("lines", []) or [])
       is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
       for ln in lines:
         ln["_editable"] = is_draft
       self.repeating_panel_lines.items = lines
 
+      # Rebind totals
       a = self.order.get("amounts", {}) or {}
       self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
       self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
@@ -226,6 +262,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
     except Exception as ex:
       Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 

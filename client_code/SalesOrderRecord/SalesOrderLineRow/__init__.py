@@ -16,12 +16,13 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
     it = self.item or {}
     editable = bool(it.get("_editable", False))
 
-    # Editable fields (same pattern as your PO lines)
+    # Editable text boxes
     self.text_box_part_id.text = it.get("part_id","")
-    self.text_box_qty.text     = str(it.get("qty_ordered","") if it.get("qty_ordered") not in [None, ""] else "")
-
+    self.text_box_qty_ordered.text = (
+      "" if it.get("qty_ordered") in [None, ""] else str(it.get("qty_ordered"))
+    )
     self.text_box_part_id.enabled = editable
-    self.text_box_qty.enabled = editable
+    self.text_box_qty_ordered.enabled = editable
 
     # Read-only labels
     self.label_line_no.text     = str(it.get("line_no",""))
@@ -30,7 +31,7 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
     self.label_unit_price.text  = self._fmt(it.get("unit_price",0))
     self.label_line_tax.text    = self._fmt(it.get("line_tax",0))
 
-    # line total (qty * unit) if server didn’t send one
+    # line total (qty * price) if server didn’t send one
     line_total = it.get("line_total")
     if line_total is None:
       try:
@@ -42,20 +43,19 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
     if hasattr(self, "label_line_total"):
       self.label_line_total.text = self._fmt(line_total)
 
-    # Delete button editability
+    # Delete button only in draft
     if hasattr(self, "button_delete"):
       self.button_delete.enabled = editable
 
-  # ----- event helpers -----
+  # ----- helpers -----
   def _raise_refresh(self):
-    # Find our row index in the RP and raise event to parent
     panel = self._get_panel()
     if not panel or self.item not in (panel.items or []):
       return
     row_index = panel.items.index(self.item)
     part_id = (self.text_box_part_id.text or "").strip()
     try:
-      qty = float(self.text_box_qty.text or "0")
+      qty = float(self.text_box_qty_ordered.text or "0")
     except Exception:
       qty = 0.0
     line_no = self.item.get("line_no")
@@ -73,14 +73,14 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
       p = p.parent
     return None
 
-  # ----- UI events -----
+  # ----- events -----
   def text_box_part_id_lost_focus(self, **e):
     self._raise_refresh()
 
-  def text_box_qty_lost_focus(self, **e):
+  def text_box_qty_ordered_lost_focus(self, **e):
     self._raise_refresh()
 
-  def text_box_qty_pressed_enter(self, **e):
+  def text_box_qty_ordered_pressed_enter(self, **e):
     self._raise_refresh()
 
   def button_delete_click(self, **e):
@@ -91,6 +91,7 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
       line_no = self.item.get("line_no")
       row_index = panel.items.index(self.item)
       panel.raise_event("x-delete-so-line", row_index=row_index, line_no=line_no)
+
 
 
 
