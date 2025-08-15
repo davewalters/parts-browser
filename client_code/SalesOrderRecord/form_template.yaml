@@ -193,6 +193,10 @@ components:
       type: GridPanel
     - components:
       - components:
+        - layout_properties: {column: line_no}
+          name: label_hdr_line_no
+          properties: {text: Line No.}
+          type: Label
         - layout_properties: {column: part_id}
           name: label_hdr_part_id
           properties: {text: Part No.}
@@ -225,7 +229,7 @@ components:
           name: label_hdr_ship_date
           properties: {align: left, text: Requested Ship Date}
           type: Label
-        - layout_properties: {column: delete_line}
+        - layout_properties: {column: delete}
           name: label_hdr_delete_line
           properties: {text: Delete Line}
           type: Label

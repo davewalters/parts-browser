@@ -8,20 +8,23 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.init_components(**props)
     self.order_id = order_id
     self.order = {}
-    self._cust_map = {}   # name -> id
+    self._cust_map = {}  # name -> id
 
-    # Button roles (optional)
+    # Roles to match your app’s style (optional)
     self.button_back.role = "mydefault-button"
     self.button_save.role = "save-button"
     self.button_confirm.role = "new-button"
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
 
+    # Repeating panel events (row -> parent)
+    self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
+    self.repeating_panel_lines.set_event_handler("x-delete-so-line", self._delete_so_line)
+
     self._load()
 
   # ---------- helpers ----------
   def _fmt_date(self, d):
-    """Accept datetime/date/ISO string and return YYYY-MM-DD."""
     try:
       if isinstance(d, (datetime, date)):
         return d.strftime("%Y-%m-%d")
@@ -31,69 +34,29 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       pass
     return "–"
 
-  def _set_enabled(self, enabled: bool):
-    """Enable/disable all editable widgets in one place."""
-    widgets = [
-      getattr(self, "drop_down_customer", None),
-      getattr(self, "text_area_notes", None),
-      getattr(self, "button_add_line", None),
-      getattr(self, "text_box_part_id", None),
-      getattr(self, "text_box_qty", None),
-      getattr(self, "date_line_req", None),
-    ]
-    for w in widgets:
-      if w is not None and hasattr(w, "enabled"):
-        w.enabled = enabled
-
   def _call(self, name, *args, **kwargs):
-    """Expect {"ok":..., "data": ...}. Raise on error; return data on success."""
+    """Server call that expects the {'ok':..., 'data':...} envelope."""
     resp = anvil.server.call(name, *args, **kwargs)
     if not resp or not resp.get("ok", False):
       raise RuntimeError((resp or {}).get("error", f"{name} failed"))
     return resp["data"]
 
-  # ---------- load & bind ----------
-  def _load(self):
-    # fetch order
-    self.order = self._call("so_get", self.order_id)
+  def _set_editable(self, editable: bool):
+    """Gate for all editables in header & lines."""
+    widgets = [
+      getattr(self, "drop_down_customer", None),
+      getattr(self, "text_area_notes", None),
+      getattr(self, "button_add_line", None),
+    ]
+    for w in widgets:
+      if w is not None and hasattr(w, "enabled"):
+        w.enabled = editable
 
-    # dropdown choices first
-    choices = self._call("so_get_customer_choices")  # [{_id, customer_name}]
-    self._cust_map = {c.get("customer_name",""): c.get("_id","") for c in (choices or [])}
-    self.drop_down_customer.items = list(self._cust_map.keys())
-
-    # header
-    self.label_so_id.text     = self.order.get("_id","")
-    self.label_status.text    = (self.order.get("status","") or "").upper()
-    self.label_order_date.text= self._fmt_date(self.order.get("order_date"))
-
-    # customer selection + id label
-    current_name = self.order.get("customer_name") or ""
-    self.drop_down_customer.selected_value = current_name if current_name in self._cust_map else None
-    self.label_customer_id.text = self._cust_map.get(current_name, self.order.get("customer_id",""))
-
-    # ship-to (read-only, pulled live)
-    self._refresh_ship_to(self.label_customer_id.text)
-
-    # notes
-    self.text_area_notes.text = self.order.get("notes","")
-
-    # lines list
-    self.repeating_panel_lines.items = self.order.get("lines", []) or []
-
-    # totals
-    a = self.order.get("amounts", {}) or {}
-    self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
-    self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
-    self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
-    self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
-
-    # editability (draft only)
-    is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
-    self._set_enabled(is_draft)
-
-    # clear quick-entry after reload
-    self._clear_quick_entry()
+    # Pass editability into each line item so rows can enable/disable text boxes
+    items = list(self.repeating_panel_lines.items or [])
+    for it in items:
+      it["_editable"] = editable
+    self.repeating_panel_lines.items = items
 
   def _refresh_ship_to(self, customer_id: str):
     try:
@@ -101,24 +64,50 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         self.label_ship_to.text = ""
         return
       cust = self._call("so_get_customer_by_id", customer_id) or {}
+      # expects a pre-formatted shipping address string
       self.label_ship_to.text = cust.get("shipping_address", "") or ""
     except Exception as ex:
       print(f"ship_to load failed: {ex}")
       self.label_ship_to.text = ""
 
-  def _clear_quick_entry(self):
-    if hasattr(self, "text_box_part_id"):
-      self.text_box_part_id.text = ""
-    if hasattr(self, "text_box_qty"):
-      self.text_box_qty.text = ""
-    if hasattr(self, "label_part_desc"):
-      self.label_part_desc.text = ""
-    if hasattr(self, "label_uom"):
-      self.label_uom.text = ""
-    if hasattr(self, "label_unit_price"):
-      self.label_unit_price.text = ""
-    if hasattr(self, "date_line_req"):
-      self.date_line_req.date = None
+  # ---------- load & bind ----------
+  def _load(self):
+    # Fetch order doc
+    self.order = self._call("so_get", self.order_id) or {}
+
+    # Populate customer choices first (name dropdown -> id label)
+    choices = self._call("so_get_customer_choices") or []   # [{_id, customer_name}]
+    self._cust_map = {c.get("customer_name",""): c.get("_id","") for c in choices}
+    self.drop_down_customer.items = list(self._cust_map.keys())
+
+    # Header
+    self.label_so_id.text = self.order.get("_id","")
+    self.label_status.text = (self.order.get("status","") or "").upper()
+    self.label_order_date.text = self._fmt_date(self.order.get("order_date"))
+
+    cur_name = self.order.get("customer_name") or ""
+    self.drop_down_customer.selected_value = cur_name if cur_name in self._cust_map else None
+    self.label_customer_id.text = self._cust_map.get(cur_name, self.order.get("customer_id",""))
+
+    self._refresh_ship_to(self.label_customer_id.text)
+
+    self.text_area_notes.text = self.order.get("notes","")
+
+    # Lines into repeating panel (rows are partly editable)
+    lines = list(self.order.get("lines", []) or [])
+    is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
+    for ln in lines:
+      ln["_editable"] = is_draft
+    self.repeating_panel_lines.items = lines
+
+    # Totals
+    a = self.order.get("amounts", {}) or {}
+    self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
+    self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
+    self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
+    self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
+
+    self._set_editable(is_draft)
 
   # ---------- header events ----------
   def drop_down_customer_change(self, **e):
@@ -126,17 +115,16 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     cust_id = self._cust_map.get(name, "")
     self.label_customer_id.text = cust_id
     self._refresh_ship_to(cust_id)
-    # Persist on Save (not immediately)
+    # persist on Save, not immediately
 
   def _save_header(self):
-    payload = {
-      "notes": self.text_area_notes.text or ""
-    }
+    payload = {"notes": self.text_area_notes.text or ""}
     name = self.drop_down_customer.selected_value or ""
     cust_id = self._cust_map.get(name, "")
     if name and cust_id:
       payload["customer_name"] = name
       payload["customer_id"] = cust_id
+    # returns updated order
     self.order = self._call("so_update", self.order_id, payload)
 
   def button_save_click(self, **e):
@@ -166,43 +154,79 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   def button_back_click(self, **e):
     open_form("SalesOrderRecords")
 
-  # ---------- quick line entry on parent ----------
-  def text_box_part_id_pressed_enter(self, **e):
-    pid = (self.text_box_part_id.text or "").strip()
-    if not pid:
-      return
-    try:
-      snap = self._call("so_get_part_snapshot", pid) or {}
-      self.label_part_desc.text   = snap.get("description","")
-      self.label_uom.text         = snap.get("uom","ea")
-      self.label_unit_price.text  = f"{float(snap.get('sell_price',0.0) or 0.0):.2f}"
-      self.text_box_qty.focus()
-    except Exception as ex:
-      Notification(str(ex), style="warning").show()
-      self.label_part_desc.text = ""
-      self.label_uom.text = ""
-      self.label_unit_price.text = ""
-
-  def text_box_qty_pressed_enter(self, **e):
-    self.button_add_line_click()
-
+  # ---------- add/delete/refresh line from rows ----------
   def button_add_line_click(self, **e):
+    """Adds a blank line on the client; server save happens when user fills fields."""
+    items = list(self.repeating_panel_lines.items or [])
+    next_line_no = (max([int(x.get("line_no", 0) or 0) for x in items], default=0) + 1)
+    items.insert(0, {
+      "line_no": next_line_no,
+      "part_id": "",
+      "description": "",
+      "uom": "ea",
+      "qty_ordered": 0.0,
+      "unit_price": 0.0,
+      "line_tax": 0.0,
+      "_editable": ((self.order.get("status") or "").strip().lower() == "draft")
+    })
+    self.repeating_panel_lines.items = items
+
+  def _delete_so_line(self, row_index=None, line_no=None, **e):
     try:
-      pid = (self.text_box_part_id.text or "").strip()
-      qty = float(self.text_box_qty.text or 0)
-      rsd = self.date_line_req.date if hasattr(self, "date_line_req") else None
-      if not pid or qty <= 0:
-        raise RuntimeError("Enter a valid Part ID and Quantity.")
+      if line_no is None:
+        # fallback if only index was provided
+        items = list(self.repeating_panel_lines.items or [])
+        if 0 <= (row_index or -1) < len(items):
+          line_no = items[row_index].get("line_no")
+      if line_no is None:
+        raise RuntimeError("Line number missing.")
 
-      payload = {"part_id": pid, "qty_ordered": qty, "requested_ship_date": rsd}
-      self._call("so_add_line", self.order_id, payload)
-
-      # Reload (lines + totals) and clear fields
+      self._call("so_delete_line", self.order_id, int(line_no))
       self._load()
-      self.text_box_part_id.focus()
+      Notification("Line deleted.", style="success").show()
+    except Exception as ex:
+      Notification(f"Delete failed: {ex}", style="warning").show()
+
+  def _refresh_so_line(self, row_index, part_id, qty_ordered, line_no=None, **e):
+    """
+    Row requests: lookup part, compute price/tax line, and persist line.
+    """
+    try:
+      # Snap from parts
+      snap = self._call("so_get_part_snapshot", part_id) if part_id else {}
+      desc = snap.get("description","")
+      uom  = snap.get("uom","ea")
+      price= float(snap.get("sell_price", 0.0) or 0.0)
+
+      # Let server do the authoritative upsert + totals recompute
+      line_payload = {
+        "line_no": int(line_no) if line_no is not None else None,
+        "part_id": part_id,
+        "qty_ordered": float(qty_ordered or 0),
+        # read-only computed server-side too, but we pass the snapshot to keep UI snappy
+        "description": desc,
+        "uom": uom,
+        "unit_price": price,
+      }
+      updated = self._call("so_upsert_line", self.order_id, line_payload)  # returns updated order
+
+      # Bind refreshed order (lines + totals)
+      self.order = updated
+      lines = list(self.order.get("lines", []) or [])
+      is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
+      for ln in lines:
+        ln["_editable"] = is_draft
+      self.repeating_panel_lines.items = lines
+
+      a = self.order.get("amounts", {}) or {}
+      self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
+      self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
+      self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
+      self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
 
     except Exception as ex:
-      Notification(f"Add line failed: {ex}", style="warning").show()
+      Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 
