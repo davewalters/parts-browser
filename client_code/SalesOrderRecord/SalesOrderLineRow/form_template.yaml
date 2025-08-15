@@ -21,7 +21,7 @@ components:
     properties: {align: left}
     type: Label
   - layout_properties: {column: qty}
-    name: text_box_qty_ordered
+    name: text_box_qty
     properties: {align: center, font_size: 12}
     type: TextBox
   - layout_properties: {column: line_price}
