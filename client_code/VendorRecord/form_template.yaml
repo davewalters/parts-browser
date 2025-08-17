@@ -2,136 +2,312 @@ components:
 - components:
   - components:
     - components:
-      - components:
-        - layout_properties: {col_xs: 0, row: DKFPPM, width_xs: 3}
-          name: label_id
-          properties: {font_size: 16, text: Vendor ID}
-          type: Label
-        - layout_properties: {col_xs: 3, row: DKFPPM, width_xs: 8}
-          name: text_box_id
-          properties: {foreground: 'theme:White', placeholder: vendor_id}
-          type: TextBox
-        layout_properties: {col_xs: 0, row: NHQTRB, width_xs: 7}
-        name: grid_panel_2
-        properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
-        type: GridPanel
-      - components:
-        - layout_properties: {col_xs: 0, row: FOQJWC, width_xs: 5}
-          name: label_status
-          properties: {font_size: 14, text: 'Status:'}
-          type: Label
-        - layout_properties: {col_xs: 5, row: FOQJWC, width_xs: 7}
-          name: drop_down_status
-          properties: {font_size: 14}
-          type: DropDown
-        layout_properties: {col_xs: 7, row: NHQTRB, width_xs: 4}
-        name: grid_panel_3
-        properties: {background: 'theme:Gray 200'}
-        type: GridPanel
-      - components:
-        - layout_properties: {col_xs: 0, row: VTLTHM, width_xs: 3}
-          name: label_company_name
-          properties: {font_size: 14, text: 'Company Name:'}
-          type: Label
-        - layout_properties: {col_xs: 3, row: VTLTHM, width_xs: 8}
-          name: text_box_company_name
-          properties: {font_size: 14, placeholder: company_name}
-          type: TextBox
-        layout_properties: {col_xs: 0, row: LAKDBD, width_xs: 7}
-        name: grid_panel_5
-        properties: {background: 'theme:Gray 200'}
-        type: GridPanel
-      - components:
-        - layout_properties: {col_xs: 0, row: RKUGMY, width_xs: 3}
-          name: label_categories
-          properties: {font_size: 14, text: 'Categories:'}
-          type: Label
-        - layout_properties: {col_xs: 3, row: RKUGMY, width_xs: 8}
-          name: text_area_categories
-          properties: {font_size: 14, height: 61, placeholder: 'categories,', text: ''}
-          type: TextArea
-        layout_properties: {col_xs: 0, row: JCUSTZ, width_xs: 7}
-        name: grid_panel_7
-        properties: {background: 'theme:Gray 200'}
-        type: GridPanel
-      - components:
-        - layout_properties: {col_xs: 0, row: QQKKUG, width_xs: 2}
-          name: label_address
-          properties: {font_size: 14, text: 'Address:'}
-          type: Label
-        - layout_properties: {col_xs: 3, row: QQKKUG, width_xs: 5}
-          name: text_box_address_line1
-          properties: {font_size: 14, placeholder: address line1}
-          type: TextBox
-        - layout_properties: {col_xs: 3, row: TDHAVC, width_xs: 5}
-          name: text_box_address_line2
-          properties: {font_size: 14, placeholder: address line2}
-          type: TextBox
-        - layout_properties: {col_xs: 3, row: QHPECG, width_xs: 5}
-          name: text_box_city
-          properties: {font_size: 14, placeholder: city}
-          type: TextBox
-        - layout_properties: {col_xs: 8, row: QHPECG, width_xs: 3}
-          name: text_box_postal_code
-          properties: {font_size: 14, placeholder: postal code}
-          type: TextBox
-        - layout_properties: {col_xs: 3, row: VLRKMV, width_xs: 5}
-          name: text_box_state
-          properties: {font_size: 14, placeholder: state}
-          type: TextBox
-        - layout_properties: {col_xs: 3, row: VNVHRR, width_xs: 5}
-          name: text_box_country
-          properties: {font_size: 14, placeholder: country}
-          type: TextBox
-        layout_properties: {col_xs: 0, row: JJKFRA, width_xs: 7}
-        name: grid_panel_6
-        properties: {background: 'theme:Gray 200'}
-        type: GridPanel
-      - components:
-        - layout_properties: {col_xs: 0, row: BLCIEE, width_xs: 12}
-          name: text_box_contact_name
-          properties: {font_size: 14, placeholder: contact name}
-          type: TextBox
-        - layout_properties: {col_xs: 0, row: GCWYUP, width_xs: 12}
-          name: text_box_phone
-          properties: {font_size: 14, placeholder: phone}
-          type: TextBox
-        - layout_properties: {col_xs: 0, row: PUCKWG, width_xs: 12}
-          name: text_box_email
-          properties: {font_size: 14, placeholder: email}
-          type: TextBox
-        layout_properties: {col_xs: 7, row: JJKFRA, width_xs: 4}
-        name: grid_panel_4
-        properties: {background: 'theme:Gray 200'}
-        type: GridPanel
-      - components:
-        - event_bindings: {click: button_back_click}
-          layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 2}
-          name: button_back
-          properties: {background: '', font_size: 14, icon: 'fa:arrow-left', text: ''}
-          type: Button
-        - event_bindings: {click: button_delete_click}
-          layout_properties: {col_xs: 3, row: YXOXYU, width_xs: 3}
-          name: button_delete
-          properties: {background: '', font_size: 14, icon: 'fa:trash-o', role: null, text: Delete Record}
-          type: Button
-        - event_bindings: {click: button_save_click}
-          layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
-          name: button_save
-          properties: {background: '', bold: false, font_size: 14, icon: 'fa:save', text: Save}
-          type: Button
-        layout_properties: {col_xs: 0, row: ZIYSKY, width_xs: 10}
-        name: grid_panel_13
-        properties: {}
-        type: GridPanel
-      layout_properties: {grid_position: 'EXYRDL,LIZEQZ'}
-      name: grid_panel_1
+      - event_bindings: {click: button_back_click}
+        layout_properties: {col_xs: 0, row: AMBEZG, width_xs: 3}
+        name: button_back
+        properties: {icon: 'fa:arrow-left', text: ''}
+        type: Button
+      - event_bindings: {click: button_save_click}
+        layout_properties: {col_xs: 4, row: AMBEZG, width_xs: 3}
+        name: button_save
+        properties: {icon: 'fa:save', text: Save}
+        type: Button
+      - event_bindings: {click: button_delete_click}
+        layout_properties: {col_xs: 9, row: AMBEZG, width_xs: 3}
+        name: button_delete
+        properties: {icon: 'fa:trash', text: Delete}
+        type: Button
+      layout_properties: {col_xs: 2, row: HKDZVO, width_xs: 8}
+      name: header_panel
       properties: {}
       type: GridPanel
-    layout_properties: {grid_position: 'MFHGJA,ZQAMUH'}
-    name: column_panel_1
+    - components:
+      - layout_properties: {col_xs: 1, row: CIMTMQ, width_xs: 4}
+        name: label_vendor_id
+        properties: {font_size: 14, icon: 'fa:id-badge', text: 'Vendor ID:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: CIMTMQ, width_xs: 6}
+        name: text_vendor_id
+        properties: {background: 'theme:Gray 200', font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: WLTCRM, width_xs: 3}
+        name: label_name
+        properties: {font_size: 12, text: 'Name:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: WLTCRM, width_xs: 6}
+        name: text_name
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: KNPQXZ, width_xs: 3}
+        name: label_legal_name
+        properties: {font_size: 12, text: 'Legal Name:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: KNPQXZ, width_xs: 6}
+        name: text_legal_name
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: XNWKFD, width_xs: 4}
+        name: label_email
+        properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: XNWKFD, width_xs: 6}
+        name: text_email
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: GVXPRZ, width_xs: 3}
+        name: label_website
+        properties: {font_size: 12, icon: 'fa:globe', text: 'Website:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: GVXPRZ, width_xs: 6}
+        name: text_website
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: CHPPJR, width_xs: 4}
+        name: label_phone_raw
+        properties: {font_size: 12, icon: 'fa:phone', text: 'Phone (raw):'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: CHPPJR, width_xs: 5}
+        name: text_phone_raw
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: NLRVSB, width_xs: 4}
+        name: label_phone_e164
+        properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: NLRVSB, width_xs: 5}
+        name: text_phone_e164
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: YZVPSE, width_xs: 3}
+        name: label_tax_country
+        properties: {font_size: 12, text: 'Tax Country:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: YZVPSE, width_xs: 3}
+        name: drop_down_tax_country_code
+        properties: {font_size: 11}
+        type: DropDown
+      - layout_properties: {col_xs: 1, row: MZNMOL, width_xs: 3}
+        name: label_tax_type
+        properties: {font_size: 12, text: 'Tax Type:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: MZNMOL, width_xs: 3}
+        name: drop_down_tax_type
+        properties: {font_size: 11}
+        type: DropDown
+      - layout_properties: {col_xs: 8, row: MZNMOL, width_xs: 4}
+        name: check_tax_is_default
+        properties: {font_size: 12, text: use for billing}
+        type: CheckBox
+      - layout_properties: {col_xs: 1, row: YBCISX, width_xs: 3}
+        name: label_tax_number
+        properties: {font_size: 12, text: 'Tax ID Number:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: YBCISX, width_xs: 6}
+        name: text_tax_id_number
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: FTKIMF, width_xs: 3}
+        name: label_currency
+        properties: {font_size: 12, text: 'Currency:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: FTKIMF, width_xs: 3}
+        name: drop_down_currency
+        properties: {font_size: 11}
+        type: DropDown
+      layout_properties: {col_xs: 0, row: EWWRBD, width_xs: 6}
+      name: grid_panel_core
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 1, row: MGPYIM, width_xs: 6}
+        name: label_1
+        properties: {font_size: 15, icon: 'fa:user-o', text: Contact Details}
+        type: Label
+      - layout_properties: {col_xs: 1, row: YPZIXP, width_xs: 3}
+        name: label_contact_name
+        properties: {font_size: 12, text: 'Name:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: YPZIXP, width_xs: 6}
+        name: text_contact_name
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: MYVOAB, width_xs: 10}
+        name: label_spacer
+        properties: {font_size: 12}
+        type: Label
+      - layout_properties: {col_xs: 1, row: QEOXAD, width_xs: 4}
+        name: label_contact_email
+        properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: QEOXAD, width_xs: 6}
+        name: text_contact_email
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: HBHIIX, width_xs: 10}
+        name: label_spacer2
+        properties: {font_size: 12}
+        type: Label
+      - layout_properties: {col_xs: 1, row: GABLKC, width_xs: 4}
+        name: label_contact_phone_raw
+        properties: {font_size: 11, icon: 'fa:phone', text: 'Phone (raw):'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: GABLKC, width_xs: 5}
+        name: text_contact_phone_raw
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: BWDEDV, width_xs: 4}
+        name: label_contact_phone_e164
+        properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: BWDEDV, width_xs: 5}
+        name: text_contact_phone_e164
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: JNHSCY, width_xs: 4}
+        name: label_contact_role
+        properties: {font_size: 12, text: 'Role:'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: JNHSCY, width_xs: 5}
+        name: text_contact_role
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: CDWRMZ, width_xs: 2}
+        name: label_notes
+        properties: {font_size: 12, text: 'Notes:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: CDWRMZ, width_xs: 8}
+        name: text_notes
+        properties:
+          font_size: 12
+          height: 118.00006103515625
+          text: |2+
+
+        type: TextArea
+      layout_properties: {col_xs: 6, row: EWWRBD, width_xs: 6}
+      name: grid_panel_contact
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    - components:
+      - layout_properties: {col_xs: 3, row: FWOGVS, width_xs: 2}
+        name: label_billing
+        properties: {font_size: 16, icon: 'fa:credit-card', text: Billing Details}
+        type: Label
+      - layout_properties: {col_xs: 7, row: FWOGVS, width_xs: 3}
+        name: label_shipping
+        properties: {font_size: 16, icon: 'fa:plane', text: Shipping Details}
+        type: Label
+      - layout_properties: {col_xs: 3, row: YUMSJD, width_xs: 3}
+        name: label_spacer_3
+        properties: {font_size: 12}
+        type: Label
+      - layout_properties: {col_xs: 7, row: YUMSJD, width_xs: 2}
+        name: check_box_same_as_billing
+        properties: {font_size: 12, text: same as billing}
+        type: CheckBox
+      - layout_properties: {col_xs: 1, row: SPOBLN, width_xs: 2}
+        name: label_billing_name
+        properties: {font_size: 12, text: 'Attention:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: SPOBLN, width_xs: 3}
+        name: text_b_name_line
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: SPOBLN, width_xs: 3}
+        name: text_s_name_line
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: ANZFVU, width_xs: 2}
+        name: label_billing_organisation
+        properties: {font_size: 12, text: 'Organisation:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: ANZFVU, width_xs: 3}
+        name: text_b_org
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: ANZFVU, width_xs: 3}
+        name: text_s_org
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: NYSVCQ, width_xs: 2}
+        name: label_billing_addr1
+        properties: {font_size: 12, text: 'Address 1:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: NYSVCQ, width_xs: 3}
+        name: text_b_addr1
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: NYSVCQ, width_xs: 3}
+        name: text_s_addr1
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: YSQGML, width_xs: 2}
+        name: label_billing_addr2
+        properties: {font_size: 12, text: 'Address 2:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: YSQGML, width_xs: 3}
+        name: text_b_addr2
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: YSQGML, width_xs: 3}
+        name: text_s_addr2
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: ZRKGLE, width_xs: 2}
+        name: label_billing_locality
+        properties: {font_size: 12, text: 'City/Town:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: ZRKGLE, width_xs: 3}
+        name: text_b_locality
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: ZRKGLE, width_xs: 3}
+        name: text_s_locality
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: PSVTST, width_xs: 2}
+        name: label_billing_admin_area
+        properties: {font_size: 12, text: 'State/Province:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: PSVTST, width_xs: 3}
+        name: text_b_admin_area
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: PSVTST, width_xs: 3}
+        name: text_s_admin_area
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: WPZJHZ, width_xs: 2}
+        name: label_billing_postal_code
+        properties: {font_size: 12, text: 'Postal Code:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: WPZJHZ, width_xs: 2}
+        name: text_b_postal_code
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 7, row: WPZJHZ, width_xs: 2}
+        name: text_s_postal_code
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 1, row: UQOHFB, width_xs: 2}
+        name: label_billing_country_code
+        properties: {font_size: 12, text: 'Country Code:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: UQOHFB, width_xs: 2}
+        name: drop_down_billing_country_code
+        properties: {font_size: 11}
+        type: DropDown
+      - layout_properties: {col_xs: 7, row: UQOHFB, width_xs: 2}
+        name: drop_down_shipping_country_code
+        properties: {font_size: 11}
+        type: DropDown
+      layout_properties: {col_xs: 0, row: IGSAGB, width_xs: 12}
+      name: grid_panel_bill_ship
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    layout_properties: {grid_position: 'QEKCWD,VTNHML'}
+    name: grid_panel_container
     properties: {}
-    type: ColumnPanel
+    type: GridPanel
   layout_properties: {slot: default}
   name: content_panel
   properties: {}
@@ -141,8 +317,8 @@ components:
   properties: {}
   type: FlowPanel
 - layout_properties: {slot: title}
-  name: headline_1
-  properties: {role: headline, text: Vendor Record}
+  name: label_title
+  properties: {text: Vendor Record}
   type: Label
 container:
   properties: {html: '@theme:standard-page.html'}

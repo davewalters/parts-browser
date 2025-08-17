@@ -1,0 +1,99 @@
+components:
+- components:
+  - components:
+    - components:
+      - layout_properties: {col_xs: 1, row: ANFIOO, width_xs: 1}
+        name: label_filter
+        properties: {font_size: 24, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+        type: Label
+      - layout_properties: {col_xs: 2, row: ANFIOO, width_xs: 2}
+        name: text_box_vendor_id
+        properties: {font_size: 12, placeholder: Filter Vendor_ID e.g. RBAU, text: ''}
+        type: TextBox
+      - layout_properties: {col_xs: 5, row: ANFIOO, width_xs: 3}
+        name: text_box_company_name
+        properties: {font_size: 12, placeholder: Filter Company Name e.g. Robert Bosch or Bos, text: ''}
+        type: TextBox
+      - layout_properties: {col_xs: 9, row: ANFIOO, width_xs: 2}
+        name: label_count
+        properties: {font_size: 12, text: 'row count:'}
+        type: Label
+      data_bindings: []
+      layout_properties: {grid_position: 'TLLUAU,YEXWGK'}
+      name: grid_panel_1
+      properties: {role: null}
+      type: GridPanel
+    - components:
+      - event_bindings: {click: button_home_click}
+        layout_properties: {col_xs: 4, row: OIDCLY, width_xs: 2}
+        name: button_home
+        properties: {font_size: 14, icon: 'fa:home', text: ''}
+        type: Button
+      - data_bindings: []
+        event_bindings: {click: button_new_vendor_click}
+        layout_properties: {col_xs: 6, row: OIDCLY, width_xs: 3}
+        name: button_new_vendor
+        properties: {background: '', icon: 'fa:plus-circle', text: New Vendor}
+        type: Button
+      layout_properties: {grid_position: 'IBHXES,MSRGNY'}
+      name: grid_panel_2
+      properties: {}
+      type: GridPanel
+    - components:
+      - layout_properties: {column: lvendor_id}
+        name: label_vendor_id
+        properties: {align: left, font_size: 12, text: Vendor ID}
+        type: Label
+      - layout_properties: {column: company_name}
+        name: label_company_name
+        properties: {align: left, font_size: 12, text: Company Name}
+        type: Label
+      - layout_properties: {column: address_line1}
+        name: label_address_line1
+        properties: {align: left, font_size: 12, text: Address Line1}
+        type: Label
+      - layout_properties: {column: address_line2}
+        name: label_address_line2
+        properties: {align: left, font_size: 12, text: Address Line2}
+        type: Label
+      - layout_properties: {column: city}
+        name: label_city
+        properties: {align: left, font_size: 12, text: City}
+        type: Label
+      - layout_properties: {column: button_view}
+        name: button_view
+        properties: {font_size: 12}
+        type: Label
+      layout_properties: {full_width_row: false, grid_position: 'EKIJXN,KHMVDO'}
+      name: data_row_panel_1
+      properties: {align: center, auto_display_data: true, background: 'theme:Gray 600', bold: false, foreground: 'theme:White'}
+      type: DataRowPanel
+    layout_properties: {full_width_row: false, grid_position: 'BGZZJP,NSXVLS'}
+    name: column_panel_1
+    properties: {}
+    type: ColumnPanel
+  - components:
+    - layout_properties: {full_width_row: false, grid_position: 'SWNBAJ,CGEXRB'}
+      name: repeating_panel_1
+      properties: {item_template: VendorRecordsOLD.ItemTemplate2}
+      type: RepeatingPanel
+    layout_properties: {full_width_row: false, grid_position: 'VZTIYL,VEQJIX'}
+    name: column_panel_2
+    properties: {}
+    type: ColumnPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: headline_1
+  properties: {role: headline, text: Vendor Records}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
