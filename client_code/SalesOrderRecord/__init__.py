@@ -57,14 +57,15 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     try:
       if not customer_id:
         self.label_ship_to.text = ""
+        self.label_customer_id.text = ""
         return
-      cust = self._call("so_get_customer_by_id", customer_id) or {}
-      self.label_ship_to.text = cust.get("shipping_address", "") or ""
-      # show business customer_id (if provided by server)
-      self.label_customer_id.text = cust.get("customer_id", customer_id)
+      ship_str = self._call("so_get_default_shipping_address", customer_id) or ""
+      self.label_ship_to.text = ship_str
+      self.label_customer_id.text = customer_id
     except Exception as ex:
       print(f"ship_to load failed: {ex}")
       self.label_ship_to.text = ""
+
 
   # ---------- load & bind ----------
   def _load(self):
@@ -159,8 +160,9 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       "part_id": "",
       "description": "",
       "uom": "ea",
-      "qty_ordered": 0.0,
       "unit_price": 0.0,
+      "qty_ordered": 0.0,
+      "line_price": 0.0,
       "line_tax": 0.0,
       "_editable": is_draft
     })
@@ -211,10 +213,12 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         return
   
       # 1) Instant local fill from part snapshot
-      snap = self._call("so_get_part_snapshot", part_id) if part_id else {}
-      desc = snap.get("description", "")
-      uom  = snap.get("uom", "ea")
-      price= float(snap.get("sell_price", 0.0) or 0.0)
+      cust_id = (self.label_customer_id.text or "").strip()
+      snap = self._call("so_get_part_snapshot", part_id, customer_id=cust_id) if part_id else {}
+      desc   = snap.get("description", "")
+      uom    = snap.get("uom", "ea")
+      price  = float(snap.get("unit_price", 0.0) or 0.0)     # <— key changed
+      # tax_rate = float(snap.get("tax_rate", 0.0) or 0.0)    # available if you want to display/store it
   
       row = dict(items[row_index])
       row["part_id"]     = (part_id or "").strip()

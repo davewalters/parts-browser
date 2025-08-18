@@ -19,7 +19,7 @@ components:
     type: Label
   - layout_properties: {column: unit_price}
     name: label_unit_price
-    properties: {align: left}
+    properties: {align: center}
     type: Label
   - event_bindings: {lost_focus: text_box_qty_ordered_lost_focus, pressed_enter: text_box_qty_ordered_pressed_enter}
     layout_properties: {column: qty}
@@ -28,11 +28,11 @@ components:
     type: TextBox
   - layout_properties: {column: line_price}
     name: label_line_price
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: line_tax}
     name: label_line_tax
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: ship_date}
     name: label_ship_date
