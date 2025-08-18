@@ -41,7 +41,7 @@ class PartRecords(PartRecordsTemplate):
     self.prev_filter_type = self.drop_down_type.selected_value or ""
     self.prev_filter_status = self.drop_down_status.selected_value or ""
     self.prev_filter_designbom = self.check_box_designbom.checked
-
+  
     try:
       results = anvil.server.call(
         "get_filtered_parts",
@@ -49,10 +49,33 @@ class PartRecords(PartRecordsTemplate):
         desc=self.prev_filter_desc,
         part_type=self.prev_filter_type,
         status=self.prev_filter_status,
-        designbom = self.prev_filter_designbom
+        designbom=self.prev_filter_designbom,
       )
-      self.repeating_panel_1.items = results
-      self.label_count.text = f"{len(results)} parts returned"
+  
+      # Collect unique vendor_ids
+      vendor_ids = sorted({ r.get("default_vendor") for r in results if r.get("default_vendor") })
+  
+      # Batch resolve -> { vendor_id: company_name }
+      try:
+        name_map = anvil.server.call("get_vendor_names_by_ids", vendor_ids) or {}
+      except Exception:
+        name_map = {}
+  
+      # Normalize keys/values to strings (defensive)
+      name_map = { str(k): (v if isinstance(v, str) and v.strip() else str(k)) for k, v in name_map.items() }
+  
+      # Annotate each row with a ready-to-display vendor name
+      annotated = []
+      for r in results:
+        vid = str(r.get("default_vendor") or "")
+        r2 = dict(r)
+        r2["_vendor_name"] = name_map.get(vid, vid)  # fallback to id if missing
+        annotated.append(r2)
+  
+      # Bind
+      self.repeating_panel_1.items = annotated
+      self.label_count.text = f"{len(annotated)} parts returned"
+  
     except Exception as e:
       self.label_count.text = f"Error: {e}"
       self.repeating_panel_1.items = []

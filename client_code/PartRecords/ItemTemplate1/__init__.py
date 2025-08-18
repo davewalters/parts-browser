@@ -8,16 +8,16 @@ class ItemTemplate1(ItemTemplate1Template):
     self.set_display_fields()
 
   def set_display_fields(self):
-    part = self.item
+    part = self.item or {}
     self.label_id.text = part.get("_id", "")
     self.label_rev.text = part.get("revision", "")
     self.label_desc.text = part.get("description", "")
     self.label_status.text = part.get("status", "")
     self.label_type.text = part.get("type", "")
     self.label_type.column = "type"
-    self.label_vendor.text = part.get("default_vendor", "")
-
-    latest_cost = part.get("latest_cost", {})
+    self.label_vendor.text = part.get("_vendor_name", part.get("default_vendor", ""))
+  
+    latest_cost = part.get("latest_cost", {}) or {}
     self.label_cost_nz.text = self.format_currency(latest_cost.get("cost_nz"))
     self.label_cost_date.text = self.format_date(latest_cost.get("cost_date"))
 
