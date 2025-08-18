@@ -56,18 +56,10 @@ components:
         type: TextBox
       - layout_properties: {col_xs: 1, row: CHPPJR, width_xs: 4}
         name: label_phone_raw
-        properties: {font_size: 12, icon: 'fa:phone', text: 'Phone (raw):'}
+        properties: {font_size: 12, icon: 'fa:phone', text: 'Phone:'}
         type: Label
       - layout_properties: {col_xs: 5, row: CHPPJR, width_xs: 5}
         name: text_phone_raw
-        properties: {font_size: 12}
-        type: TextBox
-      - layout_properties: {col_xs: 1, row: NLRVSB, width_xs: 4}
-        name: label_phone_e164
-        properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
-        type: Label
-      - layout_properties: {col_xs: 5, row: NLRVSB, width_xs: 5}
-        name: text_phone_e164
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: YZVPSE, width_xs: 3}
@@ -137,18 +129,10 @@ components:
         type: Label
       - layout_properties: {col_xs: 1, row: GABLKC, width_xs: 4}
         name: label_contact_phone_raw
-        properties: {font_size: 11, icon: 'fa:phone', text: 'Phone (raw):'}
+        properties: {font_size: 11, icon: 'fa:phone', text: 'Phone:'}
         type: Label
       - layout_properties: {col_xs: 5, row: GABLKC, width_xs: 5}
         name: text_contact_phone_raw
-        properties: {font_size: 12}
-        type: TextBox
-      - layout_properties: {col_xs: 1, row: BWDEDV, width_xs: 4}
-        name: label_contact_phone_e164
-        properties: {font_size: 12, icon: 'fa:phone-square', text: 'Phone (e164):'}
-        type: Label
-      - layout_properties: {col_xs: 5, row: BWDEDV, width_xs: 5}
-        name: text_contact_phone_e164
         properties: {font_size: 12}
         type: TextBox
       - layout_properties: {col_xs: 1, row: JNHSCY, width_xs: 4}

@@ -26,7 +26,6 @@ class VendorRecord(VendorRecordTemplate):
     self._contact_name_touched = False
     self._contact_email_touched = False
     self._contact_phone_raw_touched = False
-    self._contact_phone_e164_touched = False
 
     # Populate dropdowns
     self.drop_down_tax_country_code.items = _COUNTRIES
@@ -82,21 +81,18 @@ class VendorRecord(VendorRecordTemplate):
     self.drop_down_currency.selected_value = "NZD"
     self.text_notes.text = ""
 
-    # Phone (primary)
+    # Phone (primary) – single number only for Vendors
     self.text_phone_raw.text = ""
-    self.text_phone_e164.text = ""
 
     # Contact (single)
     self.text_contact_name.text = ""
     self.text_contact_email.text = ""
-    self.text_contact_phone_raw.text = ""
-    self.text_contact_phone_e164.text = ""
+    self.text_contact_phone_raw.text = ""   
     self.text_contact_role.text = ""
     self._contacts_prefilled_once = False
     self._contact_name_touched = False
     self._contact_email_touched = False
     self._contact_phone_raw_touched = False
-    self._contact_phone_e164_touched = False
 
     # Addresses (billing + shipping)
     for p in ("b", "s"):
@@ -134,27 +130,30 @@ class VendorRecord(VendorRecordTemplate):
     self.drop_down_currency.selected_value = doc.get("currency", "NZD")
     self.text_notes.text = doc.get("notes", "") or ""
 
-    # Phones
-    p = next((p for p in doc.get("phones", []) if p.get("is_default")), None)
-    self.text_phone_raw.text = (p or {}).get("raw", "") or ""
-    self.text_phone_e164.text = (p or {}).get("e164", "") or ""
+    # Phones (Vendor schema: [{"type": "...", "number": "..."}])
+    p = (doc.get("phones") or [])
+    p0 = p[0] if p else {}
+    self.text_phone_raw.text = p0.get("number", "") or ""   # reuse raw field
 
-    # Contact
+    # Contact (Vendor schema: [{"name": "...", "email": "...", "phone": "<string>"}])
     c = doc.get("contacts") or []
     if c:
       c0 = c[0]
       self.text_contact_name.text = c0.get("name", "") or ""
       self.text_contact_email.text = c0.get("email", "") or ""
-      ph = c0.get("phone") or {}
-      self.text_contact_phone.text = ph.get("phone", "") or ""
+      ph_str = c0.get("phone", "") or ""
+      self.text_contact_phone_raw.text = ph_str             # reuse raw field
       self.text_contact_role.text = c0.get("role", "") or ""
       self._contacts_prefilled_once = True
       self._contact_name_touched = True
       self._contact_email_touched = True
       self._contact_phone_raw_touched = True
-      self._contact_phone_e164_touched = True
     else:
-      self._bind_blank()
+      # keep other fields as-is, but don't call _bind_blank() (it would wipe everything)
+      self.text_contact_name.text = ""
+      self.text_contact_email.text = ""
+      self.text_contact_phone_raw.text = ""
+      self.text_contact_role.text = ""
 
     # Addresses
     def _addr_of(kind):
@@ -189,14 +188,14 @@ class VendorRecord(VendorRecordTemplate):
       _addr_of("shipping") or {}
     ).get("country_code", "NZ")
 
-    # Tax registration
+    # Tax registration (Vendor: country_code + number)
     trs = doc.get("tax_registrations") or []
-    tr = next((t for t in trs if t.get("is_default")), trs[0] if trs else None)
+    tr = trs[0] if trs else None
     if tr:
       self.drop_down_tax_country_code.selected_value = tr.get("country_code", "NZ")
-      self.drop_down_tax_type.selected_value = tr.get("type", "Other")
-      self.text_tax_id_number.text = tr.get("id_number", "") or ""
-      self.check_tax_is_default.checked = tr.get("is_default", True)
+      self.drop_down_tax_type.selected_value = "GST"  # UI default; not persisted on vendor
+      self.text_tax_id_number.text = tr.get("number", "") or ""
+      self.check_tax_is_default.checked = True
     else:
       self.drop_down_tax_country_code.selected_value = "NZ"
       self.drop_down_tax_type.selected_value = "GST"
@@ -235,9 +234,6 @@ class VendorRecord(VendorRecordTemplate):
       )
       self._maybe_prefill_single(
         "text_phone_raw", "text_contact_phone_raw", "_contact_phone_raw_touched"
-      )
-      self._maybe_prefill_single(
-        "text_phone_e164", "text_contact_phone_e164", "_contact_phone_e164_touched"
       )
 
       payload = self._collect_payload()
@@ -296,7 +292,6 @@ class VendorRecord(VendorRecordTemplate):
       ("text_contact_name", "_contact_name_touched"),
       ("text_contact_email", "_contact_email_touched"),
       ("text_contact_phone_raw", "_contact_phone_raw_touched"),
-      ("text_contact_phone_e164", "_contact_phone_e164_touched"),
     ]
     for dest_attr, flag in mapping:
       w = getattr(self, dest_attr, None)
@@ -309,7 +304,6 @@ class VendorRecord(VendorRecordTemplate):
       ("text_name", "text_contact_name", "_contact_name_touched"),
       ("text_email", "text_contact_email", "_contact_email_touched"),
       ("text_phone_raw", "text_contact_phone_raw", "_contact_phone_raw_touched"),
-      ("text_phone_e164", "text_contact_phone_e164", "_contact_phone_e164_touched"),
     ]
     for src_attr, dest_attr, flag in pairs:
       src = getattr(self, src_attr, None)
@@ -344,7 +338,6 @@ class VendorRecord(VendorRecordTemplate):
         (self.text_contact_name.text or "").strip(),
         (self.text_contact_email.text or "").strip(),
         (self.text_contact_phone_raw.text or "").strip(),
-        (self.text_contact_phone_e164.text or "").strip(),
       ]
     )
     if force or all_blank:
@@ -360,12 +353,6 @@ class VendorRecord(VendorRecordTemplate):
         "_contact_phone_raw_touched",
         force=True,
       )
-      self._maybe_prefill_single(
-        "text_phone_e164",
-        "text_contact_phone_e164",
-        "_contact_phone_e164_touched",
-        force=True,
-      )
       self._contacts_prefilled_once = True
 
   # ---------- Collect payload ----------
@@ -373,88 +360,73 @@ class VendorRecord(VendorRecordTemplate):
     vid = (self.text_vendor_id.text or "").strip()
     if not vid:
       raise ValueError("vendor_id is required")
-
+  
     billing = {
       "type": "billing",
       "is_default": True,
       "organization": (self.text_b_org.text or "").strip() or None,
       "name_line": (self.text_b_name_line.text or "").strip() or None,
-      "address_lines": list(
-        filter(
-          None,
-          [
-            (self.text_b_addr1.text or "").strip(),
-            (self.text_b_addr2.text or "").strip(),
-          ],
-        )
-      ),
+      "address_lines": list(filter(None, [
+        (self.text_b_addr1.text or "").strip(),
+        (self.text_b_addr2.text or "").strip(),
+      ])),
       "locality": (self.text_b_locality.text or "").strip() or None,
       "administrative_area": (self.text_b_admin_area.text or "").strip() or None,
       "postal_code": (self.text_b_postal_code.text or "").strip() or None,
       "country_code": self.drop_down_billing_country_code.selected_value or "NZ",
     }
-
+  
     shipping = {
       "type": "shipping",
       "is_default": True,
       "organization": (self.text_s_org.text or "").strip() or None,
       "name_line": (self.text_s_name_line.text or "").strip() or None,
-      "address_lines": list(
-        filter(
-          None,
-          [
-            (self.text_s_addr1.text or "").strip(),
-            (self.text_s_addr2.text or "").strip(),
-          ],
-        )
-      ),
+      "address_lines": list(filter(None, [
+        (self.text_s_addr1.text or "").strip(),
+        (self.text_s_addr2.text or "").strip(),
+      ])),
       "locality": (self.text_s_locality.text or "").strip() or None,
       "administrative_area": (self.text_s_admin_area.text or "").strip() or None,
       "postal_code": (self.text_s_postal_code.text or "").strip() or None,
       "country_code": self.drop_down_shipping_country_code.selected_value or "NZ",
     }
-
-    primary_phone = {
-      "type": "primary",
-      "is_default": True,
-      "raw": (self.text_phone_raw.text or "").strip() or None,
-      "e164": (self.text_phone_e164.text or "").strip() or None,
-    }
-
-    contact = None
-    if (self.text_contact_name.text or "").strip():
-      contact = {
-        "name": (self.text_contact_name.text or "").strip(),
+  
+    # Vendor phones: {"type": "...", "number": "..."}
+    phone_number = (self.text_phone_raw.text or "").strip()
+    phones = [{"type": "primary", "number": phone_number}] if phone_number else []
+  
+    # Vendor contacts: phone is a STRING
+    has_any_contact = any([
+      (self.text_contact_name.text or "").strip(),
+      (self.text_contact_email.text or "").strip(),
+      (self.text_contact_phone_raw.text or "").strip(),
+      (self.text_contact_role.text or "").strip(),
+    ])
+    contacts = []
+    if has_any_contact:
+      contacts.append({
+        "name": (self.text_contact_name.text or "").strip() or None,
         "email": (self.text_contact_email.text or "").strip() or None,
+        "phone": (self.text_contact_phone_raw.text or "").strip() or None,  # string
         "role": (self.text_contact_role.text or "").strip() or None,
-        "phone": {
-          "type": "other",
-          "is_default": False,
-          "raw": (self.text_contact_phone_raw.text or "").strip() or None,
-          "e164": (self.text_contact_phone_e164.text or "").strip() or None,
-        },
-      }
-
-    tr = {
+      })
+  
+    # Vendor tax_registrations: {"country_code", "number"}
+    tr_number = (self.text_tax_id_number.text or "").strip()
+    tax_registrations = [{
       "country_code": self.drop_down_tax_country_code.selected_value or "NZ",
-      "type": self.drop_down_tax_type.selected_value or "Other",
-      "id_number": (self.text_tax_id_number.text or "").strip(),
-      "is_default": True if self.check_tax_is_default.checked else True,
-    }
-    tax_registrations = [tr] if tr["id_number"] else []
-
+      "number": tr_number,
+    }] if tr_number else []
+  
     return {
       "vendor_id": vid,
-      "name": (self.text_name.text or "").strip(),
-      "legal_name": (self.text_legal_name.text or "").strip() or None,
+      "company_name": (self.text_name.text or "").strip(),  # <-- company_name
       "email": (self.text_email.text or "").strip() or None,
       "website": (self.text_website.text or "").strip() or None,
       "currency": (self.drop_down_currency.selected_value or "NZD").strip() or "NZD",
       "notes": (self.text_notes.text or "").strip() or None,
-      "phones": [primary_phone]
-      if primary_phone["raw"] or primary_phone["e164"]
-      else [],
-      "contacts": [contact] if contact else [],
+      "phones": phones,
+      "contacts": contacts,
       "addresses": [billing, shipping],
       "tax_registrations": tax_registrations,
     }
