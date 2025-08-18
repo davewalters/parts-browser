@@ -34,12 +34,12 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     except Exception:
       pass
     return "–"
-
+  
   def _call(self, name, *args, **kwargs):
     resp = anvil.server.call(name, *args, **kwargs)
-    if not resp or not resp.get("ok", False):
-      raise RuntimeError((resp or {}).get("error", f"{name} failed"))
-    return resp["data"]
+    if resp is None:
+      raise RuntimeError(f"{name} returned no data")
+    return resp
 
   def _set_editable(self, editable: bool):
     for w in (getattr(self, "drop_down_customer", None),

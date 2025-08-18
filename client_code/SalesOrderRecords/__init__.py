@@ -1,4 +1,3 @@
-# client_code/SalesOrderRecords/__init__.py
 from ._anvil_designer import SalesOrderRecordsTemplate
 from anvil import *
 import anvil.server
@@ -23,9 +22,6 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
     
     self.update_filter()  # initial load
 
-    resp = anvil.server.call("so_probe")
-    print(resp)
-
   # ---------- Utilities ----------
   def format_date(self, d):
     """Render server 'order_date' which may be a datetime or ISO string."""
@@ -44,12 +40,12 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
     so_prefix = (self.text_box_so_id_prefix.text or "").strip()
     cust = (self.text_box_customer.text or "").strip()
     status = self.drop_down_status.selected_value or ""
-
+  
     fd = self.date_from.date      # date or None
     td = self.date_to.date        # date or None
-
-    # Call uplink (server converts these dates to day-bounds datetimes)
-    resp = anvil.server.call(
+  
+    # Server accepts date|datetime|ISO; raw list returned
+    rows = anvil.server.call(
       "so_list",
       so_id_prefix=so_prefix,
       customer_name=cust,
@@ -58,19 +54,20 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
       to_date=td.isoformat() if td else None,
       limit=500
     )
-    if not resp or not resp.get("ok", False):
-      Notification((resp or {}).get("error", "Load failed."), style="warning").show()
+  
+    if not rows:
+      self.repeating_panel_orders.items = []   # clear
+      self.label_count.text = "0 sales order(s) returned"
+      Notification("⚠️ No sales orders found.", style="warning").show()
       return
-
-    rows = resp["data"] or []
-
-    # Post-process for display-only fields that want formatted dates
-    # (You can also format in the row form; doing it here keeps the row simple.)
+  
+    # Post-process for display-only fields (optional)
     for r in rows:
       r["_order_date_display"] = self.format_date(r.get("order_date"))
-
+  
     self.repeating_panel_orders.items = rows
     self.label_count.text = f"{len(rows)} sales order(s) returned"
+
 
   # ---------- Filter events ----------
   def text_box_so_id_prefix_pressed_enter(self, **event_args):
@@ -90,13 +87,12 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
 
   # ---------- Actions ----------
   def button_new_so_click(self, **event_args):
-    # Minimal draft (server sets order_date = created_at UTC)
-    resp = anvil.server.call("so_create", {"notes": ""})
-    if not resp or not resp.get("ok", False):
-      Notification((resp or {}).get("error", "Create failed."), style="warning").show()
+    new_so = anvil.server.call("so_create", {"notes": ""})
+    if not new_so:
+      Notification("Create failed.", style="warning").show()
       return
-    new_so = resp["data"]
     open_form("SalesOrderRecord", order_id=new_so["_id"])
+
 
   def button_back_click(self, **event_args):
     open_form("Nav")
