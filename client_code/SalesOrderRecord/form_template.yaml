@@ -226,6 +226,10 @@ components:
           name: label_hdr_line_tax
           properties: {text: Line Tax}
           type: Label
+        - layout_properties: {column: line_total}
+          name: label_hdr_line_total
+          properties: {align: center, text: Line Total}
+          type: Label
         - layout_properties: {column: ship_date}
           name: label_hdr_ship_date
           properties: {align: left, text: Requested Ship Date}

@@ -34,6 +34,10 @@ components:
     name: label_line_tax
     properties: {align: center}
     type: Label
+  - layout_properties: {column: line_total}
+    name: label_line_total
+    properties: {align: center}
+    type: Label
   - layout_properties: {column: ship_date}
     name: label_ship_date
     properties: {align: center}

@@ -29,25 +29,25 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
     self.label_desc.text        = it.get("description", "")
     self.label_uom.text         = it.get("uom", "ea")
     self.label_unit_price.text  = self._fmt(it.get("unit_price", 0))
-  
-    if hasattr(self, "label_line_price"):
-      try:
-        qty = float(it.get("qty_ordered") or 0)
-        unit = float(it.get("unit_price") or 0)
-        line_price = it.get("line_price")
-        if line_price is None:
-          line_price = qty * unit
-      except Exception:
-        line_price = 0.0
-      self.label_line_price.text = self._fmt(line_price)
-  
-    # Already present — shows server-computed line tax
+    self.label_line_price.text = self._fmt(it.get("line_price", 0))
+    
+    #if hasattr(self, "label_line_price"):
+    #  try:
+    #    qty = float(it.get("qty_ordered") or 0)
+    #    unit = float(it.get("unit_price") or 0)
+    #    line_price = it.get("line_price")
+    #    if line_price is None:
+    #      line_price = qty * unit
+    #  except Exception:
+    #    line_price = 0.0
+    #  self.label_line_price.text = self._fmt(line_price)
+
     self.label_line_tax.text    = self._fmt(it.get("line_tax", 0))
 
     line_total = it.get("line_total")
     if line_total is None:
       try:
-        lp = float(line_price or 0)
+        lp = float(it.get("line_price") or 0)
         t = float(it.get("line_tax") or 0)
         line_total = lp + t
       except Exception:
