@@ -212,37 +212,16 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       if not (0 <= row_index < len(items)):
         return
   
-      # 1) Instant local fill from part snapshot
-      cust_id = (self.label_customer_id.text or "").strip()
-      snap = self._call("so_get_part_snapshot", part_id, customer_id=cust_id) if part_id else {}
-      desc   = snap.get("description", "")
-      uom    = snap.get("uom", "ea")
-      price  = float(snap.get("unit_price", 0.0) or 0.0)     # <— key changed
-      # tax_rate = float(snap.get("tax_rate", 0.0) or 0.0)    # available if you want to display/store it
-  
-      row = dict(items[row_index])
-      row["part_id"]     = (part_id or "").strip()
-      row["qty_ordered"] = float(qty_ordered or 0)
-      row["description"] = desc
-      row["uom"]         = uom
-      row["unit_price"]  = price
-      items[row_index] = row
-      self.repeating_panel_lines.items = items  # update labels immediately
-  
-      # 2) Persist using your existing API:
-      if row.get("_id"):  # existing line: update qty only
-        self._call("so_update_line", row["_id"], {"qty_ordered": row["qty_ordered"]})
-      else:               # new line: add
-        new_line = self._call("so_add_line", self.order_id, {
-          "part_id": row["part_id"],
-          "qty_ordered": row["qty_ordered"]
+      # Persist directly (create or update)
+      if line_id:  # existing line
+        self._call("so_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
+      else:        # new line
+        self._call("so_add_line", self.order_id, {
+          "part_id": (part_id or "").strip(),
+          "qty_ordered": float(qty_ordered or 0),
         })
-        # write back _id so future edits update, not add
-        row["_id"] = new_line.get("_id")
-        items[row_index] = row
-        self.repeating_panel_lines.items = items
   
-      # 3) Reload order (authoritative taxes/totals/line calc) and rebind
+      # Now reload the order and bind authoritative values (unit_price, tax, totals)
       self.order = self._call("so_get", self.order_id) or {}
       is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
       lines = list(self.order.get("lines", []) or [])
@@ -258,6 +237,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   
     except Exception as ex:
       Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 
