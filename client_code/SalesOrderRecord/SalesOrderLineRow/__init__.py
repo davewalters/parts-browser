@@ -43,15 +43,13 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
   
     # Already present — shows server-computed line tax
     self.label_line_tax.text    = self._fmt(it.get("line_tax", 0))
-  
-    # (Optional) If you also have a separate "Line Total" label,
-    # keep or remove it; it's redundant with line_price if that's your total.
+
     line_total = it.get("line_total")
     if line_total is None:
       try:
-        q = float(it.get("qty_ordered") or 0)
-        p = float(it.get("unit_price") or 0)
-        line_total = q * p
+        lp = float(line_price or 0)
+        t = float(it.get("line_tax") or 0)
+        line_total = lp + t
       except Exception:
         line_total = 0.0
     if hasattr(self, "label_line_total"):
