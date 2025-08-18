@@ -32,16 +32,16 @@ components:
     name: label_cost_date
     properties: {font_size: 12}
     type: Label
+  - event_bindings: {click: button_view_click}
+    layout_properties: {column: details}
+    name: button_view
+    properties: {font_size: 16, icon: 'fa:arrow-right', text: ''}
+    type: Button
   layout_properties: {full_width_row: true, grid_position: 'RJXCNZ,OPFLMU'}
   name: data_row_panel_1
   properties: {background: 'theme:Gray 200'}
   type: DataRowPanel
-- event_bindings: {click: button_view_click}
-  layout_properties: {grid_position: 'RJXCNZ,UOJXNT'}
-  name: button_view
-  properties: {font_size: 16, icon: 'fa:arrow-right', text: ''}
-  type: Button
 container:
-  properties: {col_spacing: small, col_widths: '{"OPFLMU":55,"UOJXNT":5}'}
+  properties: {col_spacing: small, col_widths: '{"OPFLMU":55}'}
   type: ColumnPanel
 is_package: true
