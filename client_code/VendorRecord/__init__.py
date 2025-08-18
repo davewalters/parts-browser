@@ -77,7 +77,6 @@ class VendorRecord(VendorRecordTemplate):
     # Core
     self.text_vendor_id.text = ""
     self.text_name.text = ""
-    self.text_legal_name.text = ""
     self.text_email.text = ""
     self.text_website.text = ""
     self.drop_down_currency.selected_value = "NZD"
@@ -129,8 +128,7 @@ class VendorRecord(VendorRecordTemplate):
 
     # Core
     self.text_vendor_id.text = doc.get("vendor_id", "") or ""
-    self.text_name.text = doc.get("name", "") or ""
-    self.text_legal_name.text = doc.get("legal_name", "") or ""
+    self.text_name.text = doc.get("company_name", "") or ""
     self.text_email.text = doc.get("email", "") or ""
     self.text_website.text = doc.get("website", "") or ""
     self.drop_down_currency.selected_value = doc.get("currency", "NZD")
@@ -148,8 +146,7 @@ class VendorRecord(VendorRecordTemplate):
       self.text_contact_name.text = c0.get("name", "") or ""
       self.text_contact_email.text = c0.get("email", "") or ""
       ph = c0.get("phone") or {}
-      self.text_contact_phone_raw.text = ph.get("raw", "") or ""
-      self.text_contact_phone_e164.text = ph.get("e164", "") or ""
+      self.text_contact_phone.text = ph.get("phone", "") or ""
       self.text_contact_role.text = c0.get("role", "") or ""
       self._contacts_prefilled_once = True
       self._contact_name_touched = True

@@ -38,14 +38,6 @@ components:
         name: text_name
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: KNPQXZ, width_xs: 3}
-        name: label_legal_name
-        properties: {font_size: 12, text: 'Legal Name:'}
-        type: Label
-      - layout_properties: {col_xs: 5, row: KNPQXZ, width_xs: 6}
-        name: text_legal_name
-        properties: {font_size: 12}
-        type: TextBox
       - layout_properties: {col_xs: 1, row: XNWKFD, width_xs: 4}
         name: label_email
         properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}
@@ -131,10 +123,6 @@ components:
         name: text_contact_name
         properties: {font_size: 12}
         type: TextBox
-      - layout_properties: {col_xs: 1, row: MYVOAB, width_xs: 10}
-        name: label_spacer
-        properties: {font_size: 12}
-        type: Label
       - layout_properties: {col_xs: 1, row: QEOXAD, width_xs: 4}
         name: label_contact_email
         properties: {font_size: 12, icon: 'fa:envelope', text: 'Email Address:'}

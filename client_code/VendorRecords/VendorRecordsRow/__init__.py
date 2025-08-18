@@ -7,7 +7,7 @@ class VendorRecordsRow(VendorRecordsRowTemplate):
     self.init_components(**properties)
     self.button_details.role = "mydefault-button"
     self.label_vendor_id.text = self.item.get("vendor_id","")
-    self.label_name.text = self.item.get("name","") or ""
+    self.label_name.text = self.item.get("company_name","") or ""
     self.label_email.text = self.item.get("email","") or ""
     self.label_billing_address.text = self._format_billing_address(self.item)
 
