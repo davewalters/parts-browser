@@ -59,6 +59,7 @@ class PartRecord(PartRecordTemplate):
     cost_date = latest_cost.get("cost_date", datetime.today().isoformat())
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_date_costed.text = self.format_date(cost_date)
+    self.text_box_sell_price_nzd = self.format_currency(self.part.get("sell_price"))
 
     self.button_delete.visible = bool(self.part)
     self.button_BOM.visible = self.drop_down_type.selected_value == "assembly"
@@ -84,7 +85,8 @@ class PartRecord(PartRecordTemplate):
         "group_code": self.part.get("group_code", ""),
         "root_serial": self.part.get("root_serial", ""),
         "variant": self.part.get("variant", ""),
-        "vendor_part_numbers": self.part.get("vendor_part_numbers", [])
+        "vendor_part_numbers": self.part.get("vendor_part_numbers", []),
+        "sell_price": self.text_box_sell_price_nzd,
       }
 
       validated = anvil.server.call("save_part_from_client", new_data)
