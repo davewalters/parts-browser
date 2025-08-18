@@ -15,23 +15,37 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
   def _bind(self):
     it = self.item or {}
     editable = bool(it.get("_editable", False))
-
-    # Editable text boxes (names aligned with your PO rows)
+  
+    # Editable fields
     self.text_box_part_id.text = it.get("part_id", "")
     self.text_box_qty_ordered.text = (
       "" if it.get("qty_ordered") in [None, ""] else str(it.get("qty_ordered"))
     )
     self.text_box_part_id.enabled = editable
     self.text_box_qty_ordered.enabled = editable
-
+  
     # Read-only labels
     self.label_line_no.text     = str(it.get("line_no", ""))
     self.label_desc.text        = it.get("description", "")
     self.label_uom.text         = it.get("uom", "ea")
     self.label_unit_price.text  = self._fmt(it.get("unit_price", 0))
+  
+    if hasattr(self, "label_line_price"):
+      try:
+        qty = float(it.get("qty_ordered") or 0)
+        unit = float(it.get("unit_price") or 0)
+        line_price = it.get("line_price")
+        if line_price is None:
+          line_price = qty * unit
+      except Exception:
+        line_price = 0.0
+      self.label_line_price.text = self._fmt(line_price)
+  
+    # Already present — shows server-computed line tax
     self.label_line_tax.text    = self._fmt(it.get("line_tax", 0))
-
-    # Line total (fallback client calc)
+  
+    # (Optional) If you also have a separate "Line Total" label,
+    # keep or remove it; it's redundant with line_price if that's your total.
     line_total = it.get("line_total")
     if line_total is None:
       try:
@@ -42,9 +56,10 @@ class SalesOrderLineRow(SalesOrderLineRowTemplate):
         line_total = 0.0
     if hasattr(self, "label_line_total"):
       self.label_line_total.text = self._fmt(line_total)
-
+  
     if hasattr(self, "button_delete"):
       self.button_delete.enabled = editable
+
 
   # ----- utilities -----
   def _panel(self):
