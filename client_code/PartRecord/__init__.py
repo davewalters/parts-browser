@@ -6,13 +6,13 @@ from .. import config
 from .. PartRecords import PartRecords
 
 class PartRecord(PartRecordTemplate):
-  def __init__(self, part_id, 
-              prev_filter_part="",
-              prev_filter_desc="",
-              prev_filter_type="",
-              prev_filter_status="",
-              prev_filter_designbom=False,
-              **kwargs):
+  def __init__(self, part_id,
+               prev_filter_part="",
+               prev_filter_desc="",
+               prev_filter_type="",
+               prev_filter_status="",
+               prev_filter_designbom=False,
+               **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
@@ -25,8 +25,7 @@ class PartRecord(PartRecordTemplate):
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.prev_filter_designbom = prev_filter_designbom
-    print(f"In PartRecord: prev_filter_designbom = {prev_filter_designbom}")
-    
+
     self.part = {}
     self.is_new = part_id is None
     if not self.is_new:
@@ -38,31 +37,53 @@ class PartRecord(PartRecordTemplate):
           self.part = fetched
       except Exception as e:
         Notification(f"❌ Failed to load part: {e}", style="danger").show()
-    
+
+    # dropdown setup
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
     self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
+    # populate fields
     self.text_box_id.text = self.part.get("_id", "")
     self.text_box_rev.text = self.part.get("revision", "A")
     self.text_box_desc.text = self.part.get("description", "")
     self.drop_down_status.selected_value = self.part.get("status", "active")
-    self.text_box_vendor.text = self.part.get("default_vendor", "DESIGNATWORK")
     self.drop_down_type.selected_value = self.part.get("type", "part")
     self.drop_down_process.selected_value = self.part.get("process", "-")
     self.text_box_material.text = self.part.get("material_spec", "")
     self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
-    latest_cost = self.part.get("latest_cost", {})
+    # vendor (resolve company name; default_vendor stays vendor_id internally)
+    vid = self.part.get("default_vendor", "")
+    if vid:
+      try:
+        vmap = anvil.server.call("get_vendor_names_by_ids", [vid]) or {}
+        self.label_vendor.text = vmap.get(vid, vid)  # fallback to id if not resolvable
+      except Exception:
+        self.label_vendor.text = vid
+    else:
+      self.label_vendor.text = "–"
+
+    # cost + sell price
+    latest_cost = self.part.get("latest_cost", {}) or {}
     cost_nz = latest_cost.get("cost_nz", 0.0)
     cost_date = latest_cost.get("cost_date", datetime.today().isoformat())
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_date_costed.text = self.format_date(cost_date)
-    self.text_box_sell_price_nzd = self.format_currency(self.part.get("sell_price"))
 
+    # sell_price is always NZD (persisted as float + sell_currency="NZD")
+    sell_price_val = self.part.get("sell_price", 0.0)
+    self.text_box_sell_price_nzd.text = self._format_price_field(sell_price_val)
+
+    # optional: wire simple numeric sanitation/formatting
+    self.text_box_sell_price_nzd.set_event_handler("lost_focus", self._format_price_on_blur)
+
+    # buttons visibility
     self.button_delete.visible = bool(self.part)
     self.button_BOM.visible = self.drop_down_type.selected_value == "assembly"
+
+  # ---------- Save ----------
 
   def button_save_click(self, **event_args):
     try:
@@ -71,12 +92,14 @@ class PartRecord(PartRecordTemplate):
         "cost_date": self.label_date_costed.text.strip() or "1970-01-01"
       }
 
+      sell_price_val = self._parse_price(self.text_box_sell_price_nzd.text)
+
       new_data = {
         "_id": self.text_box_id.text,
         "description": self.text_box_desc.text,
         "revision": self.text_box_rev.text,
         "status": self.drop_down_status.selected_value,
-        "default_vendor": self.text_box_vendor.text,
+        "default_vendor": self.part.get("default_vendor", ""),  # persist vendor_id
         "type": self.drop_down_type.selected_value,
         "process": self.drop_down_process.selected_value,
         "material_spec": self.text_box_material.text,
@@ -86,17 +109,21 @@ class PartRecord(PartRecordTemplate):
         "root_serial": self.part.get("root_serial", ""),
         "variant": self.part.get("variant", ""),
         "vendor_part_numbers": self.part.get("vendor_part_numbers", []),
-        "sell_price": self.text_box_sell_price_nzd,
+
+        # --- Sell price & currency (always NZD in the parts collection) ---
+        "sell_price": sell_price_val,
+        "sell_currency": "NZD",
       }
 
       validated = anvil.server.call("save_part_from_client", new_data)
       self.part = validated
 
       Notification("✅ Part saved.", style="success").show()
-      #get_open_form().content = PartRecords(filter_part=self.prev_filter_part, filter_desc=self.prev_filter_desc)
 
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
+
+  # ---------- Navigation ----------
 
   def button_back_click(self, **event_args):
     open_form("PartRecords",
@@ -105,7 +132,6 @@ class PartRecord(PartRecordTemplate):
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status,
               filter_designbom=self.prev_filter_designbom)
-    print(f"In PartRecord opening PartRecords, self.prev_filter_designbom = {self.prev_filter_designbom}")
 
   def button_delete_click(self, **event_args):
     part_id = self.text_box_id.text
@@ -130,8 +156,6 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
                 prev_filter_designbom=self.prev_filter_designbom)
-    else:
-      print(f"PartRecord->PartVendorRecords: part_id is: {part_id}")
 
   def button_BOM_click(self, **event_args):
     part_id = self.ensure_part_saved()
@@ -143,8 +167,8 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
                 prev_filter_designbom=self.prev_filter_designbom)
-    else:
-      print(f"PartRecord->DesignBOMRecord: part_id is: {part_id}")
+
+  # ---------- Helpers ----------
 
   def format_date(self, iso_string):
     if not iso_string or not isinstance(iso_string, str):
@@ -157,12 +181,28 @@ class PartRecord(PartRecordTemplate):
     except (ValueError, TypeError):
       return "–"
 
+  def _parse_price(self, s) -> float:
+    try:
+      return float((s or "").replace("$", "").replace(",", "").strip() or 0.0)
+    except Exception:
+      return 0.0
+
+  def _format_price_field(self, value) -> str:
+    try:
+      return f"{float(value):.2f}"
+    except Exception:
+      return "0.00"
+
+  def _format_price_on_blur(self, **e):
+    self.text_box_sell_price_nzd.text = self._format_price_field(self.text_box_sell_price_nzd.text)
+
   def ensure_part_saved(self):
     part_id = self.part.get("_id")
     if not part_id:
       self.button_save_click()
       part_id = self.part.get("_id")
     return part_id
+
 
 
 

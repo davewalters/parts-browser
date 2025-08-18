@@ -106,13 +106,13 @@ components:
         properties: {font_size: 12, placeholder: ''}
         type: TextBox
       - layout_properties: {col_xs: 1, row: FUDVZT, width_xs: 2}
-        name: label_vendor
+        name: label_title_vendor
         properties: {font_size: 12, text: 'Active Vendor:'}
         type: Label
-      - layout_properties: {col_xs: 3, row: FUDVZT, width_xs: 8}
-        name: text_box_vendor
-        properties: {font_size: 12, placeholder: ''}
-        type: TextBox
+      - layout_properties: {col_xs: 3, row: FUDVZT, width_xs: 4}
+        name: label_vendor
+        properties: {font_size: 12}
+        type: Label
       - layout_properties: {col_xs: 1, row: UELIAW, width_xs: 2}
         name: label_cost
         properties: {font_size: 12, text: 'Cost (NZD):'}
@@ -133,7 +133,7 @@ components:
         name: label_sell_price
         properties: {font_size: 12, text: 'Sell Price (NZD):'}
         type: Label
-      - layout_properties: {col_xs: 3, row: YWTHYJ, width_xs: 3}
+      - layout_properties: {col_xs: 3, row: YWTHYJ, width_xs: 2}
         name: text_box_sell_price_nzd
         properties: {font_size: 12}
         type: TextBox
