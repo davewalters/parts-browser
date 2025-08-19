@@ -167,10 +167,10 @@ components:
             padding: ['4', null, '4', null]
           text: 'TOTAL:'
         type: Label
-      - layout_properties: {col_xs: 5, row: QERFRF, width_xs: 6}
+      - layout_properties: {col_xs: 5, row: QERFRF, width_xs: 4}
         name: label_grand
         properties:
-          background: theme:Gray 300
+          background: theme:Gray 600
           bold: false
           font_size: 14
           foreground: theme:White

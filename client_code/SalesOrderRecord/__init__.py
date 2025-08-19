@@ -110,6 +110,14 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     cust_id = self._cust_map.get(name, "")
     self.label_customer_id.text = cust_id
     self._refresh_ship_to(cust_id)
+  
+    if name and cust_id:
+      try:
+        self._call("so_update", self.order_id, {"customer_name": name, "customer_id": cust_id})
+        self._load()  # reload to show any re-priced taxes/totals
+      except Exception as ex:
+        Notification(f"Failed to set customer: {ex}", style="warning").show()
+
 
   def _save_header(self):
     payload = {"notes": self.text_area_notes.text or ""}
@@ -212,30 +220,26 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       if not (0 <= row_index < len(items)):
         return
   
-      qty = float(qty_ordered or 0)
-      part_id = (part_id or "").strip()
-  
-      if line_id:  # existing line
-        updated_line = self._call("so_update_line", line_id, {"qty_ordered": qty})
-      else:        # new line
+      if line_id:
+        updated_line = self._call("so_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
+      else:
         updated_line = self._call("so_add_line", self.order_id, {
-          "part_id": part_id,
-          "qty_ordered": qty,
+          "part_id": (part_id or "").strip(),
+          "qty_ordered": float(qty_ordered or 0),
         })
   
+      # Replace only this row with authoritative server values (unit_price, line_price, line_tax)
       row = dict(items[row_index])
-      # keep UI-only flags like _editable and line_no if server didn't return them
       editable = row.get("_editable", False)
       line_no_fallback = row.get("line_no")
       row.update(updated_line or {})
       row["_editable"] = editable
-      # if server didn't include line_no for add, keep the local one
       if line_no_fallback is not None and row.get("line_no") in [None, ""]:
         row["line_no"] = line_no_fallback
       items[row_index] = row
-      self.repeating_panel_lines.items = items  # rebinds the row -> labels update now
+      self.repeating_panel_lines.items = items
   
-      #Refresh header totals 
+      # Refresh header totals (amounts)
       self.order = self._call("so_get", self.order_id) or {}
       a = self.order.get("amounts", {}) or {}
       self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
@@ -245,6 +249,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   
     except Exception as ex:
       Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 
