@@ -212,23 +212,31 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       if not (0 <= row_index < len(items)):
         return
   
-      # Persist directly (create or update)
+      qty = float(qty_ordered or 0)
+      part_id = (part_id or "").strip()
+  
       if line_id:  # existing line
-        self._call("so_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
+        updated_line = self._call("so_update_line", line_id, {"qty_ordered": qty})
       else:        # new line
-        self._call("so_add_line", self.order_id, {
-          "part_id": (part_id or "").strip(),
-          "qty_ordered": float(qty_ordered or 0),
+        updated_line = self._call("so_add_line", self.order_id, {
+          "part_id": part_id,
+          "qty_ordered": qty,
         })
   
-      # Now reload the order and bind authoritative values (unit_price, tax, totals)
-      self.order = self._call("so_get", self.order_id) or {}
-      is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
-      lines = list(self.order.get("lines", []) or [])
-      for ln in lines:
-        ln["_editable"] = is_draft
-      self.repeating_panel_lines.items = lines
+      row = dict(items[row_index])
+      # keep UI-only flags like _editable and line_no if server didn't return them
+      editable = row.get("_editable", False)
+      line_no_fallback = row.get("line_no")
+      row.update(updated_line or {})
+      row["_editable"] = editable
+      # if server didn't include line_no for add, keep the local one
+      if line_no_fallback is not None and row.get("line_no") in [None, ""]:
+        row["line_no"] = line_no_fallback
+      items[row_index] = row
+      self.repeating_panel_lines.items = items  # rebinds the row -> labels update now
   
+      #Refresh header totals 
+      self.order = self._call("so_get", self.order_id) or {}
       a = self.order.get("amounts", {}) or {}
       self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
       self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
@@ -237,6 +245,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   
     except Exception as ex:
       Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 
