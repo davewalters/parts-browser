@@ -33,7 +33,7 @@ components:
     properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
     type: Button
   - layout_properties: {column: finsih}
-    name: button_2
+    name: button_finish
     properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
     type: Button
   - layout_properties: {column: next_cell}

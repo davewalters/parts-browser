@@ -91,7 +91,7 @@ class CellDetail(CellDetailTemplate):
     except Exception as e:
       Notification(f"Save failed: {e}", style="danger", timeout=6).show()
 
-  def btn_delete_click(self, **event_args):
+  def button_delete_cell_click(self, **event_args):
     if self._is_new:
       Notification("Nothing to delete (new, unsaved).", style="warning").show()
       return
@@ -100,8 +100,8 @@ class CellDetail(CellDetailTemplate):
     try:
       anvil.server.call('cells_delete', self._cell["_id"])
       Notification("Cell deleted.", style="success").show()
-      self.btn_save.enabled = False
-      self.btn_delete.enabled = False
+      self.button_save.enabled = False
+      self.button_delete_cell.enabled = False
       for c in [self.txt_name, self.dd_type, self.chk_active,
                 self.num_capacity, self.num_cost, self.txt_wip_bin]:
         c.enabled = False
