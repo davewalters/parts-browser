@@ -120,38 +120,43 @@ class CellDetail(CellDetailTemplate):
       self.repeating_tasks.items = []
       self.lbl_task_summary.text = "No tasks (unsaved cell)."
       return
-
+  
     try:
       items = anvil.server.call('tasks_for_cell_dashboard', cell_id, True)
-
+  
       decorated = []
       today = self._today_nz()
       for t in (items or []):
         op_name = f"OP{t.get('operation_seq')}"
         batch_run_time_min = self._calc_batch_run_time_min(t)
-
-        # --- Compute next cell/bin (or "-") ---
-        next_cell_id, next_bin_id = self._compute_next_destination(t)
-
-        # Bucket by date
-        sd = t.get("scheduled_date")
+  
+        # --- Next destination + WO due date ---
+        next_cell_id, next_bin_id, wo_due_date = self._compute_next_and_due(t)
+  
+        # --- Bucket & label ---
+        sd = t.get("scheduled_date")  # date or None
         if sd and sd < today:
           bucket = "overdue"
+          bucket_label = "Overdue"
         elif sd == today:
           bucket = "today"
+          bucket_label = "Today"
         else:
           bucket = "upcoming"
-
+          bucket_label = "Upcoming"
+  
         decorated.append({
           **t,
           "_op_name": op_name,
           "batch_run_time_min": batch_run_time_min,
           "_bucket": bucket,
+          "_bucket_label": bucket_label,            # <— for UI
+          "_scheduled_str": sd.isoformat() if sd else "—",
           "_next_cell_id": next_cell_id or "-",
           "_next_bin_id": next_bin_id or "-",
+          "_wo_due_str": wo_due_date.isoformat() if wo_due_date else "—",
         })
-
-      # (sorting and summary untouched)
+  
       bucket_order = {"overdue": 0, "today": 1, "upcoming": 2}
       decorated.sort(key=lambda d: (
         bucket_order.get(d.get("_bucket"), 3),
@@ -160,30 +165,34 @@ class CellDetail(CellDetailTemplate):
         int(d.get("operation_seq", 999)),
       ))
       self.repeating_tasks.items = decorated
-
+  
       n_over = sum(1 for d in decorated if d["_bucket"] == "overdue")
       n_today = sum(1 for d in decorated if d["_bucket"] == "today")
       n_up = sum(1 for d in decorated if d["_bucket"] == "upcoming")
       self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
-
+  
     except Exception as e:
       self.lbl_task_summary.text = f"Failed to load tasks: {e}"
       self.repeating_tasks.items = []
 
-  def _compute_next_destination(self, task_row: dict) -> tuple[str | None, str | None]:
-    """Return (next_cell_id, next_bin_id) or (None, None) if this is the last op."""
+  def _compute_next_and_due(self, task_row: dict):
+    """
+    Returns (next_cell_id, next_bin_id, wo_due_date or None).
+    """
     try:
       wo = anvil.server.call('wo_get', task_row["wo_id"])
+      wo_due = wo.get("due_date")
       ops = sorted(wo.get("route_ops", []), key=lambda o: o["seq"])
       seq = task_row.get("operation_seq")
       idx = next((i for i,o in enumerate(ops) if o["seq"] == seq), None)
       if idx is None or idx >= len(ops) - 1:
-        return None, None
+        return None, None, wo_due
       next_op = ops[idx + 1]
       next_cell = anvil.server.call('cells_get', next_op["cell_id"])
-      return next_op["cell_id"], (next_cell or {}).get("default_wip_bin_id")
+      next_bin = (next_cell or {}).get("default_wip_bin_id")
+      return next_op["cell_id"], next_bin, wo_due
     except Exception:
-      return None, None
+      return None, None, None
 
   def _decorate_tasks(self, items):
     decorated = []
@@ -223,17 +232,10 @@ class CellDetail(CellDetailTemplate):
       Notification(f"Start failed: {e}", style="danger").show()
 
   def task_complete_click(self, row_data, **event_args):
-    """
-    Finish the task. Server will:
-      - Consume inputs
-      - If last op: produce FG
-      - Else: auto-transfer to next cell's WIP bin (journal)
-    Show a hint with the next destination.
-    """
     try:
       anvil.server.call('tasks_complete', row_data["_id"])
-      # Show next destination hint (computed client-side for consistency)
-      next_cell_id, next_bin_id = self._compute_next_destination(row_data)
+      # Show next destination hint
+      next_cell_id, next_bin_id, _ = self._compute_next_and_due(row_data)
       if next_cell_id and next_bin_id:
         Notification(f"Finished. Next: {next_cell_id} → {next_bin_id}", timeout=4).show()
       else:

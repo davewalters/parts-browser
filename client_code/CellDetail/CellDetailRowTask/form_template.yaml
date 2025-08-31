@@ -1,7 +1,15 @@
 components:
 - components:
+  - layout_properties: {column: priority}
+    name: label_priority
+    properties: {font_size: 12}
+    type: Label
   - layout_properties: {column: order_id}
     name: label_wo_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: due_date}
+    name: label_due_date
     properties: {font_size: 12}
     type: Label
   - layout_properties: {column: op_name}
@@ -24,7 +32,7 @@ components:
     name: button_1
     properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
     type: Button
-  - layout_properties: {column: finish}
+  - layout_properties: {column: finsih}
     name: button_2
     properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
     type: Button
