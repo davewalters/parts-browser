@@ -9,8 +9,8 @@ components:
     properties: {font_size: 12}
     type: Label
   - layout_properties: {column: due_date}
-    name: label_due_date
-    properties: {font_size: 12}
+    name: label_scheduled_date
+    properties: {align: center, font_size: 12}
     type: Label
   - layout_properties: {column: op_name}
     name: label_op_name
@@ -29,7 +29,7 @@ components:
     properties: {align: center, font_size: 12}
     type: Label
   - layout_properties: {column: start}
-    name: button_1
+    name: button_start
     properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
     type: Button
   - layout_properties: {column: finsih}

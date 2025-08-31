@@ -37,7 +37,7 @@ components:
       name: text_runtime_cost
       properties: {font_size: 12}
       type: TextBox
-    - layout_properties: {col_xs: 10, row: XNGJJK, width_xs: 2}
+    - layout_properties: {col_xs: 9, row: XNGJJK, width_xs: 2}
       name: label_cost_units
       properties: {font_size: 12, text: NZD/minute}
       type: Label
@@ -54,9 +54,13 @@ components:
     properties: {background: 'theme:Gray 200'}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 2, row: UGHOFC, width_xs: 1}
+    - layout_properties: {col_xs: 1, row: UGHOFC, width_xs: 1}
       name: button_back
       properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
+    - layout_properties: {col_xs: 3, row: UGHOFC, width_xs: 2}
+      name: button_save
+      properties: {icon: 'fa:save', text: Save Cell}
       type: Button
     - layout_properties: {col_xs: 4, row: UGHOFC, width_xs: 3}
       name: button_delete_cell
@@ -66,6 +70,10 @@ components:
       name: button_refresh_tasks
       properties: {icon: 'fa:refresh', text: Refresh Tasks}
       type: Button
+    - layout_properties: {col_xs: 1, row: YIODVI, width_xs: 10}
+      name: label_text_summary
+      properties: {align: center, background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White', icon: 'fa:info-circle', italic: true}
+      type: Label
     layout_properties: {grid_position: 'KKRBNT,XAHAJB'}
     name: grid_panel_3
     properties: {}
@@ -81,8 +89,8 @@ components:
         properties: {text: Work Order ID}
         type: Label
       - layout_properties: {column: due_date}
-        name: label_due_date
-        properties: {text: Due Date}
+        name: label_scheduled_date
+        properties: {align: center, text: Scheduled Date}
         type: Label
       - layout_properties: {column: op_name}
         name: label_op

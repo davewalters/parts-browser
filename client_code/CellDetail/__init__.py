@@ -13,9 +13,14 @@ class CellDetail(CellDetailTemplate):
     self.init_components(**properties)
     self._cell = None
     self._is_new = (cell_id is None)
+    self.drop_down_type.items = [("Work Centre, work_center")] + [("Assembly, assembly"), ("Inspection, inspection"), ("Packout, packout"), ("Test, test"), ("Other, other")]
+    self.button_back.role = "mydefault-button"
+    self.button_save_cell.role = "save-button"
+    self.button_delete_cell.role = "delete-button"
+    self.button_refresh_tasks.role = "new-button"
     self._load_cell(cell_id)
     self._load_tasks()
-
+  
   # -----------------------------
   # Loading & Binding
   # -----------------------------
@@ -47,36 +52,36 @@ class CellDetail(CellDetailTemplate):
 
   def _bind_form(self):
     c = self._cell or {}
-    self.lbl_id.text = c.get("_id","")
-    self.txt_name.text = c.get("name","")
-    self.dd_type.selected_value = c.get("type","work_center")
-    self.chk_active.checked = bool(c.get("active", True))
-    self.num_capacity.value = int(c.get("parallel_capacity", 1))
+    self.label_id.text = c.get("_id","")
+    self.text_cell_name.text = c.get("name","")
+    self.drop_down_type.selected_value = c.get("type","work_center")
+    self.check_box_active.checked = bool(c.get("active", True))
+    self.num_capacity.value = int(1)
     self.num_cost.value = float(c.get("minute_cost_nz", 1.0))
-    self.txt_wip_bin.text = c.get("default_wip_bin_id","")
+    self.text_cell_bin_id.text = c.get("default_wip_bin_id","")
 
   # -----------------------------
   # Persist
   # -----------------------------
   def _collect_payload(self) -> dict:
-    if not (self.txt_name.text or "").strip():
+    if not (self.text_cell_name.text or "").strip():
       Notification("Cell name is required.", style="danger").show()
       raise ValueError("Cell name required")
-    if not (self.txt_wip_bin.text or "").strip():
-      Notification("Default WIP bin is required.", style="danger").show()
-      raise ValueError("WIP bin required")
+    if not (self.text_cell_bin_id.text or "").strip():
+      Notification("Default Cell WIP bin is required.", style="danger").show()
+      raise ValueError("Cell WIP bin required")
 
     return {
-      "_id": self.lbl_id.text,
-      "name": self.txt_name.text.strip(),
-      "type": self.dd_type.selected_value or "work_center",
-      "active": bool(self.chk_active.checked),
+      "_id": self.label_id.text,
+      "name": self.text_cell_name.text.strip(),
+      "type": self.drop_down_type.selected_value or "work_center",
+      "active": bool(self.check_box_active.checked),
       "parallel_capacity": int(self.num_capacity.value or 1),
-      "minute_cost_nz": float(self.num_cost.value or 0.0),
-      "default_wip_bin_id": self.txt_wip_bin.text.strip()
+      "minute_cost_nz": float(self.text_runtime_cost.text.strip() or 0.0),
+      "default_wip_bin_id": self.text_cell_bin_id.text.strip()
     }
 
-  def btn_save_click(self, **event_args):
+  def button_save_click(self, **event_args):
     try:
       payload = self._collect_payload()
       if self._is_new:
@@ -102,8 +107,8 @@ class CellDetail(CellDetailTemplate):
       Notification("Cell deleted.", style="success").show()
       self.button_save.enabled = False
       self.button_delete_cell.enabled = False
-      for c in [self.txt_name, self.dd_type, self.chk_active,
-                self.num_capacity, self.num_cost, self.txt_wip_bin]:
+      for c in [self.text_cell_name, self.dropdown_type, self.check_box_active,
+                self.num_capacity, self.text_runtime_cost.text, self.txt_cell_bin_id]:
         c.enabled = False
     except Exception as e:
       Notification(f"Delete failed: {e}", style="danger").show()
@@ -115,10 +120,10 @@ class CellDetail(CellDetailTemplate):
     return _dt.datetime.now(_NZ).date()
 
   def _load_tasks(self):
-    cell_id = (self.lbl_id.text or "").strip()
+    cell_id = (self.label_id.text or "").strip()
     if not cell_id:
       self.repeating_tasks.items = []
-      self.lbl_task_summary.text = "No tasks (unsaved cell)."
+      self.label_task_summary.text = "No tasks (unsaved cell)."
       return
   
     try:
@@ -169,10 +174,10 @@ class CellDetail(CellDetailTemplate):
       n_over = sum(1 for d in decorated if d["_bucket"] == "overdue")
       n_today = sum(1 for d in decorated if d["_bucket"] == "today")
       n_up = sum(1 for d in decorated if d["_bucket"] == "upcoming")
-      self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
+      self.label_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
   
     except Exception as e:
-      self.lbl_task_summary.text = f"Failed to load tasks: {e}"
+      self.label_task_summary.text = f"Failed to load tasks: {e}"
       self.repeating_tasks.items = []
 
   def _compute_next_and_due(self, task_row: dict):
@@ -221,7 +226,7 @@ class CellDetail(CellDetailTemplate):
     except Exception:
       return None
 
-  def btn_refresh_tasks_click(self, **event_args):
+  def buttonn_refresh_tasks_click(self, **event_args):
     self._load_tasks()
 
   def task_start_click(self, row_data, **event_args):
@@ -231,7 +236,7 @@ class CellDetail(CellDetailTemplate):
     except Exception as e:
       Notification(f"Start failed: {e}", style="danger").show()
 
-  def task_complete_click(self, row_data, **event_args):
+  def task_finish_click(self, row_data, **event_args):
     try:
       anvil.server.call('tasks_complete', row_data["_id"])
       # Show next destination hint
@@ -244,8 +249,6 @@ class CellDetail(CellDetailTemplate):
     except Exception as e:
       Notification(f"Finish failed: {e}", style="danger").show()
 
-  def chk_today_only_change(self, **event_args):
-    self._load_tasks()
 
 
 

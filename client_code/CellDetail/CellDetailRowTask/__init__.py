@@ -7,7 +7,7 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
   def form_show(self, **event_args):
     t = self.item or {}
     self.label_wo_id.text = t.get("wo_id")
-    self.label_op.text = t.get("_op_name", f"OP{t.get('operation_seq')}")
+    self.label_op_name.text = t.get("_op_name", f"OP{t.get('operation_seq')}")
     self.label_qty.text = f"Qty {t.get('qty')}"
     self.label_batch_runtime.text = f"Batch run-time: {t.get('batch_run_time_min') or '?'} min"
 
@@ -22,21 +22,21 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     self.label_priority.foreground = colors.get(t.get('_bucket_label'), "#666")
 
     # New: dates
-    self.label_due_date.text = f"Scheduled: {t.get('_scheduled_str','—')}"
-    self.label_wo_due.text = f"WO due: {t.get('_wo_due_str','—')}"
+    self.label_scheduled_date.text = f"Scheduled: {t.get('_scheduled_str','—')}"
+    #self.label_wo_due.text = f"WO due: {t.get('_wo_due_str','—')}"
 
     st = t.get("status","queued")
     self.label_status.text = st.title()
 
     #self.btn_start.text = "Start"
     #self.btn_finish.text = "Finish"
-    self.btn_start.visible = (st == "queued")
-    self.btn_finish.visible = (st in ("queued", "in_progress"))
+    self.button_start.visible = (st == "queued")
+    self.button_finish.visible = (st in ("queued", "in_progress"))
 
-  def btn_start_click(self, **event_args):
+  def button_start_click(self, **event_args):
     self.parent.parent.task_start_click(self.item)
 
-  def btn_finish_click(self, **event_args):
+  def button_finish_click(self, **event_args):
     self.parent.parent.task_finish_click(self.item)
 
 
