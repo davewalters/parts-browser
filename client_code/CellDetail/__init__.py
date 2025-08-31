@@ -120,35 +120,38 @@ class CellDetail(CellDetailTemplate):
       self.repeating_tasks.items = []
       self.lbl_task_summary.text = "No tasks (unsaved cell)."
       return
-  
+
     try:
-      # 1) fetch ALL tasks (no date filter)
-      items = anvil.server.call('tasks_list_for_cell', cell_id, None, None)  # all statuses; adjust to status="queued" if desired
-  
-      # 2) decorate with batch_run_time_min and date buckets
+      items = anvil.server.call('tasks_for_cell_dashboard', cell_id, True)
+
       decorated = []
       today = self._today_nz()
       for t in (items or []):
         op_name = f"OP{t.get('operation_seq')}"
         batch_run_time_min = self._calc_batch_run_time_min(t)
-        sd = t.get("scheduled_date")  # expects a date
-        # bucket
+
+        # --- Compute next cell/bin (or "-") ---
+        next_cell_id, next_bin_id = self._compute_next_destination(t)
+
+        # Bucket by date
+        sd = t.get("scheduled_date")
         if sd and sd < today:
           bucket = "overdue"
         elif sd == today:
           bucket = "today"
         else:
           bucket = "upcoming"
-        decorated.append({**t,
-                          "_op_name": op_name,
-                          "batch_run_time_min": batch_run_time_min,
-                          "_bucket": bucket})
-  
-      # 3) optional filter: today only
-      if self.chk_today_only.checked:
-        decorated = [d for d in decorated if d.get("_bucket") in ("overdue", "today")]  # keep overdue visible
-  
-      # 4) sort by (bucket order) then scheduled_date, then priority, then op seq
+
+        decorated.append({
+          **t,
+          "_op_name": op_name,
+          "batch_run_time_min": batch_run_time_min,
+          "_bucket": bucket,
+          "_next_cell_id": next_cell_id or "-",
+          "_next_bin_id": next_bin_id or "-",
+        })
+
+      # (sorting and summary untouched)
       bucket_order = {"overdue": 0, "today": 1, "upcoming": 2}
       decorated.sort(key=lambda d: (
         bucket_order.get(d.get("_bucket"), 3),
@@ -156,21 +159,31 @@ class CellDetail(CellDetailTemplate):
         int(d.get("priority", 999)),
         int(d.get("operation_seq", 999)),
       ))
-  
       self.repeating_tasks.items = decorated
-  
-      # 5) header summary
+
       n_over = sum(1 for d in decorated if d["_bucket"] == "overdue")
       n_today = sum(1 for d in decorated if d["_bucket"] == "today")
       n_up = sum(1 for d in decorated if d["_bucket"] == "upcoming")
-      if self.chk_today_only.checked:
-        self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today"
-      else:
-        self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
-  
+      self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
+
     except Exception as e:
       self.lbl_task_summary.text = f"Failed to load tasks: {e}"
       self.repeating_tasks.items = []
+
+  def _compute_next_destination(self, task_row: dict) -> tuple[str | None, str | None]:
+    """Return (next_cell_id, next_bin_id) or (None, None) if this is the last op."""
+    try:
+      wo = anvil.server.call('wo_get', task_row["wo_id"])
+      ops = sorted(wo.get("route_ops", []), key=lambda o: o["seq"])
+      seq = task_row.get("operation_seq")
+      idx = next((i for i,o in enumerate(ops) if o["seq"] == seq), None)
+      if idx is None or idx >= len(ops) - 1:
+        return None, None
+      next_op = ops[idx + 1]
+      next_cell = anvil.server.call('cells_get', next_op["cell_id"])
+      return next_op["cell_id"], (next_cell or {}).get("default_wip_bin_id")
+    except Exception:
+      return None, None
 
   def _decorate_tasks(self, items):
     decorated = []
@@ -210,11 +223,24 @@ class CellDetail(CellDetailTemplate):
       Notification(f"Start failed: {e}", style="danger").show()
 
   def task_complete_click(self, row_data, **event_args):
+    """
+    Finish the task. Server will:
+      - Consume inputs
+      - If last op: produce FG
+      - Else: auto-transfer to next cell's WIP bin (journal)
+    Show a hint with the next destination.
+    """
     try:
       anvil.server.call('tasks_complete', row_data["_id"])
+      # Show next destination hint (computed client-side for consistency)
+      next_cell_id, next_bin_id = self._compute_next_destination(row_data)
+      if next_cell_id and next_bin_id:
+        Notification(f"Finished. Next: {next_cell_id} → {next_bin_id}", timeout=4).show()
+      else:
+        Notification("Finished. This was the last operation.", timeout=4).show()
       self._load_tasks()
     except Exception as e:
-      Notification(f"Complete failed: {e}", style="danger").show()
+      Notification(f"Finish failed: {e}", style="danger").show()
 
   def chk_today_only_change(self, **event_args):
     self._load_tasks()

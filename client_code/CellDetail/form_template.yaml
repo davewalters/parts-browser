@@ -83,6 +83,14 @@ components:
         name: label_finish
         properties: {align: center, text: Finish}
         type: Label
+      - layout_properties: {column: next_cell}
+        name: label_next_cell
+        properties: {align: center, text: Next Cell}
+        type: Label
+      - layout_properties: {column: next_bin}
+        name: label_next_bin
+        properties: {align: center, text: Next Bin}
+        type: Label
       layout_properties: {col_xs: 0, row: XRHOQI, width_xs: 12}
       name: data_row_panel_1
       properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
