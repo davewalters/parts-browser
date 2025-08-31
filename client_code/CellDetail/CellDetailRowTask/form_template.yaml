@@ -1,0 +1,38 @@
+components:
+- components:
+  - layout_properties: {column: order_id}
+    name: label_wo_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: op_name}
+    name: label_op_name
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: qty}
+    name: label_qty
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: batch_runtime}
+    name: label_batch_runtime
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_status
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: start}
+    name: button_1
+    properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
+    type: Button
+  - layout_properties: {column: finish}
+    name: button_2
+    properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'WDZBNR,XQEESG'}
+  name: data_row_panel_1
+  properties: {}
+  type: DataRowPanel
+container:
+  properties: {background: 'theme:Gray 200'}
+  type: ColumnPanel
+is_package: true
