@@ -89,7 +89,7 @@ components:
       type: DataRowPanel
     - components:
       - layout_properties: {}
-        name: repeating_panel_1
+        name: repeating_tasks
         properties: {item_template: CellDetail.CellDetailRowTask}
         type: RepeatingPanel
       layout_properties: {col_xs: 0, row: WXVYLQ, width_xs: 12}

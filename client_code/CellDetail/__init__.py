@@ -1,6 +1,8 @@
 from anvil import *
 import anvil.server
 import datetime as _dt
+import zoneinfo
+_NZ = zoneinfo.ZoneInfo("Pacific/Auckland")  # keep UI in shop TZ
 
 class CellDetail(CellDetailTemplate):
   """
@@ -12,7 +14,7 @@ class CellDetail(CellDetailTemplate):
     self._cell = None
     self._is_new = (cell_id is None)
     self._load_cell(cell_id)
-    self._load_tasks_for_today()
+    self._load_tasks()
 
   # -----------------------------
   # Loading & Binding
@@ -109,21 +111,63 @@ class CellDetail(CellDetailTemplate):
   # -----------------------------
   # Tasks (right pane)
   # -----------------------------
-  def _today(self):
-    return _dt.date.today()
+  def _today_nz(self):
+    return _dt.datetime.now(_NZ).date()
 
-  def _load_tasks_for_today(self):
+  def _load_tasks(self):
     cell_id = (self.lbl_id.text or "").strip()
     if not cell_id:
       self.repeating_tasks.items = []
       self.lbl_task_summary.text = "No tasks (unsaved cell)."
       return
-
+  
     try:
-      items = anvil.server.call('tasks_list_for_cell', cell_id,
-                                self._today(), None)
-      self.repeating_tasks.items = self._decorate_tasks(items)
-      self.lbl_task_summary.text = f"{len(items)} task(s) scheduled today"
+      # 1) fetch ALL tasks (no date filter)
+      items = anvil.server.call('tasks_list_for_cell', cell_id, None, None)  # all statuses; adjust to status="queued" if desired
+  
+      # 2) decorate with batch_run_time_min and date buckets
+      decorated = []
+      today = self._today_nz()
+      for t in (items or []):
+        op_name = f"OP{t.get('operation_seq')}"
+        batch_run_time_min = self._calc_batch_run_time_min(t)
+        sd = t.get("scheduled_date")  # expects a date
+        # bucket
+        if sd and sd < today:
+          bucket = "overdue"
+        elif sd == today:
+          bucket = "today"
+        else:
+          bucket = "upcoming"
+        decorated.append({**t,
+                          "_op_name": op_name,
+                          "batch_run_time_min": batch_run_time_min,
+                          "_bucket": bucket})
+  
+      # 3) optional filter: today only
+      if self.chk_today_only.checked:
+        decorated = [d for d in decorated if d.get("_bucket") in ("overdue", "today")]  # keep overdue visible
+  
+      # 4) sort by (bucket order) then scheduled_date, then priority, then op seq
+      bucket_order = {"overdue": 0, "today": 1, "upcoming": 2}
+      decorated.sort(key=lambda d: (
+        bucket_order.get(d.get("_bucket"), 3),
+        d.get("scheduled_date") or _dt.date.max,
+        int(d.get("priority", 999)),
+        int(d.get("operation_seq", 999)),
+      ))
+  
+      self.repeating_tasks.items = decorated
+  
+      # 5) header summary
+      n_over = sum(1 for d in decorated if d["_bucket"] == "overdue")
+      n_today = sum(1 for d in decorated if d["_bucket"] == "today")
+      n_up = sum(1 for d in decorated if d["_bucket"] == "upcoming")
+      if self.chk_today_only.checked:
+        self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today"
+      else:
+        self.lbl_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
+  
     except Exception as e:
       self.lbl_task_summary.text = f"Failed to load tasks: {e}"
       self.repeating_tasks.items = []
@@ -156,21 +200,24 @@ class CellDetail(CellDetailTemplate):
       return None
 
   def btn_refresh_tasks_click(self, **event_args):
-    self._load_tasks_for_today()
+    self._load_tasks()
 
   def task_start_click(self, row_data, **event_args):
     try:
       anvil.server.call('tasks_start', row_data["_id"])
-      self._load_tasks_for_today()
+      self._load_tasks()
     except Exception as e:
       Notification(f"Start failed: {e}", style="danger").show()
 
   def task_complete_click(self, row_data, **event_args):
     try:
       anvil.server.call('tasks_complete', row_data["_id"])
-      self._load_tasks_for_today()
+      self._load_tasks()
     except Exception as e:
       Notification(f"Complete failed: {e}", style="danger").show()
+
+  def chk_today_only_change(self, **event_args):
+    self._load_tasks()
 
 
 
