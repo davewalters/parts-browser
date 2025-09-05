@@ -18,7 +18,7 @@ class Route(RouteTemplate):
 
   def _load_routes(self):
     name_substring = self.text_filter_route_name.text or ""
-    routes = anvil.server.call("get_filtered_routes", route_name=name_substring)
+    routes = anvil.server.call("get_filtered_routes", route_name=name_substring, include_routing_preview=True)
     routes = sorted(routes, key=lambda r: (r.get("route_name") or "").lower())
     self.repeating_panel_routes.items = routes
 
