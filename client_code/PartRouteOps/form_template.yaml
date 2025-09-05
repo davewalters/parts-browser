@@ -1,5 +1,106 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - components:
+    - layout_properties: {col_xs: 2, row: FBKPYX, width_xs: 2}
+      name: button_home
+      properties: {icon: 'fa:home', text: Home}
+      type: Button
+    - layout_properties: {col_xs: 5, row: FBKPYX, width_xs: 2}
+      name: button_part_records
+      properties: {text: Part Details}
+      type: Button
+    layout_properties: {grid_position: 'NCNBXB,YRQPCB'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 1, row: NXAWSD, width_xs: 1}
+      name: label_part_id_hdr
+      properties: {font_size: 12, text: Part No.}
+      type: Label
+    - layout_properties: {col_xs: 3, row: NXAWSD, width_xs: 2}
+      name: label_part_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 5, row: NXAWSD, width_xs: 2}
+      name: label_description_hdr
+      properties: {font_size: 12, text: 'Description:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: NXAWSD, width_xs: 4}
+      name: label_part_name
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 1, row: ZQTBQE, width_xs: 2}
+      name: label_route_name_hdr
+      properties: {font_size: 12, text: 'Route Name:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: ZQTBQE, width_xs: 3}
+      name: label_route_name
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 1, row: SKIUAI, width_xs: 2}
+      name: label_route_preview_hdr
+      properties: {font_size: 12, text: 'Route Preview:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: SKIUAI, width_xs: 8}
+      name: label_route_preview
+      properties: {font_size: 12}
+      type: Label
+    layout_properties: {grid_position: 'FIQVFE,JVXPNU'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: op_id}
+        name: label_seq
+        properties: {text: Op ID}
+        type: Label
+      - layout_properties: {column: cell}
+        name: label_cell_name
+        properties: {text: Cell}
+        type: Label
+      - layout_properties: {column: op_name}
+        name: label_operation_name
+        properties: {text: Op Name}
+        type: Label
+      - layout_properties: {column: op_cycle_time}
+        name: label_op_cycle_time
+        properties: {align: left, text: 'Op Cycle Time [mins/unit]'}
+        type: Label
+      - layout_properties: {column: consumes}
+        name: label_consumes
+        properties: {align: left, text: Consumes Part No.}
+        type: Label
+      - layout_properties: {column: nc_file}
+        name: label_nc_file
+        properties: {align: left, text: NC File}
+        type: Label
+      - layout_properties: {column: op_doc}
+        name: label_op_doc
+        properties: {text: Op Doc}
+        type: Label
+      - layout_properties: {column: save}
+        name: label_save_row
+        properties: {align: center, text: Save Op}
+        type: Label
+      - layout_properties: {column: delete}
+        name: label_delete_op
+        properties: {align: center, text: Delete Op}
+        type: Label
+      layout_properties: {col_xs: 0, row: FWRNJN, width_xs: 12}
+      name: data_row_panel_hdr
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: UPHWOQ, width_xs: 12}
+      name: repeating_panel_ops
+      properties: {item_template: PartRouteOps.PartRouteOpRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'LNOWUY,JYUBYG'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel
