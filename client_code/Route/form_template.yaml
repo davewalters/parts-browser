@@ -1,0 +1,70 @@
+components:
+- components:
+  - components:
+    - layout_properties: {col_xs: 4, row: RZKFEP, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 5, row: RZKFEP, width_xs: 3}
+      name: text_filter_route_name
+      properties: {font_size: 12, placeholder: Route Name}
+      type: TextBox
+    layout_properties: {grid_position: 'VHWJGK,PTYIKV'}
+    name: grid_panel_filter
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 4, row: RUTPVV, width_xs: 1}
+      name: button_back
+      properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
+    - layout_properties: {col_xs: 6, row: RUTPVV, width_xs: 2}
+      name: button_new_route
+      properties: {icon: 'fa:map', text: New Route}
+      type: Button
+    layout_properties: {grid_position: 'KSVSOC,YLCGFD'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: name}
+        name: label_route_name
+        properties: {text: Name}
+        type: Label
+      - layout_properties: {column: description}
+        name: label_route_description
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: routing}
+        name: label_routing
+        properties: {align: center, text: Routing}
+        type: Label
+      layout_properties: {col_xs: 1, row: DFDPDG, width_xs: 10}
+      name: data_row_panel_hdr
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 1, row: QUGRXF, width_xs: 10}
+      name: repeating_panel_routes
+      properties: {item_template: Route.ItemTemplate5}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'YMQITA,CQRGOD'}
+    name: grid_panel_1
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_route
+  properties: {text: Route}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
