@@ -8,25 +8,32 @@ class RouteRow(RouteRowTemplate):
     self.button_open_details.role = "mydefault-button"
 
   def form_show(self, **event_args):
-    route = self.item or {}
-    self.label_route_id.text = route.get("_id", "")
-    self.label_route_name.text = route.get("route_name", "")
-    self.label_route_description.text = route.get("description", "")
+    r = self.item or {}
+    #self.label_route_id.text = r.get("_id", "")
+    self.label_route_name.text = r.get("name", "")
+    self.label_product_family.text = r.get("product_family", "")
 
-    # Build a readable summary of routing (sequence + cell_name)
-    routing = route.get("routing") or []
-    # Route list returns cell_id; for display we prefer cell_name.
-    # If the server included cell_name (recommended), use it; otherwise fallback to id.
-    def step_to_text(step):
-      seq = step.get("sequence_number", "")
-      name = step.get("cell_name") or step.get("cell_id") or ""
-      return f"{seq} {name}".strip()
+    # Compose readable preview from operations: [{seq, cell_id}]
+    cell_map = r.get("_cell_id_to_name", {}) or {}
+    ops = (r.get("operations") or [])
+    parts = []
+    for op in sorted(ops, key=lambda x: x.get("seq", 10)):
+      seq = op.get("seq", "")
+      cell_name = cell_map.get(op.get("cell_id", ""), op.get("cell_id", ""))
+      parts.append(f"{seq} {cell_name}".strip())
+    # shorten if long
+    if len(parts) > 10:
+      parts = parts[:10] + ["…"]
+    self.label_routing_preview.text = " \u2192 ".join(parts)
 
-    summary_items = [step_to_text(s) for s in sorted(routing, key=lambda x: x.get("sequence_number", 10))]
-    # Optional: limit length for very long routes
-    max_tokens = 8
-    if len(summary_items) > max_tokens:
-      summary_items = summary_items[:max_tokens] + ["…"]
+  def button_open_details_click(self, **event_args):
+    from ..RouteDetails import RouteDetails
+    parent = self.parent
+    prev = ""
+    try:
+      prev = parent.parent.text_filter_name.text or ""
+    except Exception:
+      pass
+    open_form("RouteDetails", route_id=self.item.get("_id"), prev_filter_name=prev)
 
-    self.label_routing_summary.text = " \u2192 ".join(summary_items)  # → arrows
 

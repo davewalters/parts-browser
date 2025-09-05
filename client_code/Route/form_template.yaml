@@ -18,7 +18,8 @@ components:
       name: button_back
       properties: {icon: 'fa:arrow-left', text: ''}
       type: Button
-    - layout_properties: {col_xs: 6, row: RUTPVV, width_xs: 2}
+    - event_bindings: {click: button_new_route_click}
+      layout_properties: {col_xs: 6, row: RUTPVV, width_xs: 2}
       name: button_new_route
       properties: {icon: 'fa:map', text: New Route}
       type: Button
@@ -32,13 +33,13 @@ components:
         name: label_route_name
         properties: {text: Name}
         type: Label
-      - layout_properties: {column: description}
-        name: label_route_description
-        properties: {text: Description}
+      - layout_properties: {column: product_family}
+        name: label_product_family
+        properties: {align: center, text: Product Family}
         type: Label
-      - layout_properties: {column: routing}
-        name: label_routing
-        properties: {align: center, text: Routing}
+      - layout_properties: {column: routing_preview}
+        name: label_routing_preview
+        properties: {align: center, text: Routing Preview}
         type: Label
       - layout_properties: {column: details}
         name: label_details
