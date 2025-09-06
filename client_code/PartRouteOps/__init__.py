@@ -68,15 +68,15 @@ class PartRouteOps(PartRouteOpsTemplate):
     """
     self._load()
 
-  def button_part_records_click(self, **event_args):
+  def button_part_record_click(self, **event_args):
     # Navigate back to where you prefer; example to PartRecord if available:
     try:
-      from ..PartRecords import PartRecords
-      open_form("PartRecords", part_id=self.part_id)
+      from ..PartRecord import PartRecord
+      open_form("PartRecord", part_id=self.part_id)
     except Exception:
       open_form("Nav")
 
-  def button_back_click(self, **event_args):
+  def button_home_click(self, **event_args):
     open_form("Nav")
       
 

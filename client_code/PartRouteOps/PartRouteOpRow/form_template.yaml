@@ -28,11 +28,13 @@ components:
     name: text_work_docs
     properties: {font_size: 12}
     type: TextBox
-  - layout_properties: {column: save}
+  - event_bindings: {click: button_save_row_click}
+    layout_properties: {column: save}
     name: button_save_row
     properties: {icon: 'fa:save', text: ''}
     type: Button
-  - layout_properties: {column: delete}
+  - event_bindings: {click: button_delete_row_click}
+    layout_properties: {column: delete}
     name: button_delete_row
     properties: {icon: 'fa:trash', text: ''}
     type: Button
