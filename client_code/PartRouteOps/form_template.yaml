@@ -77,10 +77,6 @@ components:
         name: label_op_cycle_time
         properties: {align: left, text: 'Op Cycle Time [mins/unit]'}
         type: Label
-      - layout_properties: {column: consumes}
-        name: label_consumes
-        properties: {align: left, text: Consumes Part No.}
-        type: Label
       - layout_properties: {column: nc_file}
         name: label_nc_file
         properties: {align: left, text: NC File}

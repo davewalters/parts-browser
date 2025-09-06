@@ -16,10 +16,6 @@ components:
     name: text_box_cycle_min_per_unit
     properties: {font_size: 12}
     type: TextBox
-  - layout_properties: {column: consumes}
-    name: text_consumes
-    properties: {font_size: 12}
-    type: TextBox
   - layout_properties: {column: nc_files}
     name: text_nc_files
     properties: {font_size: 12}

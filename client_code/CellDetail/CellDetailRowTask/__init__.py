@@ -11,32 +11,42 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     self.label_qty.text = f"Qty {t.get('qty')}"
     self.label_batch_runtime.text = f"Batch run-time: {t.get('batch_run_time_min') or '?'} min"
 
-    # New: explicit next destination
+    # Next destination
     self.label_next_cell.text = f"Next cell: {t.get('_next_cell_id','-')}"
     self.label_next_bin.text  = f"Next bin: {t.get('_next_bin_id','-')}"
 
-    # New: bucket visibility as “Priority”
+    # Priority bucket
     self.label_priority.text = f"Priority: {t.get('_bucket_label','')}"
-    # optional colour cue
     colors = {"Overdue": "#e74c3c", "Today": "#2ecc71", "Upcoming": "#3498db"}
     self.label_priority.foreground = colors.get(t.get('_bucket_label'), "#666")
 
-    # New: dates
+    # Dates
     self.label_scheduled_date.text = f"Scheduled: {t.get('_scheduled_str','—')}"
-    #self.label_wo_due.text = f"WO due: {t.get('_wo_due_str','—')}"
 
-    st = t.get("status","queued")
-    self.label_status.text = st.title()
+    # --- STATE / BUTTON VISIBILITY ---
+    # Status from server: "queued" | "in_progress" | "paused" | "complete"
+    st = (t.get("status") or "queued").lower()
+    self.label_status.text = st.replace("_", " ").title()
 
-    #self.btn_start.text = "Start"
-    #self.btn_finish.text = "Finish"
-    self.button_start.visible = (st == "queued")
-    self.button_finish.visible = (st in ("queued", "in_progress"))
+    is_queued  = (st in ("queued", "waiting"))
+    is_running = (st == "in_progress")
+    is_paused  = (st == "paused")
+    is_done    = (st in ("complete", "finished"))
 
+    # Start doubles as Resume when paused
+    self.button_start.visible  = (is_queued or is_paused) and not is_done
+    self.button_pause.visible  = is_running
+    self.button_finish.visible = (is_running or is_paused) and not is_done
+
+  # Delegate actions to the parent form
   def button_start_click(self, **event_args):
-    self.parent.parent.task_start_click(self.item)
+    self.parent.parent.task_start_or_resume_click(self.item)
+
+  def button_pause_click(self, **event_args):
+    self.parent.parent.task_pause_click(self.item)
 
   def button_finish_click(self, **event_args):
     self.parent.parent.task_finish_click(self.item)
+
 
 

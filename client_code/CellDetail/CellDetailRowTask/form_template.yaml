@@ -28,11 +28,18 @@ components:
     name: label_status
     properties: {align: center, font_size: 12}
     type: Label
-  - layout_properties: {column: start}
+  - event_bindings: {click: button_start_click}
+    layout_properties: {column: start}
     name: button_start
     properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
     type: Button
-  - layout_properties: {column: finsih}
+  - event_bindings: {click: button_pause_click}
+    layout_properties: {column: pause}
+    name: button_pause
+    properties: {icon: 'fa:pause', text: ''}
+    type: Button
+  - event_bindings: {click: button_finish_click}
+    layout_properties: {column: finish}
     name: button_finish
     properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
     type: Button

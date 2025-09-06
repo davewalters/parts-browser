@@ -24,7 +24,7 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
     # Editable per-part content
     self.text_operation_name.text = r.get("operation_name", "")
     self.text_cycle_min_per_unit.text = str(r.get("cycle_min_per_unit", 0.0))
-    self.text_consumes.text = ", ".join(r.get("consumes", []))
+    #self.text_consumes.text = ", ".join(r.get("consumes", []))
     self.text_nc_files.text = ", ".join(r.get("nc_files", []))
     self.text_work_docs.text = ", ".join(r.get("work_docs", []))
 

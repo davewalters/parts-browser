@@ -7,20 +7,29 @@ _NZ = zoneinfo.ZoneInfo("Pacific/Auckland")  # keep UI in shop TZ
 class CellDetail(CellDetailTemplate):
   """
   Props:
-    cell_id: str | None  # if None, a new _id is generated on init
+    cell_id: str | None
   """
   def __init__(self, cell_id: str | None = None, **properties):
     self.init_components(**properties)
     self._cell = None
     self._is_new = (cell_id is None)
-    self.drop_down_type.items = [("Work Centre, work_center")] + [("Assembly, assembly"), ("Inspection, inspection"), ("Packout, packout"), ("Test, test"), ("Other, other")]
+
+    self.drop_down_type.items = [
+      ("Work Centre", "work_center"),
+      ("Assembly", "assembly"),
+      ("Inspection", "inspection"),
+      ("Packout", "packout"),
+      ("Test", "test"),
+      ("Other", "other"),
+    ]
     self.button_back.role = "mydefault-button"
     self.button_save_cell.role = "save-button"
     self.button_delete_cell.role = "delete-button"
     self.button_refresh_tasks.role = "new-button"
+
     self._load_cell(cell_id)
     self._load_tasks()
-  
+
   # -----------------------------
   # Loading & Binding
   # -----------------------------
@@ -56,7 +65,7 @@ class CellDetail(CellDetailTemplate):
     self.text_cell_name.text = c.get("name","")
     self.drop_down_type.selected_value = c.get("type","work_center")
     self.check_box_active.checked = bool(c.get("active", True))
-    self.num_capacity.value = int(1)
+    self.num_capacity.value = int(c.get("parallel_capacity", 1))
     self.num_cost.value = float(c.get("minute_cost_nz", 1.0))
     self.text_cell_bin_id.text = c.get("default_wip_bin_id","")
 
@@ -77,11 +86,12 @@ class CellDetail(CellDetailTemplate):
       "type": self.drop_down_type.selected_value or "work_center",
       "active": bool(self.check_box_active.checked),
       "parallel_capacity": int(self.num_capacity.value or 1),
-      "minute_cost_nz": float(self.text_runtime_cost.text.strip() or 0.0),
+      # FIX: use num_cost.value (was text_runtime_cost)
+      "minute_cost_nz": float(self.num_cost.value or 0.0),
       "default_wip_bin_id": self.text_cell_bin_id.text.strip()
     }
 
-  def button_save_click(self, **event_args):
+  def button_save_cell_click(self, **event_args):
     try:
       payload = self._collect_payload()
       if self._is_new:
@@ -105,10 +115,10 @@ class CellDetail(CellDetailTemplate):
     try:
       anvil.server.call('cells_delete', self._cell["_id"])
       Notification("Cell deleted.", style="success").show()
-      self.button_save.enabled = False
-      self.button_delete_cell.enabled = False
-      for c in [self.text_cell_name, self.dropdown_type, self.check_box_active,
-                self.num_capacity, self.text_runtime_cost.text, self.txt_cell_bin_id]:
+      # Disable inputs cleanly
+      for c in [self.text_cell_name, self.drop_down_type, self.check_box_active,
+                self.num_capacity, self.num_cost, self.text_cell_bin_id,
+                self.button_save_cell, self.button_delete_cell]:
         c.enabled = False
     except Exception as e:
       Notification(f"Delete failed: {e}", style="danger").show()
@@ -125,43 +135,40 @@ class CellDetail(CellDetailTemplate):
       self.repeating_tasks.items = []
       self.label_task_summary.text = "No tasks (unsaved cell)."
       return
-  
+
     try:
       items = anvil.server.call('tasks_for_cell_dashboard', cell_id, True)
-  
+
       decorated = []
       today = self._today_nz()
       for t in (items or []):
         op_name = f"OP{t.get('operation_seq')}"
         batch_run_time_min = self._calc_batch_run_time_min(t)
-  
-        # --- Next destination + WO due date ---
+
+        # Next destination + WO due date
         next_cell_id, next_bin_id, wo_due_date = self._compute_next_and_due(t)
-  
-        # --- Bucket & label ---
+
+        # Bucket & label
         sd = t.get("scheduled_date")  # date or None
         if sd and sd < today:
-          bucket = "overdue"
-          bucket_label = "Overdue"
+          bucket = "overdue";  bucket_label = "Overdue"
         elif sd == today:
-          bucket = "today"
-          bucket_label = "Today"
+          bucket = "today";    bucket_label = "Today"
         else:
-          bucket = "upcoming"
-          bucket_label = "Upcoming"
-  
+          bucket = "upcoming"; bucket_label = "Upcoming"
+
         decorated.append({
           **t,
           "_op_name": op_name,
           "batch_run_time_min": batch_run_time_min,
           "_bucket": bucket,
-          "_bucket_label": bucket_label,            # <— for UI
+          "_bucket_label": bucket_label,
           "_scheduled_str": sd.isoformat() if sd else "—",
           "_next_cell_id": next_cell_id or "-",
           "_next_bin_id": next_bin_id or "-",
           "_wo_due_str": wo_due_date.isoformat() if wo_due_date else "—",
         })
-  
+
       bucket_order = {"overdue": 0, "today": 1, "upcoming": 2}
       decorated.sort(key=lambda d: (
         bucket_order.get(d.get("_bucket"), 3),
@@ -170,12 +177,12 @@ class CellDetail(CellDetailTemplate):
         int(d.get("operation_seq", 999)),
       ))
       self.repeating_tasks.items = decorated
-  
+
       n_over = sum(1 for d in decorated if d["_bucket"] == "overdue")
       n_today = sum(1 for d in decorated if d["_bucket"] == "today")
       n_up = sum(1 for d in decorated if d["_bucket"] == "upcoming")
       self.label_task_summary.text = f"{n_over} overdue • {n_today} today • {n_up} upcoming"
-  
+
     except Exception as e:
       self.label_task_summary.text = f"Failed to load tasks: {e}"
       self.repeating_tasks.items = []
@@ -199,47 +206,49 @@ class CellDetail(CellDetailTemplate):
     except Exception:
       return None, None, None
 
-  def _decorate_tasks(self, items):
-    decorated = []
-    for t in (items or []):
-      op_name = f"OP{t.get('operation_seq')}"
-      batch_run_time_min = self._calc_batch_run_time_min(t)
-      decorated.append({**t,
-                        "_op_name": op_name,
-                        "batch_run_time_min": batch_run_time_min})
-    return decorated
-
   def _calc_batch_run_time_min(self, task_row: dict) -> float | None:
     """
-    Calculate estimated batch run-time (minutes for the whole lot)
-    based on cycle time, qty, and parallel capacity.
+    Estimate batch time (min) = qty * cycle / parallel_capacity
     """
     try:
       wo = anvil.server.call('wo_get', task_row["wo_id"])
-      op = next((o for o in wo["route_ops"]
-                 if o["seq"] == task_row["operation_seq"]), None)
+      op = next((o for o in wo["route_ops"] if o["seq"] == task_row["operation_seq"]), None)
       if not op:
         return None
-      cycle_time_min_per_unit = float(op["cycle_min_per_unit"])
+      cycle_time_min_per_unit = float(op.get("cycle_min_per_unit", 0.0))
       cap = int(self.num_capacity.value or 1)
-      return round(task_row["qty"] * cycle_time_min_per_unit / cap, 1)
+      return round((task_row.get("qty", 0) * cycle_time_min_per_unit) / max(cap, 1), 1)
     except Exception:
       return None
 
-  def buttonn_refresh_tasks_click(self, **event_args):
+  def button_refresh_tasks_click(self, **event_args):
     self._load_tasks()
 
-  def task_start_click(self, row_data, **event_args):
+  # -----------------------------
+  # Task commands from row
+  # -----------------------------
+  def task_start_or_resume_click(self, row_data, **event_args):
     try:
-      anvil.server.call('tasks_start', row_data["_id"])
+      st = (row_data.get("status") or "queued").lower()
+      if st == "paused":
+        anvil.server.call('tasks_resume', row_data["_id"])
+      else:
+        anvil.server.call('tasks_start', row_data["_id"])
       self._load_tasks()
     except Exception as e:
-      Notification(f"Start failed: {e}", style="danger").show()
+      Notification(f"Start/Resume failed: {e}", style="danger").show()
+
+  def task_pause_click(self, row_data, **event_args):
+    try:
+      anvil.server.call('tasks_pause', row_data["_id"])
+      Notification("Paused.", timeout=2).show()
+      self._load_tasks()
+    except Exception as e:
+      Notification(f"Pause failed: {e}", style="danger").show()
 
   def task_finish_click(self, row_data, **event_args):
     try:
       anvil.server.call('tasks_complete', row_data["_id"])
-      # Show next destination hint
       next_cell_id, next_bin_id, _ = self._compute_next_and_due(row_data)
       if next_cell_id and next_bin_id:
         Notification(f"Finished. Next: {next_cell_id} → {next_bin_id}", timeout=4).show()
@@ -248,6 +257,7 @@ class CellDetail(CellDetailTemplate):
       self._load_tasks()
     except Exception as e:
       Notification(f"Finish failed: {e}", style="danger").show()
+
 
 
 
