@@ -3,31 +3,35 @@ components:
   - components:
     - components:
       - event_bindings: {click: button_back_click}
-        layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 0, row: YXOXYU, width_xs: 1}
         name: button_back
         properties: {background: '', font_size: 14, icon: 'fa:arrow-left', text: ''}
         type: Button
       - event_bindings: {click: button_delete_click}
-        layout_properties: {col_xs: 2, row: YXOXYU, width_xs: 3}
+        layout_properties: {col_xs: 1, row: YXOXYU, width_xs: 3}
         name: button_delete
         properties: {background: '', font_size: 14, icon: 'fa:trash-o', role: null, text: Delete Record}
         type: Button
       - event_bindings: {click: button_save_click}
-        layout_properties: {col_xs: 5, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 4, row: YXOXYU, width_xs: 2}
         name: button_save
         properties: {background: '', bold: false, font_size: 14, icon: 'fa:save', text: Save}
         type: Button
       - event_bindings: {click: button_vendor_list_click}
-        layout_properties: {col_xs: 7, row: YXOXYU, width_xs: 3}
+        layout_properties: {col_xs: 6, row: YXOXYU, width_xs: 2}
         name: button_vendor_list
         properties: {icon: 'fa:user-circle', text: Vendors}
         type: Button
       - event_bindings: {click: button_BOM_click}
-        layout_properties: {col_xs: 10, row: YXOXYU, width_xs: 2}
+        layout_properties: {col_xs: 8, row: YXOXYU, width_xs: 2}
         name: button_BOM
         properties: {icon: 'fa:list-ul', text: BOM}
         type: Button
-      layout_properties: {col_xs: 1, row: PHWDHN, width_xs: 10}
+      - layout_properties: {col_xs: 10, row: YXOXYU, width_xs: 2}
+        name: button_part_route_ops
+        properties: {icon: 'fa:road', text: PartOps}
+        type: Button
+      layout_properties: {col_xs: 0, row: PHWDHN, width_xs: 12}
       name: grid_panel_13
       properties: {}
       type: GridPanel
@@ -105,6 +109,22 @@ components:
         name: text_box_material
         properties: {font_size: 12, placeholder: ''}
         type: TextBox
+      - layout_properties: {col_xs: 1, row: YPTLLV, width_xs: 2}
+        name: label_route_name
+        properties: {font_size: 12, text: 'Route Name:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: YPTLLV, width_xs: 3}
+        name: drop_down_route_name
+        properties: {font_size: 12}
+        type: DropDown
+      - layout_properties: {col_xs: 1, row: ZRCZSK, width_xs: 2}
+        name: label_route_preview_title
+        properties: {font_size: 12, text: 'Route Preview:'}
+        type: Label
+      - layout_properties: {col_xs: 3, row: ZRCZSK, width_xs: 8}
+        name: label_route_preview_value
+        properties: {font_size: 12}
+        type: Label
       - layout_properties: {col_xs: 1, row: FUDVZT, width_xs: 2}
         name: label_title_vendor
         properties: {font_size: 12, text: 'Active Vendor:'}

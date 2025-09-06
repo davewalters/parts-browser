@@ -14,12 +14,12 @@ components:
     properties: {}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 4, row: RUTPVV, width_xs: 1}
+    - layout_properties: {col_xs: 3, row: RUTPVV, width_xs: 1}
       name: button_back
       properties: {icon: 'fa:arrow-left', text: ''}
       type: Button
     - event_bindings: {click: button_new_route_click}
-      layout_properties: {col_xs: 6, row: RUTPVV, width_xs: 2}
+      layout_properties: {col_xs: 6, row: RUTPVV, width_xs: 3}
       name: button_new_route
       properties: {icon: 'fa:map', text: New Route}
       type: Button

@@ -3,7 +3,7 @@ import anvil.server
 from ._anvil_designer import PartRecordTemplate
 from datetime import datetime
 from .. import config
-from .. PartRecords import PartRecords
+from .. PartRecords import PartRecords   # keep as-is if this is your working import
 
 class PartRecord(PartRecordTemplate):
   def __init__(self, part_id,
@@ -14,18 +14,30 @@ class PartRecord(PartRecordTemplate):
                prev_filter_designbom=False,
                **kwargs):
     self.init_components(**kwargs)
+
+    # Roles
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
     self.button_vendor_list.role = "mydefault-button"
     self.button_delete.role = "delete-button"
     self.button_BOM.role = "new-button"
+    try:
+      self.button_part_route_ops.role = "mydefault-button"
+    except Exception:
+      pass
 
+    # Preserve list filters for back navigation
     self.prev_filter_part = prev_filter_part
     self.prev_filter_desc = prev_filter_desc
     self.prev_filter_type = prev_filter_type
     self.prev_filter_status = prev_filter_status
     self.prev_filter_designbom = prev_filter_designbom
 
+    # ------- Route name <-> id maps (populated in _load_routes_dropdown) -------
+    self._route_id_by_name = {}
+    self._route_name_by_id = {}
+
+    # Load part (if editing)
     self.part = {}
     self.is_new = part_id is None
     if not self.is_new:
@@ -38,13 +50,13 @@ class PartRecord(PartRecordTemplate):
       except Exception as e:
         Notification(f"❌ Failed to load part: {e}", style="danger").show()
 
-    # dropdown setup
+    # Dropdowns (static lists)
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
     self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
-    # populate fields
+    # Populate fields from part
     self.text_box_id.text = self.part.get("_id", "")
     self.text_box_rev.text = self.part.get("revision", "A")
     self.text_box_desc.text = self.part.get("description", "")
@@ -54,36 +66,81 @@ class PartRecord(PartRecordTemplate):
     self.text_box_material.text = self.part.get("material_spec", "")
     self.drop_down_unit.selected_value = self.part.get("unit", "each")
 
-    # vendor (resolve company name; default_vendor stays vendor_id internally)
+    # Load routes and select current one (by id -> name)
+    self._load_routes_dropdown()
+    current_route_id = self.part.get("route_id", "")
+    if current_route_id and current_route_id in self._route_name_by_id:
+      self.drop_down_route_name.selected_value = self._route_name_by_id[current_route_id]
+    else:
+      self.drop_down_route_name.selected_value = None
+
+    # Routing preview in header (server helper)
+    try:
+      if current_route_id:
+        self.label_route_preview_value.text = anvil.server.call("routes_preview_string", current_route_id, 12) or ""
+      else:
+        self.label_route_preview_value.text = ""
+    except Exception:
+      self.label_route_preview_value.text = ""
+
+    # Enable/disable Part Ops button based on validity of selection
+    self._update_part_ops_button_enabled_state()
+
+    # Vendor (resolve company name; default_vendor stays vendor_id internally)
     vid = self.part.get("default_vendor", "")
     if vid:
       try:
         vmap = anvil.server.call("get_vendor_names_by_ids", [vid]) or {}
-        self.label_vendor.text = vmap.get(vid, vid)  # fallback to id if not resolvable
+        self.label_vendor.text = vmap.get(vid, vid)
       except Exception:
         self.label_vendor.text = vid
     else:
       self.label_vendor.text = "–"
 
-    # cost + sell price
+    # Cost + sell price
     latest_cost = self.part.get("latest_cost", {}) or {}
     cost_nz = latest_cost.get("cost_nz", 0.0)
     cost_date = latest_cost.get("cost_date", datetime.today().isoformat())
     self.label_cost_nz.text = self.format_currency(cost_nz)
     self.label_date_costed.text = self.format_date(cost_date)
 
-    # sell_price is always NZD (persisted as float + sell_currency="NZD")
+    # sell_price is always NZD
     sell_price_val = self.part.get("sell_price", 0.0)
     self.text_box_sell_price_nzd.text = self._format_price_field(sell_price_val)
-
-    # optional: wire simple numeric sanitation/formatting
     self.text_box_sell_price_nzd.set_event_handler("lost_focus", self._format_price_on_blur)
 
-    # buttons visibility
+    # Buttons visibility
     self.button_delete.visible = bool(self.part)
     self.button_BOM.visible = self.drop_down_type.selected_value == "assembly"
 
-  # ---------- Save ----------
+  # ---------------------- Route dropdown loader ----------------------
+
+  def _load_routes_dropdown(self):
+    """
+    Populate route name dropdown. We show names, but will save the corresponding route_id.
+    """
+    try:
+      routes = anvil.server.call("routes_list", "") or []   # all routes (product_family filter blank)
+      # Alternative: routes = anvil.server.call("get_filtered_routes_by_name", "", 1000) or []
+
+      self._route_id_by_name = {}
+      self._route_name_by_id = {}
+      name_items = []
+      for r in routes:
+        rid = r.get("_id", "")
+        rname = r.get("name", "")
+        if not rid or not rname:
+          continue
+        self._route_id_by_name[rname] = rid
+        self._route_name_by_id[rid] = rname
+        name_items.append(rname)
+
+      self.drop_down_route_name.items = sorted(name_items, key=lambda s: s.lower())
+    except Exception as e:
+      self.drop_down_route_name.items = []
+      Notification(f"⚠️ Failed to load routes: {e}", style="warning").show()
+
+  # ---------------------- Save ----------------------
 
   def button_save_click(self, **event_args):
     try:
@@ -93,13 +150,15 @@ class PartRecord(PartRecordTemplate):
       }
 
       sell_price_val = self._parse_price(self.text_box_sell_price_nzd.text)
+      selected_route_name = self.drop_down_route_name.selected_value
+      route_id_to_save = self._route_id_by_name.get(selected_route_name, "") if selected_route_name else ""
 
       new_data = {
         "_id": self.text_box_id.text,
         "description": self.text_box_desc.text,
         "revision": self.text_box_rev.text,
         "status": self.drop_down_status.selected_value,
-        "default_vendor": self.part.get("default_vendor", ""),  # persist vendor_id
+        "default_vendor": self.part.get("default_vendor", ""),
         "type": self.drop_down_type.selected_value,
         "process": self.drop_down_process.selected_value,
         "material_spec": self.text_box_material.text,
@@ -109,10 +168,9 @@ class PartRecord(PartRecordTemplate):
         "root_serial": self.part.get("root_serial", ""),
         "variant": self.part.get("variant", ""),
         "vendor_part_numbers": self.part.get("vendor_part_numbers", []),
-
-        # --- Sell price & currency (always NZD in the parts collection) ---
         "sell_price": sell_price_val,
         "sell_currency": "NZD",
+        "route_id": route_id_to_save,
       }
 
       validated = anvil.server.call("save_part_from_client", new_data)
@@ -123,7 +181,62 @@ class PartRecord(PartRecordTemplate):
     except Exception as e:
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
-  # ---------- Navigation ----------
+  # ---------------------- Route dropdown change (auto-save + preview) ----------------------
+
+  def drop_down_route_name_change(self, **event_args):
+    """
+    Project pattern: auto-save on change, then refresh preview and button state.
+    """
+    selected_route_name = self.drop_down_route_name.selected_value
+    route_id_to_save = self._route_id_by_name.get(selected_route_name or "", "")
+
+    # Save immediately
+    try:
+      latest_cost = {
+        "cost_nz": float(self.label_cost_nz.text.replace("$", "") or 0),
+        "cost_date": self.label_date_costed.text.strip() or "1970-01-01"
+      }
+      sell_price_val = self._parse_price(self.text_box_sell_price_nzd.text)
+
+      new_data = {
+        "_id": self.text_box_id.text,
+        "description": self.text_box_desc.text,
+        "revision": self.text_box_rev.text,
+        "status": self.drop_down_status.selected_value,
+        "default_vendor": self.part.get("default_vendor", ""),
+        "type": self.drop_down_type.selected_value,
+        "process": self.drop_down_process.selected_value,
+        "material_spec": self.text_box_material.text,
+        "unit": self.drop_down_unit.selected_value,
+        "latest_cost": latest_cost,
+        "group_code": self.part.get("group_code", ""),
+        "root_serial": self.part.get("root_serial", ""),
+        "variant": self.part.get("variant", ""),
+        "vendor_part_numbers": self.part.get("vendor_part_numbers", []),
+        "sell_price": sell_price_val,
+        "sell_currency": "NZD",
+        "route_id": route_id_to_save,
+      }
+      validated = anvil.server.call("save_part_from_client", new_data)
+      self.part = validated
+
+      # Update preview quietly
+      try:
+        if route_id_to_save:
+          self.label_route_preview_value.text = anvil.server.call("routes_preview_string", route_id_to_save, 12) or ""
+        else:
+          self.label_route_preview_value.text = ""
+      except Exception:
+        self.label_route_preview_value.text = ""
+
+      # Update Part Ops button enabled state
+      self._update_part_ops_button_enabled_state()
+
+    except Exception as e:
+      Notification(f"⚠️ Could not save route: {e}", style="warning").show()
+      # Keep previous state; user can retry/select again
+
+  # ---------------------- Navigation ----------------------
 
   def button_back_click(self, **event_args):
     open_form("PartRecords",
@@ -168,7 +281,37 @@ class PartRecord(PartRecordTemplate):
                 prev_filter_status=self.prev_filter_status,
                 prev_filter_designbom=self.prev_filter_designbom)
 
-  # ---------- Helpers ----------
+  def button_part_route_ops_click(self, **event_args):
+    part_id = self.ensure_part_saved()
+    if not part_id:
+      return
+
+    selected_route_name = self.drop_down_route_name.selected_value
+    if not selected_route_name:
+      Notification("Select a Route before opening Part Operations.", style="warning").show()
+      return
+
+    route_id = self._route_id_by_name.get(selected_route_name or "", "")
+    if not route_id:
+      Notification("Selected Route name could not be resolved to an ID.", style="warning").show()
+      return
+
+    try:
+      from ..PartRouteOps import PartRouteOps
+      open_form("PartRouteOps",
+                part_id=part_id,
+                route_id=route_id,
+                part_name=self.text_box_desc.text or part_id,
+                route_name=selected_route_name)
+    except Exception:
+      open_form("Nav")
+
+  # ---------------------- Helpers ----------------------
+
+  def _update_part_ops_button_enabled_state(self):
+    selected_route_name = self.drop_down_route_name.selected_value
+    route_id = self._route_id_by_name.get(selected_route_name or "", "")
+    self.button_part_route_ops.enabled = bool(route_id)
 
   def format_date(self, iso_string):
     if not iso_string or not isinstance(iso_string, str):
@@ -202,6 +345,7 @@ class PartRecord(PartRecordTemplate):
       self.button_save_click()
       part_id = self.part.get("_id")
     return part_id
+
 
 
 
