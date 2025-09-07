@@ -1,0 +1,36 @@
+components:
+- components:
+  - layout_properties: {column: line}
+    name: label_line_no
+    properties: {}
+    type: Label
+  - layout_properties: {column: part_id}
+    name: label_part_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: description}
+    name: label_desc
+    properties: {}
+    type: Label
+  - layout_properties: {column: qty}
+    name: label_qty_per
+    properties: {}
+    type: Label
+  - layout_properties: {column: unit}
+    name: label_unit
+    properties: {}
+    type: Label
+  - layout_properties: {column: lot_traced}
+    name: label_lot_traced
+    properties: {}
+    type: Label
+  - layout_properties: {column: serial}
+    name: label_serial_required
+    properties: {}
+    type: Label
+  layout_properties: {grid_position: 'EGZIMY,NIEPVT'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true

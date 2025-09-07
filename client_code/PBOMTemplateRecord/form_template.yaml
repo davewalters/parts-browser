@@ -1,5 +1,131 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - components:
+    - layout_properties: {col_xs: 3, row: DIFPOO, width_xs: 2}
+      name: button_home
+      properties: {icon: 'fa:home', text: Home}
+      type: Button
+    - event_bindings: {click: button_regenerate_click}
+      layout_properties: {col_xs: 7, row: DIFPOO, width_xs: 4}
+      name: button_regenerate
+      properties: {icon: 'fa:refresh', text: Regenerate BOM}
+      type: Button
+    layout_properties: {grid_position: 'NIMWQH,YCQCTC'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 0, row: IYDVUX, width_xs: 2}
+      name: label_id_title
+      properties: {font_size: 12, text: 'Prod. BOM ID:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: IYDVUX, width_xs: 1}
+      name: label_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 5, row: IYDVUX, width_xs: 1}
+      name: label_rev_title
+      properties: {font_size: 12, text: 'Rev:'}
+      type: Label
+    - layout_properties: {col_xs: 6, row: IYDVUX, width_xs: 1}
+      name: drop_down_rev
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 8, row: IYDVUX, width_xs: 1}
+      name: label_status_title
+      properties: {font_size: 12, text: 'Status:'}
+      type: Label
+    - layout_properties: {col_xs: 9, row: IYDVUX, width_xs: 2}
+      name: drop_down_status
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 0, row: PNKYZU, width_xs: 2}
+      name: label_plant_title
+      properties: {font_size: 12, text: 'Prod. Facility:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: PNKYZU, width_xs: 3}
+      name: text_plant
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 5, row: PNKYZU, width_xs: 2}
+      name: label_variant_title
+      properties: {font_size: 12, text: 'BOM Variant:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: PNKYZU, width_xs: 4}
+      name: text_variant
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 0, row: SDXEXQ, width_xs: 2}
+      name: label_part_no_title
+      properties: {font_size: 12, text: 'Assembly No.:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: SDXEXQ, width_xs: 2}
+      name: label_parent_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 5, row: SDXEXQ, width_xs: 2}
+      name: label_description_title
+      properties: {font_size: 12, text: 'Description:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: SDXEXQ, width_xs: 4}
+      name: label_parent_desc
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 1, row: MLJYSE, width_xs: 1}
+      name: label_notes
+      properties: {font_size: 12, text: 'Notes:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: MLJYSE, width_xs: 9}
+      name: text_notes
+      properties: {font_size: 12, height: 91.54547119140625}
+      type: TextArea
+    layout_properties: {grid_position: 'YRPQHR,JMMEZO'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: line}
+        name: label_line_no
+        properties: {align: left, text: Line No.}
+        type: Label
+      - layout_properties: {column: part_id}
+        name: label_part_id
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: description}
+        name: label_description
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: qty}
+        name: label_qty
+        properties: {align: center, text: Qty}
+        type: Label
+      - layout_properties: {column: issue}
+        name: label_unit
+        properties: {align: center, text: Unit of Issue}
+        type: Label
+      - layout_properties: {column: lot_traced}
+        name: label_lot_traced
+        properties: {align: center, text: Lot Traced}
+        type: Label
+      - layout_properties: {column: serial}
+        name: label_serial
+        properties: {align: center, text: Serial No. Req'd}
+        type: Label
+      layout_properties: {col_xs: 0, row: PNGUZE, width_xs: 12}
+      name: data_row_panel_hdr
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: FWOVVM, width_xs: 12}
+      name: repeating_panel_lines
+      properties: {item_template: PBOMTemplateRecord.PBOMTemplateLineRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'MZYBVV,JPAUUR'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel

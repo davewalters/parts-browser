@@ -9,7 +9,9 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
                filter_plant="",
                **kwargs):
     self.init_components(**kwargs)
-
+    self.button_home.role = "mydefault-button"
+    self.button_new_pbom.role = "new-button"
+    
     # Persisted filter state (useful when navigating back)
     self.prev_filter_parent_prefix = filter_parent_prefix or ""
     self.prev_filter_status = filter_status or ""
