@@ -1,0 +1,106 @@
+components:
+- components:
+  - components:
+    - layout_properties: {col_xs: 1, row: DKIKOI, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: DKIKOI, width_xs: 2}
+      name: label_parent_prefix_title
+      properties: {font_size: 12, text: 'DesignBOM Part No.:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: DKIKOI, width_xs: 3}
+      name: text_parent_prefix
+      properties: {font_size: 12, text: ''}
+      type: TextBox
+    - layout_properties: {col_xs: 8, row: DKIKOI, width_xs: 1}
+      name: label_rev_title
+      properties: {font_size: 12, text: 'Rev:'}
+      type: Label
+    - layout_properties: {col_xs: 9, row: DKIKOI, width_xs: 1}
+      name: text_rev
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 2, row: HRWAMV, width_xs: 2}
+      name: label_status_title
+      properties: {font_size: 12, text: 'Status:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: HRWAMV, width_xs: 3}
+      name: drop_down_status
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 8, row: HRWAMV, width_xs: 1}
+      name: label_plant_title
+      properties: {font_size: 12, text: 'Facility:'}
+      type: Label
+    - layout_properties: {col_xs: 9, row: HRWAMV, width_xs: 2}
+      name: text_plant
+      properties: {font_size: 12}
+      type: TextBox
+    layout_properties: {grid_position: 'KXUHCP,EUZCFX'}
+    name: grid_panel_filter
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - layout_properties: {grid_position: 'CJJXGI,HTIFYF'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 5, row: EDWLGS, width_xs: 3}
+      name: label_count
+      properties: {align: center, font_size: 12, icon: 'fa:check-circle-o'}
+      type: Label
+    layout_properties: {grid_position: 'LCVYCL,RCNEHV'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: pbom_id}
+        name: label_pbom_id
+        properties: {text: Production BOM ID}
+        type: Label
+      - layout_properties: {column: designbom_id}
+        name: label_design_bom_id
+        properties: {text: Design BOM Part No.}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_status
+        properties: {align: center, text: Status}
+        type: Label
+      - layout_properties: {column: rev}
+        name: label_rev
+        properties: {align: center, text: Rev}
+        type: Label
+      - layout_properties: {column: facility}
+        name: label_facility
+        properties: {text: Production Facility}
+        type: Label
+      layout_properties: {col_xs: 1, row: XGIIPW, width_xs: 10}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 1, row: KLEMEO, width_xs: 10}
+      name: repeating_panel_pbomtpl
+      properties: {item_template: PBOMTemplateList.PBOMTemplateRecord}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'GZQYHL,XCDUHP'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Production BOM Templates}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
