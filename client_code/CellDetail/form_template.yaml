@@ -3,76 +3,72 @@ components:
   - components:
     - layout_properties: {col_xs: 1, row: BLSFHP, width_xs: 1}
       name: label_title_id
-      properties: {font_size: 12, text: 'ID:'}
+      properties: {font_size: 12, text: 'Cell ID:'}
       type: Label
-    - layout_properties: {col_xs: 2, row: BLSFHP, width_xs: 2}
+    - layout_properties: {col_xs: 3, row: BLSFHP, width_xs: 2}
       name: label_id
       properties: {font_size: 12}
       type: Label
-    - layout_properties: {col_xs: 4, row: BLSFHP, width_xs: 2}
+    - layout_properties: {col_xs: 5, row: BLSFHP, width_xs: 2}
       name: label_title_cell_name
       properties: {font_size: 12, text: 'Cell Name:'}
       type: Label
-    - layout_properties: {col_xs: 6, row: BLSFHP, width_xs: 5}
-      name: text_cell_name
+    - layout_properties: {col_xs: 7, row: BLSFHP, width_xs: 3}
+      name: label_cell_name
       properties: {font_size: 12}
-      type: TextBox
+      type: Label
     - layout_properties: {col_xs: 1, row: ILWZPZ, width_xs: 2}
-      name: check_box_active
-      properties: {font_size: 12, text: Active}
-      type: CheckBox
-    - layout_properties: {col_xs: 4, row: ILWZPZ, width_xs: 1}
+      name: label_cell_status
+      properties: {font_size: 12, text: 'Cell Status:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: ILWZPZ, width_xs: 1}
+      name: label_cell_active
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 5, row: ILWZPZ, width_xs: 1}
       name: label_title_type
       properties: {font_size: 12, text: 'Type:'}
       type: Label
-    - layout_properties: {col_xs: 6, row: ILWZPZ, width_xs: 3}
-      name: drop_down_type
+    - layout_properties: {col_xs: 7, row: ILWZPZ, width_xs: 3}
+      name: label_cell_type
       properties: {font_size: 12}
-      type: DropDown
-    - layout_properties: {col_xs: 4, row: XNGJJK, width_xs: 2}
+      type: Label
+    - layout_properties: {col_xs: 5, row: XNGJJK, width_xs: 2}
       name: label_title_run_time_cost
       properties: {font_size: 12, text: 'Runtime Cost:'}
       type: Label
-    - layout_properties: {col_xs: 6, row: XNGJJK, width_xs: 3}
-      name: text_runtime_cost
+    - layout_properties: {col_xs: 7, row: XNGJJK, width_xs: 2}
+      name: label_cell_cost
       properties: {font_size: 12}
-      type: TextBox
-    - layout_properties: {col_xs: 9, row: XNGJJK, width_xs: 2}
+      type: Label
+    - layout_properties: {col_xs: 9, row: XNGJJK, width_xs: 1}
       name: label_cost_units
       properties: {font_size: 12, text: NZD/minute}
       type: Label
-    - layout_properties: {col_xs: 4, row: YVSIIN, width_xs: 2}
+    - layout_properties: {col_xs: 5, row: ZYQEGC, width_xs: 2}
       name: label_title_bin
       properties: {font_size: 12, text: 'Cell Bin ID:'}
       type: Label
-    - layout_properties: {col_xs: 6, row: YVSIIN, width_xs: 3}
-      name: text_cell_bin_id
+    - layout_properties: {col_xs: 7, row: ZYQEGC, width_xs: 2}
+      name: label_cell_wip_bin
       properties: {font_size: 12}
-      type: TextBox
-    layout_properties: {grid_position: 'JNFAXW,LPPGTG'}
+      type: Label
+    layout_properties: {grid_position: 'JWPECO,KGZZOL'}
     name: grid_panel_1
     properties: {background: 'theme:Gray 200'}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 1, row: UGHOFC, width_xs: 1}
+    - layout_properties: {col_xs: 3, row: UGHOFC, width_xs: 2}
       name: button_back
       properties: {icon: 'fa:arrow-left', text: ''}
       type: Button
-    - layout_properties: {col_xs: 3, row: UGHOFC, width_xs: 2}
-      name: button_save
-      properties: {icon: 'fa:save', text: Save Cell}
-      type: Button
-    - layout_properties: {col_xs: 4, row: UGHOFC, width_xs: 3}
-      name: button_delete_cell
-      properties: {icon: 'fa:trash-o', text: Delete Cell}
-      type: Button
     - event_bindings: {click: button_refresh_tasks_click}
-      layout_properties: {col_xs: 8, row: UGHOFC, width_xs: 3}
+      layout_properties: {col_xs: 7, row: UGHOFC, width_xs: 3}
       name: button_refresh_tasks
       properties: {icon: 'fa:refresh', text: Refresh Tasks}
       type: Button
     - layout_properties: {col_xs: 1, row: YIODVI, width_xs: 10}
-      name: label_text_summary
+      name: label_task_summary
       properties: {align: center, background: 'theme:Secondary 500', font_size: 15, foreground: 'theme:White', icon: 'fa:info-circle', italic: true}
       type: Label
     layout_properties: {grid_position: 'KKRBNT,XAHAJB'}
@@ -148,7 +144,7 @@ components:
     type: GridPanel
   layout_properties: {slot: default}
   name: content_panel
-  properties: {col_widths: '{"LPPGTG":20}'}
+  properties: {col_widths: '{}'}
   type: ColumnPanel
 - layout_properties: {slot: nav-right}
   name: navbar_links
