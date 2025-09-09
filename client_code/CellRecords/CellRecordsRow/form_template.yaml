@@ -1,5 +1,44 @@
 components:
-- layout_properties: {grid_position: 'DJCHNT,TNZGNG'}
+- components:
+  - layout_properties: {column: cell_id}
+    name: label_cell_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: cell_name}
+    name: label_cell_name
+    properties: {}
+    type: Label
+  - layout_properties: {column: cell_type}
+    name: label_cell_type
+    properties: {}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_active
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: capacity}
+    name: label_parallel_capacity
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: cost}
+    name: label_minute_cost_nz
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: bin}
+    name: label_wip_bin
+    properties: {align: center}
+    type: Label
+  - event_bindings: {click: button_details_click}
+    layout_properties: {column: details}
+    name: button_details
+    properties: {icon: 'fa:arrow-right', text: ''}
+    type: Button
+  - event_bindings: {click: button_open_click}
+    layout_properties: {column: tasks}
+    name: button_open
+    properties: {icon: 'fa:tasks', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'DJCHNT,TNZGNG'}
   name: data_row_panel_1
   properties: {background: 'theme:Gray 200', font_size: 12}
   type: DataRowPanel

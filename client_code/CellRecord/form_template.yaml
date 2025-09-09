@@ -1,0 +1,94 @@
+components:
+- components:
+  - components:
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 3, row: SCNVVR, width_xs: 2}
+      name: button_back
+      properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
+    - event_bindings: {click: button_delete_click}
+      layout_properties: {col_xs: 6, row: SCNVVR, width_xs: 4}
+      name: button_delete
+      properties: {icon: 'fa:trash', text: Delete Cell}
+      type: Button
+    layout_properties: {grid_position: 'NXKQIY,GJVNKO'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 1, row: HKBTWM, width_xs: 2}
+      name: label_cell_id_title
+      properties: {font_size: 12, text: 'Cell ID:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: HKBTWM, width_xs: 2}
+      name: label_cell_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 5, row: HKBTWM, width_xs: 2}
+      name: label_cell_name_title
+      properties: {font_size: 12, text: 'Cell Name:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: HKBTWM, width_xs: 4}
+      name: text_name
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 1, row: KVHWLX, width_xs: 2}
+      name: label_cell_type_title
+      properties: {font_size: 12, text: 'Cell Type:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: KVHWLX, width_xs: 4}
+      name: drop_down_cell_type
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 8, row: KVHWLX, width_xs: 4}
+      name: check_box_active
+      properties: {font_size: 12, text: Active}
+      type: CheckBox
+    - layout_properties: {col_xs: 1, row: ZYUJZT, width_xs: 2}
+      name: label_parallel_capacity_title
+      properties: {font_size: 12, text: 'Parallel Capacity:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: ZYUJZT, width_xs: 2}
+      name: text_parallel_capacity
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 5, row: ZYUJZT, width_xs: 2}
+      name: label_runtime_cost_title
+      properties: {font_size: 12, text: Run-time Cost}
+      type: Label
+    - layout_properties: {col_xs: 7, row: ZYUJZT, width_xs: 2}
+      name: text_minute_cost_nz
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 9, row: ZYUJZT, width_xs: 2}
+      name: label_cost_units
+      properties: {font_size: 12, text: NZD/min}
+      type: Label
+    - layout_properties: {col_xs: 1, row: QIKRYV, width_xs: 2}
+      name: label_wip_bin_title
+      properties: {font_size: 12, text: 'Cell WIP Bin ID:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: QIKRYV, width_xs: 4}
+      name: text_default_wip_bin_id
+      properties: {font_size: 12}
+      type: TextBox
+    layout_properties: {grid_position: 'PSZLLL,UGAIAQ'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Cell Record}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
