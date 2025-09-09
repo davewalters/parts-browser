@@ -1,0 +1,81 @@
+components:
+- components:
+  - components:
+    - layout_properties: {col_xs: 3, row: KLPEAE, width_xs: 2}
+      name: button_home
+      properties: {icon: 'fa:home', text: Home}
+      type: Button
+    - layout_properties: {col_xs: 6, row: KLPEAE, width_xs: 3}
+      name: button_new_cell
+      properties: {icon: 'fa:plus-circle', text: New Cell}
+      type: Button
+    layout_properties: {grid_position: 'CQVBWG,GJGDOJ'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: cell_id}
+        name: label_cell_id
+        properties: {text: Cell ID}
+        type: Label
+      - layout_properties: {column: cell_name}
+        name: label_cell_name
+        properties: {text: Cell Name}
+        type: Label
+      - layout_properties: {column: cell_type}
+        name: label_cell_type
+        properties: {text: Cell Type}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_active
+        properties: {align: center, text: Status}
+        type: Label
+      - layout_properties: {column: capacity}
+        name: label_parallel_capacity
+        properties: {align: center, text: Parallel Capacity}
+        type: Label
+      - layout_properties: {column: cost}
+        name: label_minute_cost_nz
+        properties: {text: 'Run-time Cost [NZD/min]'}
+        type: Label
+      - layout_properties: {column: bin}
+        name: label_wip_bin_id
+        properties: {text: WIP Bin ID}
+        type: Label
+      - layout_properties: {column: details}
+        name: label_details
+        properties: {align: center, text: Details}
+        type: Label
+      - layout_properties: {column: tasks}
+        name: label_tasks
+        properties: {align: center, text: Cell Tasks}
+        type: Label
+      layout_properties: {col_xs: 0, row: PPRFPN, width_xs: 12}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: UWDSVW, width_xs: 12}
+      name: repeating_panel_1
+      properties: {item_template: CellRecords.CellRecordsRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'ZJEJTW,PDJJZG'}
+    name: grid_panel_table
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Cell Records}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
