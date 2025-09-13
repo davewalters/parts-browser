@@ -1,3 +1,4 @@
+from ._anvil_designer import CellRecordsRowTemplate
 from anvil import *
 
 class CellRecordsRow(CellRecordsRowTemplate):

@@ -59,7 +59,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         self.label_ship_to.text = ""
         self.label_customer_id.text = ""
         return
-      ship_str = self._call("so_get_default_shipping_address", customer_id) or ""
+      ship_str = self._call("customer_default_shipping_address_string", customer_id) or ""
       self.label_ship_to.text = ship_str
       self.label_customer_id.text = customer_id
     except Exception as ex:
@@ -69,10 +69,10 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
   # ---------- load & bind ----------
   def _load(self):
-    self.order = self._call("so_get", self.order_id) or {}
+    self.order = self._call("sales_order_get", self.order_id) or {}
 
     # Build dropdown: name -> business customer_id (needs server to return it; see server patch below)
-    choices = self._call("so_get_customer_choices") or []  # [{"customer_id","customer_name"}]
+    choices = self._call("customer_list_choices") or []  # [{"customer_id","customer_name"}]
     self._cust_map = {c.get("customer_name",""): c.get("customer_id","") for c in choices}
     self.drop_down_customer.items = list(self._cust_map.keys())
 
@@ -113,7 +113,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   
     if name and cust_id:
       try:
-        self._call("so_update", self.order_id, {"customer_name": name, "customer_id": cust_id})
+        self._call("sales_order_update", self.order_id, {"customer_name": name, "customer_id": cust_id})
         self._load()  # reload to show any re-priced taxes/totals
       except Exception as ex:
         Notification(f"Failed to set customer: {ex}", style="warning").show()
@@ -126,7 +126,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     if name and cust_id:
       payload["customer_name"] = name
       payload["customer_id"] = cust_id
-    self.order = self._call("so_update", self.order_id, payload)
+    self.order = self._call("sales_order_update", self.order_id, payload)
 
   def button_save_click(self, **e):
     try:
@@ -140,7 +140,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
   def button_confirm_click(self, **e):
     try:
       self._persist_all_rows()
-      self.order = self._call("so_confirm", self.order_id)
+      self.order = self._call("sales_order_confirm", self.order_id)
       self._load()
       Notification("Order confirmed.", style="success").show()
     except Exception as ex:
@@ -148,7 +148,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
   def button_cancel_click(self, **e):
     try:
-      self.order = self._call("so_cancel", self.order_id)
+      self.order = self._call("sales_order_cancel", self.order_id)
       self._load()
       Notification("Order cancelled.", style="success").show()
     except Exception as ex:
@@ -180,7 +180,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     try:
       items = list(self.repeating_panel_lines.items or [])
       if line_id:
-        self._call("so_delete_line", line_id)
+        self._call("sales_order_delete_line", line_id)
         self._load()
         Notification("Line deleted.", style="success").show()
         return
@@ -207,9 +207,9 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         continue
   
       if it.get("_id"):
-        self._call("so_update_line", it["_id"], {"qty_ordered": qty})
+        self._call("sales_order_update_line", it["_id"], {"qty_ordered": qty})
       else:
-        new_line = self._call("so_add_line", self.order_id, {"part_id": part_id, "qty_ordered": qty})
+        new_line = self._call("sales_order_add_line", self.order_id, {"part_id": part_id, "qty_ordered": qty})
         it["_id"] = new_line.get("_id")   # keep it from disappearing
     # Optional: write back updated items so rows remember _id without waiting for reload
     self.repeating_panel_lines.items = items
@@ -221,9 +221,9 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         return
   
       if line_id:
-        updated_line = self._call("so_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
+        updated_line = self._call("sales_order_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
       else:
-        updated_line = self._call("so_add_line", self.order_id, {
+        updated_line = self._call("sales_order_add_line", self.order_id, {
           "part_id": (part_id or "").strip(),
           "qty_ordered": float(qty_ordered or 0),
         })
@@ -240,7 +240,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       self.repeating_panel_lines.items = items
   
       # Refresh header totals (amounts)
-      self.order = self._call("so_get", self.order_id) or {}
+      self.order = self._call("sales_order_get", self.order_id) or {}
       a = self.order.get("amounts", {}) or {}
       self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
       self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"

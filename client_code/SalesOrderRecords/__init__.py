@@ -46,7 +46,7 @@ class SalesOrderRecords(SalesOrderRecordsTemplate):
   
     # Server accepts date|datetime|ISO; raw list returned
     rows = anvil.server.call(
-      "so_list",
+      "sales_order_list",
       so_id_prefix=so_prefix,
       customer_name=cust,
       status=status,

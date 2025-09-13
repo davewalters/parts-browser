@@ -29,7 +29,7 @@ class CellRecords(CellRecordsTemplate):
       self.repeating_panel_1.items = rows
       self.label_count.text = f"{len(rows)} cells"
     except Exception as e:
-      self.label_count.text = f"Error: {e}"
+      #self.label_count.text = f"Error: {e}"
       self.repeating_panel_1.items = []
 
   # -----------------------------
