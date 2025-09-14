@@ -2,7 +2,6 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import RoutesTemplate
-from ..RouteRow import RouteRow
 
 class Routes(RoutesTemplate):
   def __init__(self, filter_name: str = "", **kwargs):

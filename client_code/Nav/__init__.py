@@ -24,7 +24,7 @@ class Nav(NavTemplate):
       {"title": "Vendors", "form_class": VendorRecords},
       {"title": "Purchase Orders", "form_class": PurchaseOrderRecords},
       {"title": "Cell Records", "form_class": CellRecords},
-      {"title": "Routes", "form_class": Route},
+      {"title": "Routes", "form_class": Routes},
       {"title": "Inventory", "form_class": InventoryRecords},
       {"title": "Inventory Status Journal", "form_class": InventoryStatusJournal},
       {"title": "Inventory Bins Journal", "form_class": InventoryBinsJournal},

@@ -106,7 +106,7 @@ class RouteDetails(RouteDetailsTemplate):
       alert(f"Resequence failed: {ex}")
 
   def button_back_click(self, **e):
-    open_form("Route")
+    open_form("Nav")
 
 
 
