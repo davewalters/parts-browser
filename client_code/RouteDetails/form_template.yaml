@@ -1,5 +1,75 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - components:
+    - layout_properties: {col_xs: 1, row: RSYTZP, width_xs: 1}
+      name: label_route_id_title
+      properties: {font_size: 12, text: 'Route ID:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: RSYTZP, width_xs: 2}
+      name: label_route_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 4, row: RSYTZP, width_xs: 2}
+      name: label_route_name_title
+      properties: {font_size: 12, text: 'Route Name:'}
+      type: Label
+    - layout_properties: {col_xs: 6, row: RSYTZP, width_xs: 5}
+      name: text_route_name
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 4, row: GZTGZO, width_xs: 2}
+      name: label_product_family_title
+      properties: {font_size: 12, text: 'Product Family:'}
+      type: Label
+    - layout_properties: {col_xs: 6, row: GZTGZO, width_xs: 4}
+      name: text_product_family
+      properties: {font_size: 12}
+      type: TextBox
+    layout_properties: {grid_position: 'OLQBZK,VZFIWA'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 3, row: OHTMJQ, width_xs: 1}
+      name: button_back
+      properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
+    - layout_properties: {col_xs: 6, row: OHTMJQ, width_xs: 5}
+      name: button_resequence
+      properties: {icon: 'fa:refresh', text: Refresh Sequence Numbers}
+      type: Button
+    layout_properties: {grid_position: 'XELRHJ,JYSFGK'}
+    name: grid_panel_1
+    properties: {}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: sequence}
+        name: label_sequence
+        properties: {align: center, text: Sequence ID}
+        type: Label
+      - layout_properties: {column: cell}
+        name: label_cell_name_hdr
+        properties: {align: center, text: Cell Name}
+        type: Label
+      - layout_properties: {column: delete}
+        name: label_delete
+        properties: {align: center, text: Delete Row}
+        type: Label
+      layout_properties: {col_xs: 2, row: UHMSCV, width_xs: 9}
+      name: data_row_panel_hdr
+      properties: {align: center, background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 2, row: UTPHUH, width_xs: 9}
+      name: repeating_panel_cells
+      properties: {item_template: RouteDetails.RouteCellRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'FQCYVZ,PDTXXZ'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel
@@ -7,6 +77,10 @@ components:
   name: navbar_links
   properties: {}
   type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Route Details}
+  type: Label
 container:
   properties: {html: '@theme:standard-page.html'}
   type: HtmlTemplate

@@ -51,7 +51,7 @@ components:
       type: DataRowPanel
     - layout_properties: {col_xs: 1, row: QUGRXF, width_xs: 10}
       name: repeating_panel_routes
-      properties: {item_template: Route.RouteRow}
+      properties: {item_template: Routes.RouteRow}
       type: RepeatingPanel
     layout_properties: {grid_position: 'YMQITA,CQRGOD'}
     name: grid_panel_1

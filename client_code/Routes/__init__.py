@@ -1,13 +1,15 @@
 # client_code/Route/__init__.py
 from anvil import *
 import anvil.server
-from ._anvil_designer import RouteTemplate
+from ._anvil_designer import RoutesTemplate
 from ..RouteRow import RouteRow
 
-class Route(RouteTemplate):
+class Routes(RoutesTemplate):
   def __init__(self, filter_name: str = "", **kwargs):
     self.init_components(**kwargs)
     self.button_new_route.role = "new-button"
+    self.button_back.role = "mydefault-button"
+    self.repeating_panel_routes.role = "scrolling-panel"
     self.prev_filter_name = filter_name or ""
     self.text_filter_name.text = self.prev_filter_name
     self.repeating_panel_routes.item_template = RouteRow
@@ -31,5 +33,8 @@ class Route(RouteTemplate):
   def button_new_route_click(self, **event_args):
     from ..RouteDetails import RouteDetails
     open_form("RouteDetails", route_id=None, prev_filter_name=self.text_filter_name.text or "")
+
+  def button_back_click(self, **e):
+    open_form("Nav")
 
 

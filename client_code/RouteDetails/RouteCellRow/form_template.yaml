@@ -1,0 +1,20 @@
+components:
+- components:
+  - layout_properties: {column: sequence}
+    name: text_seq
+    properties: {align: center, font_size: 12}
+    type: TextBox
+  - layout_properties: {column: cell}
+    name: drop_down_cell
+    properties: {align: center, font_size: 12}
+    type: DropDown
+  - layout_properties: {column: delete}
+    name: button_1
+    properties: {icon: 'fa:trash', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'ROXCNN,AGLPMY'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true
