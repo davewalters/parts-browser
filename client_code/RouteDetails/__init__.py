@@ -30,7 +30,10 @@ class RouteDetails(RouteDetailsTemplate):
       if anvil.server.call("routes_get", self.route_id):
         return
     # Create immediately with empty attributes (server should allow)
-    doc = anvil.server.call("routes_create", name="", product_family=None)
+    rid = anvil.server.call("routes_next_id")
+    doc = anvil.server.call("routes_create",
+                            {"_id": rid, "name": "", "product_family": None, "routing": []}
+                          )
     self.route_id = doc["_id"]
 
   # ---------- loading & binding ----------
