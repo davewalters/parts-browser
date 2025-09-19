@@ -28,27 +28,19 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
     s = (s or "").strip()
     return s if s else None
 
-  def update_filter(self, **e):
-    status = self.drop_down_status.selected_value or ""
-    date_from = self._parse_date(self.text_date_from.text)
-    date_to = self._parse_date(self.text_date_to.text)
-    sales_order_id = (self.text_sales_order_id.text or "").strip()
-
+  def update_filter(self, **event_args):
     try:
-      rows = anvil.server.call(
-        "wo_list",
-        status=status,
-        date_from=date_from,
-        date_to=date_to,
-        sales_order_id=sales_order_id or ""
-      ) or []
-      prefix = (self.text_wo_prefix.text or "").strip()
-      if prefix:
-        rows = [r for r in rows if str(r.get("_id","")).startswith(prefix)]
-      self.repeating_panel_work_orders.items = rows
-      self.label_count.text = f"{len(rows)} work orders"
-    except Exception as ex:
-      self.label_count.text = f"Error: {ex}"
+      results = anvil.server.call(
+        "wo_list_advanced",
+        status=self.drop_down_status.selected_value or "",
+        date_from=self.date_picker_from.date,
+        date_to=self.date_picker_to.date,
+        sales_order_id=self.text_sales_order_id.text or "",
+      )
+      self.repeating_panel_work_orders.items = results
+      self.label_count.text = f"{len(results)} work orders returned"
+    except Exception as e:
+      self.label_count.text = f"Error: {e}"
       self.repeating_panel_work_orders.items = []
 
   def _open_wo(self, wo_id, **e):

@@ -8,14 +8,15 @@ class WorkOrderRow(WorkOrderRowTemplate):
     self.button_open.role = "mydefault-button"
     self.button_delete.role = "delete-button"
 
-  def form_show(self, **e):
-    r = dict(self.item or {})
-    self.label_work_order_id.text = r.get("_id","")
-    self.label_status.text = r.get("status","")
-    self.label_sales_order_id.text = r.get("sales_order_id","")
-    self.label_part_id.text = r.get("part_id","")
-    self.label_qty.text = str(r.get("qty",""))
-    self.label_due_date.text = str(r.get("due_date",""))
+  def form_show(self, **event_args):
+    r = self.item or {}
+    self.label_work_order_id.text = r.get("_id", "")
+    self.label_status.text = r.get("status", "")
+    self.label_sales_order_id.text = r.get("sales_order_id", "")
+    self.label_part_id.text = r.get("part_id", "")
+    self.label_qty.text = str(r.get("qty", ""))
+    self.label_due_date.text = str(r.get("due_date", ""))
+
 
   def button_open_click(self, **e):
     self.parent.raise_event("x-open-wo", wo_id=self.label_wo_id.text)
