@@ -1,0 +1,40 @@
+components:
+- components:
+  - layout_properties: {column: work_order_id}
+    name: label_work_order_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_status
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: sales_order_id}
+    name: label_sales_order_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: part_id}
+    name: label_part_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: qty}
+    name: label_qty
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: due_date}
+    name: label_due_date
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: delete}
+    name: button_delete
+    properties: {icon: 'fa:trash', text: ''}
+    type: Button
+  - layout_properties: {column: details}
+    name: button_open
+    properties: {icon: 'fa:arrow-right', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'CRVUOE,TYVBZW'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
+container: {type: ColumnPanel}
+is_package: true
