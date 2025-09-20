@@ -1,7 +1,8 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 3, row: HOKOPF, width_xs: 1}
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 3, row: HOKOPF, width_xs: 1}
       name: button_back
       properties: {icon: 'fa:home', text: ''}
       type: Button
@@ -110,15 +111,41 @@ components:
       name: label_2
       properties: {background: 'theme:Primary 500', font_size: 12, foreground: 'theme:White', text: Materials}
       type: Label
-    - layout_properties: {col_xs: 0, row: OLVGZU, width_xs: 2}
+    - components:
+      - layout_properties: {col_xs: 1, row: LPPCXZ, width_xs: 1}
+        name: label_part_id_t2
+        properties: {font_size: 12, text: Part No.}
+        type: Label
+      - layout_properties: {col_xs: 2, row: LPPCXZ, width_xs: 3}
+        name: text_add_part_id
+        properties: {font_size: 12}
+        type: TextBox
+      - layout_properties: {col_xs: 5, row: LPPCXZ, width_xs: 1}
+        name: label_add_qty_title
+        properties: {font_size: 12, text: 'Qty:'}
+        type: Label
+      - layout_properties: {col_xs: 6, row: LPPCXZ, width_xs: 1}
+        name: text_add_qty
+        properties: {font_size: 12}
+        type: TextBox
+      - event_bindings: {click: button_add_component_click}
+        layout_properties: {col_xs: 7, row: LPPCXZ, width_xs: 4}
+        name: button_add_component
+        properties: {text: Add Component to WO BOM}
+        type: Button
+      layout_properties: {col_xs: 0, row: YLFPVN, width_xs: 12}
+      name: grid_panel_add_components
+      properties: {background: 'theme:Gray 300'}
+      type: GridPanel
+    - layout_properties: {col_xs: 0, row: OLVGZU, width_xs: 3}
       name: label_filter_by_step
-      properties: {font_size: 12, text: 'Filter by Op Step:'}
+      properties: {font_size: 12, text: 'Filter or Add Component at Op Step:'}
       type: Label
-    - layout_properties: {col_xs: 2, row: OLVGZU, width_xs: 2}
+    - layout_properties: {col_xs: 3, row: OLVGZU, width_xs: 2}
       name: drop_down_1
       properties: {font_size: 12}
       type: DropDown
-    - layout_properties: {col_xs: 4, row: OLVGZU, width_xs: 3}
+    - layout_properties: {col_xs: 6, row: OLVGZU, width_xs: 3}
       name: label_materials_count
       properties: {font_size: 12, icon: 'fa:check-circle'}
       type: Label
@@ -164,7 +191,7 @@ components:
       name: grid_panel_2
       properties: {}
       type: GridPanel
-    layout_properties: {grid_position: 'UJPRZA,VLJRLZ'}
+    layout_properties: {grid_position: 'SBHCCE,SLHGPZ'}
     name: grid_panel_materials
     properties: {}
     type: GridPanel

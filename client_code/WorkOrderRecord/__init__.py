@@ -3,6 +3,7 @@ import anvil.server
 from ._anvil_designer import WorkOrderRecordTemplate
 from ..WorkOrderRouteRow import WorkOrderRouteRow
 from ..WorkOrderMaterialRow import WorkOrderMaterialRow
+from datetime import date, datetime
 
 class WorkOrderRecord(WorkOrderRecordTemplate):
   def __init__(self, wo_id: str, is_new: bool = False, **kwargs):
@@ -18,9 +19,13 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.button_back.role = "mydefault-button"
 
     # Event wiring for update-on-change
-    for tb in (self.text_part_id, self.text_qty, self.date_due, self.text_sales_order_id):
-      tb.set_event_handler('pressed_enter', self._header_field_changed)
-      tb.set_event_handler('change', self._header_field_changed)
+    self.text_part_id.set_event_handler('pressed_enter', self._header_field_changed)
+    self.text_part_id.set_event_handler('change', self._header_field_changed)
+    self.text_qty.set_event_handler('pressed_enter', self._header_field_changed)
+    self.text_qty.set_event_handler('change', self._header_field_changed)
+    self.date_due.set_event_handler('change', self._header_field_changed)
+    self.text_sales_order_id.set_event_handler('pressed_enter', self._header_field_changed)
+    self.text_sales_order_id.set_event_handler('change', self._header_field_changed)
     self.drop_down_status.set_event_handler('change', self._status_changed)
 
     # Panels
@@ -29,7 +34,7 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.repeating_panel_materials.set_event_handler("x-row-changed", self._reload_materials)
 
     # Add component
-    self.button_add_component.role = "save-button"
+    self.button_add_component.role = "new-button"
     self.button_add_component.set_event_handler('click', self._add_component)
 
     #Routing step filter
@@ -43,13 +48,12 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
   def _load_initial(self):
     self.label_wo_id.text = self.wo_id
     if self.is_new:
-      # New mode: nothing in DB yet; let user fill header, then we create on-the-fly
       self.text_part_id.text = ""
       self.text_qty.text = "1"
-      self.date_due.selected_value = ""
+      self.date_due.date = None           # << correct way to clear
       self.text_sales_order_id.text = ""
       self.drop_down_status.selected_value = "planned"
-      # Hide tabs until created
+  
       self.repeating_panel_route.items = []
       self.repeating_panel_materials.items = []
       self.label_materials_count.text = ""
@@ -60,12 +64,11 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     wo = anvil.server.call("wo_get", self.wo_id) or {}
     self._created = bool(wo)
     self.is_new = not self._created
-
-    # Header
+  
     self.text_part_id.text = wo.get("part_id","")
     self.text_qty.text = str(wo.get("qty",""))
     self._wo_qty = int(wo.get("qty") or 1)
-    self.date_due.selected_value = str(wo.get("due_date",""))
+    self.date_due.date = self._to_date(wo.get("due_date"))   # << parse then set
     self.text_sales_order_id.text = wo.get("sales_order_id","") or ""
     self.drop_down_status.selected_value = wo.get("status","planned")
 
@@ -179,13 +182,12 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
   def _header_field_changed(self, **e):
     part_id = (self.text_part_id.text or "").strip()
     qty_text = (self.text_qty.text or "").strip()
-    due = (self.text_due_date.text or "").strip()
+    due_dt = self.date_due.date                 # << this is a date or None
     so = (self.text_sales_order_id.text or "").strip() or None
-
-    # In "new" mode: create once all required fields are valid
+  
+    # New mode: create once valid
     if not self._created:
-      # Validate basic
-      if not part_id or not due:
+      if not part_id or not due_dt:
         return
       try:
         qty = int(qty_text)
@@ -193,48 +195,45 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
           return
       except Exception:
         return
-      # Create with snapshots
       try:
         payload = {
           "_id": self.wo_id,
           "part_id": part_id,
           "qty": int(qty),
-          "due_date": due,
+          "due_date": due_dt,          # << pass date object
           "sales_order_id": so,
         }
         anvil.server.call("wo_create_with_snapshots", payload)
         self._created = True
-        # Reload into existing mode
         self._load_existing()
         Notification("Work order created.", style="success").show()
       except Exception as ex:
         alert(f"Create failed: {ex}")
       return
-
-    # Existing: apply shallow updates immediately
+  
+    # Existing: shallow updates
     updates = {}
-    # (Allow qty & due date & SO to change; typically part_id stays fixed after creation)
     try:
       q = int(qty_text)
       if q > 0 and q != self._wo_qty:
         updates["qty"] = q
     except Exception:
       pass
-    if due:
-      updates["due_date"] = due
+    if due_dt:
+      updates["due_date"] = due_dt     # << date object
     updates["sales_order_id"] = so
-
+  
     if updates:
       try:
         anvil.server.call("wo_update", self.wo_id, updates)
         if "qty" in updates:
           self._wo_qty = updates["qty"]
         Notification("Updated.", style="success").show()
-        # Reload materials to refresh PBOM*qty labels if qty changed
         if "qty" in updates:
           self._reload_materials()
       except Exception as ex:
         alert(f"Update failed: {ex}")
+
 
   def _status_changed(self, **e):
     if not self._created:
@@ -282,7 +281,7 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
       "serial_required": False,
       "reservations": [],
       "serials": [],
-      "anchor_part_id": self.text_part_id.text or self.label_part_id_value.text,
+      "anchor_part_id": (self.text_part_id.text or "").strip(),
       "is_manual": True,
     }
     try:
@@ -300,3 +299,23 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
       open_form("WorkOrderRecords")
     except Exception:
       open_form("Nav")
+
+  def button_add_component_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    pass
+
+  def _to_date(self, v):
+    """Accepts None | date | str('YYYY-MM-DD') and returns date|None."""
+    if v is None or v == "":
+      return None
+    if isinstance(v, date):
+      return v
+    s = str(v).strip()
+    try:
+      return date.fromisoformat(s)
+    except Exception:
+      try:
+        # last-ditch: parse 'YYYY-MM-DD...' (if there's a time portion)
+        return datetime.fromisoformat(s).date()
+      except Exception:
+        return None
