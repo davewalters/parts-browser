@@ -112,7 +112,7 @@ components:
       properties: {background: 'theme:Primary 500', font_size: 12, foreground: 'theme:White', text: Materials}
       type: Label
     - components:
-      - layout_properties: {col_xs: 1, row: LPPCXZ, width_xs: 1}
+      - layout_properties: {col_xs: 0, row: LPPCXZ, width_xs: 2}
         name: label_part_id_t2
         properties: {font_size: 12, text: Part No.}
         type: Label
@@ -133,19 +133,19 @@ components:
         name: button_add_component
         properties: {text: Add Component to WO BOM}
         type: Button
-      layout_properties: {col_xs: 0, row: YLFPVN, width_xs: 12}
+      layout_properties: {col_xs: 1, row: YLFPVN, width_xs: 10}
       name: grid_panel_add_components
       properties: {background: 'theme:Gray 300'}
       type: GridPanel
-    - layout_properties: {col_xs: 0, row: OLVGZU, width_xs: 3}
+    - layout_properties: {col_xs: 2, row: JEKIHA, width_xs: 3}
       name: label_filter_by_step
       properties: {font_size: 12, text: 'Filter or Add Component at Op Step:'}
       type: Label
-    - layout_properties: {col_xs: 3, row: OLVGZU, width_xs: 2}
+    - layout_properties: {col_xs: 5, row: JEKIHA, width_xs: 2}
       name: drop_down_1
       properties: {font_size: 12}
       type: DropDown
-    - layout_properties: {col_xs: 6, row: OLVGZU, width_xs: 3}
+    - layout_properties: {col_xs: 8, row: JEKIHA, width_xs: 3}
       name: label_materials_count
       properties: {font_size: 12, icon: 'fa:check-circle'}
       type: Label

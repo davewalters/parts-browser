@@ -2,7 +2,7 @@
 from anvil import *
 import anvil.server
 from ._anvil_designer import WorkOrderRecordsTemplate
-from ..WorkOrderRow import WorkOrderRow
+from datetime import date, datetime
 
 class WorkOrderRecords(WorkOrderRecordsTemplate):
   def __init__(self, **kwargs):
@@ -12,8 +12,8 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
 
     self.text_wo_prefix.set_event_handler('pressed_enter', self.update_filter)
     self.text_sales_order_id.set_event_handler('pressed_enter', self.update_filter)
-    self.text_date_from.set_event_handler('pressed_enter', self.update_filter)
-    self.text_date_to.set_event_handler('pressed_enter', self.update_filter)
+    self.date_from.set_event_handler('change', self.update_filter)
+    self.date_to.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
 
     self.repeating_panel_work_orders.item_template = WorkOrderRow
@@ -33,8 +33,8 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
       results = anvil.server.call(
         "wo_list_advanced",
         status=self.drop_down_status.selected_value or "",
-        date_from=self.date_picker_from.date,
-        date_to=self.date_picker_to.date,
+        date_from=self.date_from.date,
+        date_to=self.date_to.date,
         sales_order_id=self.text_sales_order_id.text or "",
       )
       self.repeating_panel_work_orders.items = results

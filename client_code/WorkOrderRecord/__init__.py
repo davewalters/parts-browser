@@ -13,6 +13,8 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self._created = False
     self._tpl_qty_per = {}   # PBOM qty_per by part_id
     self._wo_qty = 1
+    self._route_steps = []          # list of {"seq": int, "cell_id": str}
+    self._seq_to_cell_id = {}       # {seq: cell_id}
 
     # Header widgets setup
     self.drop_down_status.items = ["planned", "released", "complete", "closed"]
@@ -88,6 +90,11 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
         "cycle_min_per_unit": op.get("cycle_min_per_unit", 0.0),
       })
     self.repeating_panel_route.items = r_items
+    self._route_steps = sorted(
+      [{"seq": int(x.get("seq", 0)), "cell_id": x.get("cell_id", "")} for x in r_items],
+      key=lambda s: s["seq"]
+    )
+    self._seq_to_cell_id = {s["seq"]: s["cell_id"] for s in self._route_steps}
     
     # Build the step filter based on the route snapshot we just loaded
     try:
@@ -300,9 +307,73 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     except Exception:
       open_form("Nav")
 
-  def button_add_component_click(self, **event_args):
-    """This method is called when the button is clicked"""
-    pass
+  def button_add_component_click(self, **e):
+    if not self._created:
+      Notification("Create the work order first (enter part, qty, due).").show()
+      return
+  
+    pid = (self.text_add_part_id.text or "").strip()
+    qty_s = (self.text_add_qty.text or "").strip()
+    if not pid or not qty_s:
+      Notification("Part and qty required.").show(); return
+    try:
+      qty = float(qty_s)
+      if qty <= 0:
+        Notification("Qty must be > 0.").show(); return
+    except Exception:
+      Notification("Qty must be numeric.").show(); return
+  
+    # Resolve part desc/unit (best-effort)
+    try:
+      pdoc = anvil.server.call("parts_get", pid) or {}
+    except Exception:
+      pdoc = {}
+    desc = pdoc.get("description","")
+    unit = pdoc.get("unit","")
+  
+    # Decide where to issue:
+    # If a specific step is selected in the filter, use that.
+    # Otherwise default to the final step (max seq) if available.
+    sel = self.drop_down_step_filter.selected_value or "All"
+    if sel != "All":
+      try:
+        issue_seq = int(sel)
+      except Exception:
+        issue_seq = None
+    else:
+      issue_seq = (self._route_steps[-1]["seq"] if self._route_steps else None)
+  
+    issue_cell_id = self._seq_to_cell_id.get(issue_seq) if issue_seq is not None else None
+  
+    doc = {
+      "wo_id": self.wo_id,
+      "part_id": pid,
+      "desc": desc,
+      "unit": unit,
+      "qty_required": qty,
+      "operation_seq": 0,
+      "lot_traced": False,
+      "serial_required": False,
+      "reservations": [],
+      "serials": [],
+      "anchor_part_id": (self.text_part_id.text or "").strip(),
+      "is_manual": True,
+      # NEW: where this is consumed
+      "issue_seq": issue_seq,
+      "issue_cell_id": issue_cell_id,
+      # optional: backflush policy; leave False for now
+      "backflush": False,
+    }
+  
+    try:
+      anvil.server.call("wobom_insert_line", doc)
+      self.text_add_part_id.text = ""
+      self.text_add_qty.text = ""
+      self._reload_materials()
+      Notification("Component added.", style="success").show()
+    except Exception as ex:
+      alert(f"Add failed: {ex}")
+
 
   def _to_date(self, v):
     """Accepts None | date | str('YYYY-MM-DD') and returns date|None."""
