@@ -45,27 +45,52 @@ components:
       name: date_due
       properties: {font_size: 12}
       type: DatePicker
-    - layout_properties: {col_xs: 0, row: AXPTUJ, width_xs: 3}
+    - layout_properties: {col_xs: 0, row: AXPTUJ, width_xs: 2}
       name: label_sales_order_title
       properties: {font_size: 12, text: 'Sales Order ID:'}
       type: Label
+    - layout_properties: {col_xs: 2, row: AXPTUJ, width_xs: 2}
+      name: text_sales_order_id
+      properties: {font_size: 12}
+      type: TextBox
     layout_properties: {grid_position: 'QHXKOY,MOXTDF'}
     name: grid_panel_hdr
-    properties: {}
+    properties: {background: 'theme:Gray 200'}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 0, row: MRXCDT, width_xs: 2}
+    - layout_properties: {col_xs: 0, row: MRXCDT, width_xs: 1}
       name: label_1
       properties: {font_size: 12, text: Routing}
       type: Label
     - components:
-      - layout_properties: {col_xs: 0, row: IMIDKO, width_xs: 12}
+      - components:
+        - layout_properties: {column: sequence}
+          name: label_seq_hdr
+          properties: {text: Seq.}
+          type: Label
+        - layout_properties: {column: cell_name}
+          name: label_cell_name
+          properties: {text: Cell Name}
+          type: Label
+        - layout_properties: {column: op_name}
+          name: label_op_name_hdr
+          properties: {text: Op. Name}
+          type: Label
+        - layout_properties: {column: cycle_time}
+          name: label_cycle_time_hdr
+          properties:
+            align: center
+            text: |-
+              Cycle Time
+              [min/unit]
+          type: Label
+        layout_properties: {col_xs: 0, row: IMIDKO, width_xs: 12}
         name: data_row_panel_1
         properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
         type: DataRowPanel
       - layout_properties: {col_xs: 0, row: YJZASF, width_xs: 12}
-        name: repeating_panel_1
-        properties: {item_template: WorkOrderRecord.ItemTemplate5}
+        name: repeating_panel_route
+        properties: {item_template: WorkOrderRecord.WorkOrderRouteRow}
         type: RepeatingPanel
       layout_properties: {col_xs: 0, row: UILUJU, width_xs: 12}
       name: grid_panel_1
@@ -80,22 +105,26 @@ components:
       name: label_2
       properties: {font_size: 12, text: Materials}
       type: Label
-    - layout_properties: {col_xs: 0, row: OLVGZU, width_xs: 2}
+    - layout_properties: {col_xs: 0, row: OLVGZU, width_xs: 3}
       name: label_filter_by_step
-      properties: {font_size: 12}
+      properties: {font_size: 12, text: 'Filter by Op Step:'}
       type: Label
-    - layout_properties: {col_xs: 2, row: OLVGZU, width_xs: 2}
+    - layout_properties: {col_xs: 3, row: OLVGZU, width_xs: 2}
       name: drop_down_1
       properties: {font_size: 12}
       type: DropDown
+    - layout_properties: {col_xs: 7, row: OLVGZU, width_xs: 3}
+      name: label_materials_count
+      properties: {font_size: 12, icon: 'fa:check-circle'}
+      type: Label
     - components:
       - layout_properties: {col_xs: 0, row: ZQHWGL, width_xs: 12}
         name: data_row_panel_2
         properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
         type: DataRowPanel
       - layout_properties: {col_xs: 0, row: JBUUKG, width_xs: 12}
-        name: repeating_panel_2
-        properties: {item_template: WorkOrderRecord.ItemTemplate6}
+        name: repeating_panel_materials
+        properties: {item_template: WorkOrderRecord.WorkOrderMaterialRow}
         type: RepeatingPanel
       layout_properties: {col_xs: 0, row: MOSZVJ, width_xs: 12}
       name: grid_panel_2

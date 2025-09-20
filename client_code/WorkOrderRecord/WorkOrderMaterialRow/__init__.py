@@ -1,9 +1,9 @@
-from ._anvil_designer import ItemTemplate5Template
+from ._anvil_designer import WorkOrderMaterialRowTemplate
 from anvil import *
 import anvil.server
 
 
-class ItemTemplate5(ItemTemplate5Template):
+class WorkOrderMaterialRow(WorkOrderMaterialRowTemplate):
   def __init__(self, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)

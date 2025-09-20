@@ -18,7 +18,7 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.button_back.role = "mydefault-button"
 
     # Event wiring for update-on-change
-    for tb in (self.text_part_id, self.text_qty, self.text_due_date, self.text_sales_order_id):
+    for tb in (self.text_part_id, self.text_qty, self.date_due, self.text_sales_order_id):
       tb.set_event_handler('pressed_enter', self._header_field_changed)
       tb.set_event_handler('change', self._header_field_changed)
     self.drop_down_status.set_event_handler('change', self._status_changed)
@@ -44,10 +44,9 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.label_wo_id.text = self.wo_id
     if self.is_new:
       # New mode: nothing in DB yet; let user fill header, then we create on-the-fly
-      self.label_part_id_value.text = ""
       self.text_part_id.text = ""
       self.text_qty.text = "1"
-      self.text_due_date.text = ""
+      self.date_due.selected_value = ""
       self.text_sales_order_id.text = ""
       self.drop_down_status.selected_value = "planned"
       # Hide tabs until created
@@ -63,11 +62,10 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.is_new = not self._created
 
     # Header
-    self.label_part_id_value.text = wo.get("part_id","")
-    self.text_part_id.text = wo.get("part_id","")  # allow change post-creation only if you want; typically you don’t
+    self.text_part_id.text = wo.get("part_id","")
     self.text_qty.text = str(wo.get("qty",""))
     self._wo_qty = int(wo.get("qty") or 1)
-    self.text_due_date.text = str(wo.get("due_date",""))
+    self.date_due.selected_value = str(wo.get("due_date",""))
     self.text_sales_order_id.text = wo.get("sales_order_id","") or ""
     self.drop_down_status.selected_value = wo.get("status","planned")
 
@@ -147,15 +145,15 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
   
       view.append({
         "_doc": dict(m),
+        "issue_seq": issue_seq,
+        "issue_cell_name": issue_cell_name,
         "part_id": pid,
         "desc": m.get("desc",""),
         "unit": m.get("unit",""),
         "qty_required": m.get("qty_required", 0.0),
         "pbom_qty": pbom_qty,
         "is_manual": bool(m.get("is_manual", False)),
-        # NEW: issue tagging for display & filtering
-        "issue_seq": issue_seq,
-        "issue_cell_name": issue_cell_name,
+        
       })
   
     # Apply step filter
