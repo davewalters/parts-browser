@@ -32,6 +32,11 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.button_add_component.role = "save-button"
     self.button_add_component.set_event_handler('click', self._add_component)
 
+    #Routing step filter
+    self.drop_down_step_filter.items = ["All"]
+    self.drop_down_step_filter.selected_value = "All"
+    self.drop_down_step_filter.set_event_handler("change", self._on_step_filter_change)
+
     self._load_initial()
 
   # ---------- initial load ----------
@@ -82,6 +87,18 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
         "cycle_min_per_unit": op.get("cycle_min_per_unit", 0.0),
       })
     self.repeating_panel_route.items = r_items
+    
+    # Build the step filter based on the route snapshot we just loaded
+    try:
+      step_seqs = [str(r.get("seq")) for r in sorted(r_items, key=lambda x: x.get("seq", 10))]
+      self.drop_down_step_filter.items = ["All"] + step_seqs
+      # Preserve selection if still valid; else reset to "All"
+      if self.drop_down_step_filter.selected_value not in self.drop_down_step_filter.items:
+        self.drop_down_step_filter.selected_value = "All"
+    except Exception:
+      self.drop_down_step_filter.items = ["All"]
+      self.drop_down_step_filter.selected_value = "All"
+    
 
     # PBOM baseline for labels
     self._tpl_qty_per = {}
@@ -107,13 +124,27 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
       self.repeating_panel_materials.items = []
       self.label_materials_count.text = ""
       return
+  
+    # For fast cell name lookup
+    try:
+      id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
+    except Exception:
+      id_to_name = {}
+  
     mats = anvil.server.call("wobom_get_lines", self.wo_id) or []
+  
+    # Build view rows with PBOM baseline and issue step/cell tag
     view = []
     for m in mats:
       pid = m.get("part_id")
       pbom_qty = None
       if pid in self._tpl_qty_per:
         pbom_qty = self._tpl_qty_per[pid] * self._wo_qty
+  
+      issue_seq = m.get("issue_seq", None)
+      issue_cell_id = m.get("issue_cell_id", None)
+      issue_cell_name = id_to_name.get(issue_cell_id, issue_cell_id or "")
+  
       view.append({
         "_doc": dict(m),
         "part_id": pid,
@@ -122,10 +153,30 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
         "qty_required": m.get("qty_required", 0.0),
         "pbom_qty": pbom_qty,
         "is_manual": bool(m.get("is_manual", False)),
+        # NEW: issue tagging for display & filtering
+        "issue_seq": issue_seq,
+        "issue_cell_name": issue_cell_name,
       })
+  
+    # Apply step filter
+    sel = self.drop_down_step_filter.selected_value or "All"
+    if sel != "All":
+      try:
+        sel_int = int(sel)
+        view = [row for row in view if (row.get("issue_seq") == sel_int)]
+      except Exception:
+        pass
+  
+    # Sort (optional): by issue_seq, then part_id
+    view.sort(key=lambda r: (r.get("issue_seq") or 10**9, str(r.get("part_id") or "")))
+  
     self.repeating_panel_materials.items = view
     self.label_materials_count.text = f"{len(view)} material lines"
 
+  def _on_step_filter_change(self, **e):
+  # Just re-filter current cache by the selected step
+    self._reload_materials()
+  
   # ---------- header change handling ----------
   def _header_field_changed(self, **e):
     part_id = (self.text_part_id.text or "").strip()
