@@ -1,3 +1,36 @@
-components: []
+components:
+- components:
+  - layout_properties: {column: step_info}
+    name: label_step_info
+    properties: {}
+    type: Label
+  - layout_properties: {column: part_id}
+    name: label_part_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: desc}
+    name: label_desc
+    properties: {}
+    type: Label
+  - layout_properties: {column: unit}
+    name: label_unit
+    properties: {}
+    type: Label
+  - layout_properties: {column: pbom_qty}
+    name: label_pbom_qty
+    properties: {}
+    type: Label
+  - layout_properties: {column: qty}
+    name: text_qty_required
+    properties: {font_size: 12}
+    type: TextBox
+  - layout_properties: {column: is_manual}
+    name: label_is_manual
+    properties: {}
+    type: Label
+  layout_properties: {grid_position: 'RSVUPV,DGYGBX'}
+  name: data_row_panel_1
+  properties: {background: 'theme:Gray 200', font_size: 12}
+  type: DataRowPanel
 container: {type: ColumnPanel}
 is_package: true
