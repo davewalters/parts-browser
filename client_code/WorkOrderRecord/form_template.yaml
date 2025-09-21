@@ -150,6 +150,19 @@ components:
       properties: {font_size: 12, icon: 'fa:check-circle'}
       type: Label
     - components:
+      - layout_properties: {col_xs: 0, row: FRYJCG, width_xs: 6}
+        name: button_generate_picklist
+        properties: {icon: 'fa:list', text: Generate Picklist}
+        type: Button
+      - layout_properties: {col_xs: 6, row: FRYJCG, width_xs: 5}
+        name: button_commit
+        properties: {icon: 'fa:cart-plus', text: Commit Stock}
+        type: Button
+      layout_properties: {col_xs: 3, row: JYOJFV, width_xs: 6}
+      name: grid_panel_3
+      properties: {background: 'theme:Gray 200'}
+      type: GridPanel
+    - components:
       - components:
         - layout_properties: {column: step_info}
           name: label_step_info_hdr

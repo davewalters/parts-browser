@@ -39,6 +39,12 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self.button_add_component.role = "new-button"
     self.button_add_component.set_event_handler('click', self._add_component)
 
+    #Picklist
+    self.button_generate_picklist.role = "new-button"
+
+    #Commit stock
+    self.button_commit.role = "delete-button"
+
     #Routing step filter
     self.drop_down_step_filter.items = ["All"]
     self.drop_down_step_filter.selected_value = "All"
@@ -374,7 +380,40 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     except Exception as ex:
       alert(f"Add failed: {ex}")
 
+  def button_generate_picklist_click(self, **event_args):
+    """
+    Single WO picklist grouped by destination bin.
+    Opens PicklistRecord so the operator can mark picked/OOS on mobile or desktop.
+    """
+    try:
+      pl = anvil.server.call("flow_generate_picklist_by_destination", self.wo_id) or {}
+      pl_id = pl.get("_id")
+      if not pl_id:
+        alert("No picklist was generated (nothing to pick?)."); return
+      Notification("Picklist generated.", style="success").show()
+      # Navigate to the picklist UI
+      try:
+        from ..PicklistRecord import PicklistRecord
+        open_form("PicklistRecord", picklist_id=pl_id)
+      except Exception:
+        # Fallback if form import path differs
+        open_form("Nav")
+    except Exception as ex:
+      alert(f"Picklist generation failed: {ex}")
+  
+  def button_commit_click(self, **event_args):
+    """
+    Batch commit: consume all reservations on this WO (journal issues).
+    """
+    try:
+      summary = anvil.server.call("wo_commit_all_picks", self.wo_id) or {}
+      msg = f"Committed: {int(summary.get('consumed',0))} lines; Skipped: {int(summary.get('skipped',0))}"
+      Notification(msg, style="success").show()
+      self._reload_materials()
+    except Exception as ex:
+      alert(f"Commit failed: {ex}")
 
+  
   def _to_date(self, v):
     """Accepts None | date | str('YYYY-MM-DD') and returns date|None."""
     if v is None or v == "":
