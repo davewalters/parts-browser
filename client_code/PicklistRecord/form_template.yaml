@@ -1,11 +1,109 @@
 components:
 - components:
-  - layout_properties: {grid_position: 'YBENNC,YOLEPW'}
+  - components:
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 1, row: CETWUX, width_xs: 2}
+      name: button_back
+      properties: {icon: 'fa:arrow-left', text: ''}
+      type: Button
+    - event_bindings: {click: button_flag_shortages_click}
+      layout_properties: {col_xs: 6, row: CETWUX, width_xs: 5}
+      name: button_flag_shortages
+      properties: {icon: 'fa:fire', text: Flag Stock Shortages}
+      type: Button
+    layout_properties: {grid_position: 'YBENNC,YOLEPW'}
     name: grid_panel_buttons
     properties: {}
     type: GridPanel
-  - layout_properties: {grid_position: 'GJJWVH,XDQZCX'}
-    name: grid_panel_hdr
+  - components:
+    - layout_properties: {col_xs: 1, row: NHZSCJ, width_xs: 2}
+      name: label_picklist_id_title
+      properties: {font_size: 12, text: 'Picklist ID:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: NHZSCJ, width_xs: 2}
+      name: label_picklist_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 6, row: NHZSCJ, width_xs: 2}
+      name: label_wo_id_title
+      properties: {font_size: 12, text: 'Work Order ID:'}
+      type: Label
+    - layout_properties: {col_xs: 8, row: NHZSCJ, width_xs: 2}
+      name: label_wo_id
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 1, row: HHFKAZ, width_xs: 2}
+      name: label_created_ts_title
+      properties: {font_size: 12, text: 'Created:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: HHFKAZ, width_xs: 5}
+      name: label_created_ts
+      properties: {font_size: 12}
+      type: Label
+    - layout_properties: {col_xs: 1, row: TUVZWB, width_xs: 2}
+      name: label_bin_filter_title
+      properties: {font_size: 12, icon: 'fa:filter', text: 'Bin Filter:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: TUVZWB, width_xs: 4}
+      name: drop_down_bin_filter
+      properties: {font_size: 12}
+      type: DropDown
+    layout_properties: {grid_position: 'PGIUVD,ENOJKN'}
+    name: grid_panel_header
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: part_id}
+        name: label_part_id_hdr
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: desc}
+        name: label_desc_hdr
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: unit}
+        name: label_unit
+        properties: {align: center, text: Unit}
+        type: Label
+      - layout_properties: {column: qty_required}
+        name: label_qty_required_hdr
+        properties: {align: center, text: Qty Required}
+        type: Label
+      - layout_properties: {column: qty_reserved}
+        name: label_qty_reserved
+        properties: {text: Qty Reserved}
+        type: Label
+      - layout_properties: {column: qty_short}
+        name: label_qty_short_hdr
+        properties: {align: center, text: Qty Short}
+        type: Label
+      - layout_properties: {column: from_bin}
+        name: label_from_bin_hdr
+        properties: {align: center, text: From Bin}
+        type: Label
+      - layout_properties: {column: to_bin}
+        name: label_to_bin_hdr
+        properties: {align: center, text: To Bin}
+        type: Label
+      - layout_properties: {column: lot_id}
+        name: label_lot_id_hdr
+        properties: {align: center, text: Lot ID}
+        type: Label
+      - layout_properties: {column: pick_status}
+        name: label_pick_status_hdr
+        properties: {align: center, text: Pick Status}
+        type: Label
+      layout_properties: {col_xs: 0, row: DKJNVN, width_xs: 12}
+      name: data_row_panel_1
+      properties: {align: center, background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: RNHDIX, width_xs: 12}
+      name: repeating_panel_lines
+      properties: {item_template: PicklistRecord.PicklistRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'GJJWVH,XDQZCX'}
+    name: grid_panel_data
     properties: {}
     type: GridPanel
   layout_properties: {slot: default}
