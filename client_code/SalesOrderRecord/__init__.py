@@ -17,6 +17,8 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.button_confirm.role = "new-button"
     self.button_cancel.role = "delete-button"
     self.button_add_line.role = "new-button"
+    self.button_create_wos.role = "new-button"
+    self.button_view_wos.role = "mydefault-button"
     self.repeating_panel_lines.role = "scrolling-panel"
 
     self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
@@ -176,6 +178,31 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     })
     self.repeating_panel_lines.items = items
 
+  # ---------- work orders ----------
+  def button_create_wos_click(self, **event_args):
+    so_id = (self.label_so_id.text or "").strip()  # however you store it
+    if not so_id:
+      alert("No Sales Order open.")
+      return
+    try:
+      result = anvil.server.call("so_plan_to_wos", so_id) or {}
+      created = len(result.get("created", []))
+      updated = len(result.get("updated", []))
+      skipped = len(result.get("skipped", []))
+      Notification(f"WOs → created:{created}, updated:{updated}, skipped:{skipped}", style="success").show()
+    except Exception as ex:
+      alert(f"WO planning failed: {ex}")
+
+  def button_view_work_orders_click(self, **event_args):
+    so_id = (self.label_so_id.text or "").strip()
+    if not so_id:
+      alert("No Sales Order open."); return
+    try:
+      open_form("WorkOrderRecords", filter_sales_order_id=so_id)
+    except Exception:
+      open_form("WorkOrderRecords")
+
+  
   def _delete_so_line(self, row_index=None, line_id=None, **e):
     try:
       items = list(self.repeating_panel_lines.items or [])

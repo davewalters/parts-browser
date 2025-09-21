@@ -183,12 +183,21 @@ components:
       properties: {background: 'theme:Gray 200'}
       type: GridPanel
     - components:
+      - event_bindings: {click: button_create_wos_click}
+        layout_properties: {col_xs: 1, row: TMWFMT, width_xs: 3}
+        name: button_create_wos
+        properties: {icon: 'fa:plus-circle', text: Create/Sync Work Orders}
+        type: Button
+      - layout_properties: {col_xs: 4, row: TMWFMT, width_xs: 3}
+        name: button_view_wos
+        properties: {icon: 'fa:navicon', text: View Work Orders}
+        type: Button
       - event_bindings: {click: button_add_line_click}
-        layout_properties: {col_xs: 1, row: TMWFMT, width_xs: 10}
+        layout_properties: {col_xs: 8, row: TMWFMT, width_xs: 3}
         name: button_add_line
         properties: {icon: 'fa:plus-circle', text: Add Item}
         type: Button
-      layout_properties: {col_xs: 8, row: RCLOZV, width_xs: 3}
+      layout_properties: {col_xs: 1, row: RCLOZV, width_xs: 10}
       name: grid_panel_add_item
       properties: {}
       type: GridPanel

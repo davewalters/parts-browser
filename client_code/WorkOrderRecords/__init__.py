@@ -5,9 +5,9 @@ from ._anvil_designer import WorkOrderRecordsTemplate
 from datetime import date, datetime
 
 class WorkOrderRecords(WorkOrderRecordsTemplate):
-  def __init__(self, **kwargs):
+  def __init__(self, filter_sales_order_id: str = "", **kwargs):
     self.init_components(**kwargs)
-
+    self.text_sales_order_id.text = filter_sales_order_id or ""
     self.drop_down_status.items = ["", "planned", "released", "complete", "closed"]
 
     self.text_wo_prefix.set_event_handler('pressed_enter', self.update_filter)
@@ -16,7 +16,7 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
     self.date_to.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
 
-    self.repeating_panel_work_orders.item_template = WorkOrderRow
+    self.repeating_panel_work_orders.item_template = WorkOrderRecords.WorkOrderRow
     self.repeating_panel_work_orders.set_event_handler("x-open-wo", self._open_wo)
     self.repeating_panel_work_orders.set_event_handler("x-refresh", self.update_filter)
 
@@ -44,14 +44,11 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
       self.repeating_panel_work_orders.items = []
 
   def _open_wo(self, wo_id, **e):
-    from ..WorkOrderRecord import WorkOrderRecord
     open_form("WorkOrderRecord", wo_id=wo_id, is_new=False)
 
   def button_new_work_order_click(self, **e):
     try:
       wo_id = anvil.server.call("work_orders_next_id")  # reserve an id
-      from ..WorkOrderRecord import WorkOrderRecord
-      # Navigate to the detail form in "new" mode (no DB write yet)
       open_form("WorkOrderRecord", wo_id=wo_id, is_new=True)
     except Exception as ex:
       alert(f"Unable to start a new Work Order: {ex}")
