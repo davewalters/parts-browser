@@ -41,6 +41,8 @@ unique_ids:
     PartVendorRecords.ItemTemplate3: '1751714363687956694938869.1277'
     PicklistRecord: '1758419679460980548675038.996'
     PicklistRecord.PicklistRow: '1758430113042132241544589.59303'
+    PicklistRecords: '1758435938846203976547521.46066'
+    PicklistRecords.PicklistRecordsRow: '1758436933352646778902310.8782'
     PurchaseOrderRecord: '1753265205822924829375088.9769'
     PurchaseOrderRecord.PurchaseOrderLines: '1753265538079849612171424.9434'
     PurchaseOrderRecord.RowTemplate1: '1753572753021843307260204.588'

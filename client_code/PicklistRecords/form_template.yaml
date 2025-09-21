@@ -1,0 +1,113 @@
+components:
+- components:
+  - layout_properties: {grid_position: 'HLDTON,LJMJKP'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 1, row: TPBUTH, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 20, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: TPBUTH, width_xs: 2}
+      name: label_sales_order_id_title
+      properties: {font_size: 12, text: 'Sales Order ID:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: TPBUTH, width_xs: 2}
+      name: text_sales_order_id
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 6, row: TPBUTH, width_xs: 2}
+      name: label_work_order_id_title
+      properties: {font_size: 12, text: 'Work Order ID:'}
+      type: Label
+    - layout_properties: {col_xs: 8, row: TPBUTH, width_xs: 2}
+      name: text_work_order_id
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 2, row: RXJADC, width_xs: 2}
+      name: label_status_title
+      properties: {font_size: 12, text: 'Picklist Status:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: RXJADC, width_xs: 2}
+      name: drop_down_status
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 6, row: RXJADC, width_xs: 2}
+      name: label_bin_id_title
+      properties: {font_size: 12, text: 'Bin ID:'}
+      type: Label
+    - layout_properties: {col_xs: 8, row: RXJADC, width_xs: 2}
+      name: text_bin_id
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 5, row: FCLBVN, width_xs: 3}
+      name: button_newest
+      properties: {icon: 'fa:clock-o', text: Last 7 days}
+      type: Button
+    layout_properties: {grid_position: 'CSKUXV,VLOIGO'}
+    name: grid_panel_filter
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - components:
+      - layout_properties: {column: picklist_id}
+        name: label_picklist_id_hdr
+        properties: {text: Picklist ID}
+        type: Label
+      - layout_properties: {column: wo_id}
+        name: label_wo_id_hdr
+        properties: {text: Work Order ID}
+        type: Label
+      - layout_properties: {column: sales_order_id}
+        name: label_sales_order_id_hdr
+        properties: {text: Sales Order ID}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_status_hdr
+        properties: {align: center, text: Picklist Status}
+        type: Label
+      - layout_properties: {column: date_created}
+        name: label_created_ts_hdr
+        properties: {align: center, text: Date Created}
+        type: Label
+      - layout_properties: {column: mode}
+        name: label_mode_hdr
+        properties: {align: center, text: Mode}
+        type: Label
+      - layout_properties: {column: bins}
+        name: label_dest_bins_hdr
+        properties: {align: center, text: Destination Bins}
+        type: Label
+      - layout_properties: {column: open}
+        name: label_open_hdr
+        properties: {align: center, text: Open Picklist}
+        type: Label
+      layout_properties: {col_xs: 0, row: ADAIPE, width_xs: 12}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: MAABFW, width_xs: 12}
+      name: repeating_panel_picklists
+      properties: {item_template: PicklistRecords.PicklistRecordsRow}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'OXKMOF,UMURIX'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_title
+  properties: {text: Picklist Records}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
