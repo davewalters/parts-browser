@@ -1,3 +1,7 @@
+from anvil import *
+import anvil.server
+from ._anvil_designer import PartRouteOpsTemplate
+
 class PartRouteOps(PartRouteOpsTemplate):
   def __init__(self, part_id: str, route_id: str, part_name: str = "", route_name: str = "", **kwargs):
     self.init_components(**kwargs)
@@ -20,7 +24,7 @@ class PartRouteOps(PartRouteOpsTemplate):
     # NEW: routing preview in header (server-side helper)
     self.label_routing_preview.text = anvil.server.call("routes_preview_string", self.route_id, 12) or ""
 
-    self.repeating_panel_ops.item_template = PartRouteOpRow
+    self.repeating_panel_ops.item_template = PartRouteOps.PartRouteOpRow
     self.set_event_handler("x-row-changed", self._on_row_changed)
     self._load()
 
