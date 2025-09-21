@@ -17,11 +17,11 @@ components:
       name: text_sales_order_id
       properties: {font_size: 12}
       type: TextBox
-    - layout_properties: {col_xs: 6, row: TPBUTH, width_xs: 2}
+    - layout_properties: {col_xs: 7, row: TPBUTH, width_xs: 2}
       name: label_work_order_id_title
       properties: {font_size: 12, text: 'Work Order ID:'}
       type: Label
-    - layout_properties: {col_xs: 8, row: TPBUTH, width_xs: 2}
+    - layout_properties: {col_xs: 9, row: TPBUTH, width_xs: 2}
       name: text_work_order_id
       properties: {font_size: 12}
       type: TextBox
@@ -33,18 +33,38 @@ components:
       name: drop_down_status
       properties: {font_size: 12}
       type: DropDown
-    - layout_properties: {col_xs: 6, row: RXJADC, width_xs: 2}
+    - layout_properties: {col_xs: 7, row: RXJADC, width_xs: 2}
       name: label_bin_id_title
       properties: {font_size: 12, text: 'Bin ID:'}
       type: Label
-    - layout_properties: {col_xs: 8, row: RXJADC, width_xs: 2}
+    - layout_properties: {col_xs: 9, row: RXJADC, width_xs: 2}
       name: text_bin_id
       properties: {font_size: 12}
       type: TextBox
-    - layout_properties: {col_xs: 5, row: FCLBVN, width_xs: 3}
+    - layout_properties: {col_xs: 2, row: CXZUMZ, width_xs: 1}
+      name: label_date_from_title
+      properties: {font_size: 12, text: 'From:'}
+      type: Label
+    - layout_properties: {col_xs: 4, row: CXZUMZ, width_xs: 2}
+      name: date_from
+      properties: {font_size: 12}
+      type: DatePicker
+    - layout_properties: {col_xs: 7, row: CXZUMZ, width_xs: 1}
+      name: label_1
+      properties: {font_size: 12, text: 'To:'}
+      type: Label
+    - layout_properties: {col_xs: 9, row: CXZUMZ, width_xs: 2}
+      name: date_to
+      properties: {font_size: 12}
+      type: DatePicker
+    - layout_properties: {col_xs: 4, row: FCLBVN, width_xs: 3}
       name: button_newest
       properties: {icon: 'fa:clock-o', text: Last 7 days}
       type: Button
+    - layout_properties: {col_xs: 8, row: FCLBVN, width_xs: 3}
+      name: label_count
+      properties: {font_size: 12, icon: 'fa:check-circle'}
+      type: Label
     layout_properties: {grid_position: 'CSKUXV,VLOIGO'}
     name: grid_panel_filter
     properties: {background: 'theme:Gray 200'}
