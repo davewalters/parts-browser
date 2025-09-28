@@ -894,3 +894,31 @@ https://stackoverflow.com/questions/30533055/calculating-shadow-values-for-all-m
   border-bottom: 1px solid rgba(0,0,0,0.08);
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
+
+/* Base LED (a small circle) */
+.anvil-role-led {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08) inset, 0 0 2px rgba(0,0,0,.15);
+  vertical-align: middle;
+}
+
+/* Semantic colors */
+.anvil-role-led-ready   { background: #18a558; }   /* green */
+.anvil-role-led-partial { background: #ffb020; }   /* amber */
+.anvil-role-led-short   { background: #d93025; }   /* red */
+.anvil-role-led-na      { background: #9e9e9e; }   /* grey */
+
+/* Optional: task-status pills reuse (queued/in-progress/done) */
+.anvil-role-pill {
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.anvil-role-pill-queued      { background:#eef3ff; color:#1a73e8; }
+.anvil-role-pill-inprogress  { background:#fff7e6; color:#b8860b; }
+.anvil-role-pill-done        { background:#e6f4ea; color:#0a7d12; }
+
