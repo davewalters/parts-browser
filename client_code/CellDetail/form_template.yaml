@@ -33,6 +33,14 @@ components:
       name: label_cell_type
       properties: {font_size: 12}
       type: Label
+    - layout_properties: {col_xs: 1, row: XNGJJK, width_xs: 2}
+      name: label_cell_capacity_title
+      properties: {font_size: 12, text: 'Cell Capacity:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: XNGJJK, width_xs: 1}
+      name: label_cell_capacity
+      properties: {font_size: 12}
+      type: Label
     - layout_properties: {col_xs: 5, row: XNGJJK, width_xs: 2}
       name: label_title_run_time_cost
       properties: {font_size: 12, text: 'Runtime Cost:'}
@@ -104,6 +112,14 @@ components:
       - layout_properties: {column: status}
         name: label_status
         properties: {align: center, text: Status}
+        type: Label
+      - layout_properties: {column: materials_state}
+        name: label_materials_state_hdr
+        properties: {align: center, text: Materials State}
+        type: Label
+      - layout_properties: {column: materials_picklist}
+        name: label_button_pick_hdr
+        properties: {align: center, text: Materials Picklist}
         type: Label
       - layout_properties: {column: start}
         name: label_start

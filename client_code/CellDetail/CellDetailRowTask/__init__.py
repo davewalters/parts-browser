@@ -1,59 +1,76 @@
 from anvil import *
-
-def _norm_status(s: str) -> str:
-  s = (s or "").lower().strip()
-  if s in ("done", "complete", "completed", "finished"): return "done"
-  if s in ("in_progress", "running"): return "in_progress"
-  if s in ("queued", "waiting", "ready"): return "queued"
-  if s in ("pause", "paused"): return "paused"
-  return s or "queued"
+import anvil.server
 
 class CellDetailRowTask(CellDetailRowTaskTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
 
   def form_show(self, **event_args):
-    t = self.item or {}
-    self.label_wo_id.text = t.get("wo_id")
-    self.label_op_name.text = t.get("_op_name", f"OP{t.get('operation_seq')}")
-    self.label_qty.text = f"Qty {t.get('qty')}"
-    self.label_batch_runtime.text = f"Batch run-time: {t.get('batch_run_time_min') or '?'} min"
-    #self.label_batch_runtime.tooltip = "Estimated minutes for the whole batch at this cell"
+    d = self.item or {}
 
-    self.label_next_cell.text = f"Next cell: {t.get('_next_cell_id','-')}"
-    self.label_next_bin.text  = f"Next bin: {t.get('_next_bin_id','-')}"
+    # Priority (first column)
+    self.label_priority.text = str(d.get("priority", ""))
 
-    self.label_priority.text = f"Priority: {t.get('_bucket_label','')}"
-    #self.label_priority.tooltip = "Overdue = do first • Today = do today • Upcoming = can wait"
-    colors = {"Overdue": "#e74c3c", "Today": "#2ecc71", "Upcoming": "#3498db"}
-    self.label_priority.foreground = colors.get(t.get('_bucket_label'), "#666")
+    # Standardized labels
+    self.label_wo_id.text = d.get("wo_id", "—")
+    self.label_op_name.text = f"OP{d.get('operation_seq')}" if d.get("operation_seq") else "—"
+    self.label_qty.text = str(d.get("qty", ""))
+    self.label_status.text = (d.get("status") or "").replace("_", " ").title()
+    self.label_scheduled_date.text = d.get("_scheduled_str", "—")
+    self.label_next_cell.text = d.get("_next_cell_id", "-")
+    self.label_next_bin.text = d.get("_next_bin_id", "-")
 
-    self.label_scheduled_date.text = f"Scheduled: {t.get('_scheduled_str','—')}"
+    brt = d.get("batch_run_time_min")
+    self.label_batch_runtime.text = f"{brt:.1f} min" if isinstance(brt, (int, float)) else "—"
 
-    st = _norm_status(t.get("status"))
-    self.label_status.text = st.replace("_", " ").title()
+    # Material readiness pill (color + label)
+    readiness = d.get("_mat_status") or "unknown"
+    self.material_pill.role = {
+      "ready": "success",
+      "partial": "warning",
+      "short": "danger"
+    }.get(readiness, "default")
+    self.material_pill.text = readiness.title()
 
-    is_queued  = (st == "queued")
-    is_running = (st == "in_progress")
-    is_paused  = (st == "paused")
-    is_done    = (st == "done")
-
-    self.button_start.text  = "Start"     # doubles as Resume
-    self.button_pause.text  = "Pause"
-    self.button_finish.text = "Finish"
-
-    self.button_start.visible  = (is_queued or is_paused) and not is_done
-    self.button_pause.visible  = is_running
-    self.button_finish.visible = (is_running or is_paused) and not is_done
-
+  # ---- Actions bound to row buttons ----
   def button_start_click(self, **event_args):
-    self.parent.parent.task_start_or_resume_click(self.item)
+    try:
+      anvil.server.call('tasks_start', self.item["_id"])
+      self.parent.raise_event('x-refresh')
+    except Exception as e:
+      Notification(f"Start failed: {e}", style="danger").show()
 
   def button_pause_click(self, **event_args):
-    self.parent.parent.task_pause_click(self.item)
+    try:
+      anvil.server.call('tasks_pause', self.item["_id"])
+      self.parent.raise_event('x-refresh')
+    except Exception as e:
+      Notification(f"Pause failed: {e}", style="danger").show()
+
+  def button_resume_click(self, **event_args):
+    try:
+      anvil.server.call('tasks_resume', self.item["_id"])
+      self.parent.raise_event('x-refresh')
+    except Exception as e:
+      Notification(f"Resume failed: {e}", style="danger").show()
 
   def button_finish_click(self, **event_args):
-    self.parent.parent.task_finish_click(self.item)
+    try:
+      anvil.server.call('tasks_complete', self.item["_id"])
+      self.parent.raise_event('x-refresh')
+    except Exception as e:
+      Notification(f"Finish failed: {e}", style="danger").show()
+
+  def button_pick_click(self, **event_args):
+    """Generate reservations & picklist for this WO."""
+    try:
+      anvil.server.call('flow_generate_picklist_by_destination', self.item["wo_id"])
+      Notification("Picklist generated.", timeout=3).show()
+      self.parent.raise_event('x-refresh')
+    except Exception as e:
+      Notification(f"Pick failed: {e}", style="danger").show()
+
+
 
 
 

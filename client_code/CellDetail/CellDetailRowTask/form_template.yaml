@@ -28,6 +28,14 @@ components:
     name: label_status
     properties: {align: center, font_size: 12}
     type: Label
+  - layout_properties: {column: materials_state}
+    name: label_materials_state
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: materials_pick}
+    name: button_pick
+    properties: {icon: 'fa:list', text: ''}
+    type: Button
   - event_bindings: {click: button_start_click}
     layout_properties: {column: start}
     name: button_start
@@ -39,7 +47,7 @@ components:
     properties: {icon: 'fa:pause', text: ''}
     type: Button
   - event_bindings: {click: button_finish_click}
-    layout_properties: {column: finish}
+    layout_properties: {column: finsih}
     name: button_finish
     properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
     type: Button
