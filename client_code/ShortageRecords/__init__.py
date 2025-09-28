@@ -28,7 +28,7 @@ class ShortageRecords(ShortageRecordsTemplate):
     # Buttons
     #self.button_apply.role = "mydefault-button"
     self.button_last_7d.role = "mydefault-button"
-    self.button_buy_selected.role = "save-button"
+    self.button_buy_selected.role = "new-button"
     #self.button_apply.set_event_handler('click',   self.update_filter)
     self.button_last_7d.set_event_handler('click', self._quick_last_7d)
 
@@ -38,7 +38,7 @@ class ShortageRecords(ShortageRecordsTemplate):
     self.check_box_master.set_event_handler('change', self._toggle_master_selection)
 
     # Table
-    self.repeating_panel_shortages.item_template = ShortageRecords.ShortageRecordsRow
+    #self.repeating_panel_shortages.item_template = ShortageRecords.ShortageRecordsRow
     self.repeating_panel_shortages.set_event_handler("x-select-changed", self._row_select_changed)
     self.repeating_panel_shortages.set_event_handler("x-refresh", self.update_filter)
 

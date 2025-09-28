@@ -1,31 +1,144 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 9, row: VUIEED, width_xs: 2}
+    - layout_properties: {col_xs: 1, row: VUIEED, width_xs: 1}
+      name: label_filter
+      properties: {font_size: 24, foreground: 'theme:Secondary 500', icon: 'fa:filter'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: VUIEED, width_xs: 1}
+      name: label_status_title
+      properties: {font_size: 12, text: 'Status:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: VUIEED, width_xs: 2}
+      name: drop_down_status
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 6, row: VUIEED, width_xs: 1}
+      name: label_suggested_title
+      properties: {font_size: 12, text: 'Make or Buy:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: VUIEED, width_xs: 2}
+      name: drop_down_suggestion
+      properties: {font_size: 12}
+      type: DropDown
+    - layout_properties: {col_xs: 2, row: XJNAKX, width_xs: 1}
+      name: label_part_id_title
+      properties: {font_size: 12, text: 'Part No.:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: XJNAKX, width_xs: 2}
+      name: text_part_prefix
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 6, row: XJNAKX, width_xs: 1}
+      name: label_vendor_title
+      properties: {font_size: 12, text: 'Vendor Name:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: XJNAKX, width_xs: 2}
+      name: text_vendor_substr
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 2, row: CURLQZ, width_xs: 1}
+      name: label_from_title
+      properties: {font_size: 12, text: 'From:'}
+      type: Label
+    - layout_properties: {col_xs: 3, row: CURLQZ, width_xs: 2}
+      name: date_from
+      properties: {font_size: 12}
+      type: DatePicker
+    - layout_properties: {col_xs: 6, row: CURLQZ, width_xs: 1}
+      name: label_to_title
+      properties: {font_size: 12, text: 'To:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: CURLQZ, width_xs: 2}
+      name: date_to
+      properties: {font_size: 12}
+      type: DatePicker
+    - layout_properties: {col_xs: 9, row: CURLQZ, width_xs: 2}
       name: button_last_7d
       properties: {text: Last 7 days}
       type: Button
-    layout_properties: {grid_position: 'RXAWPA,ZWXBKK'}
+    - layout_properties: {col_xs: 4, row: VTLNGR, width_xs: 3}
+      name: label_count
+      properties: {font_size: 12, icon: 'fa:check-circle'}
+      type: Label
+    layout_properties: {grid_position: 'SAITQK,SJGDYC'}
     name: grid_panel_filter
     properties: {background: 'theme:Gray 200'}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 5, row: HQEKSE, width_xs: 3}
-      name: button_bu_selected
-      properties: {text: Order Selected Items}
+    - layout_properties: {col_xs: 3, row: HQEKSE, width_xs: 2}
+      name: check_box_master
+      properties: {font_size: 12, text: Select All (filtered)}
+      type: CheckBox
+    - layout_properties: {col_xs: 6, row: HQEKSE, width_xs: 3}
+      name: button_buy_selected
+      properties: {text: Order All Selected Items}
       type: Button
     layout_properties: {grid_position: 'HVBPSL,YNVDSD'}
     name: grid_panel_buttons
     properties: {}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 0, row: ZFQCLX, width_xs: 12}
+    - components:
+      - layout_properties: {column: part_id}
+        name: label_part_id_hdr
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: description}
+        name: label_desc_hdr
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: vendor}
+        name: label_vendor_hdr
+        properties: {text: Vendor Name}
+        type: Label
+      - layout_properties: {column: unit}
+        name: label_unit_hdr
+        properties: {align: center, text: Unit}
+        type: Label
+      - layout_properties: {column: total_qty}
+        name: label_total_qty_hdr
+        properties:
+          align: center
+          text: |-
+            Total Demand
+            (including
+             On-Order)
+        type: Label
+      - layout_properties: {column: open_qty}
+        name: label_open_qty_hdr
+        properties: {align: center, text: Min Qty to Order}
+        type: Label
+      - layout_properties: {column: suggestion}
+        name: label_suggestion_hdr
+        properties: {text: Make or Buy}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_status_hdr
+        properties: {align: center, text: Status}
+        type: Label
+      - layout_properties: {column: select}
+        name: label_select_hdr
+        properties: {align: center, text: Select Item}
+        type: Label
+      - layout_properties: {column: order_qty}
+        name: label_action_qty_hdr
+        properties: {align: center, text: Order Qty}
+        type: Label
+      - layout_properties: {column: create}
+        name: label_create_order_hdr
+        properties:
+          align: center
+          text: |
+            Create Order
+        type: Label
+      layout_properties: {col_xs: 0, row: ZFQCLX, width_xs: 12}
       name: data_row_panel_hdr
-      properties: {background: 'theme:Gray 200', font_size: 12}
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
       type: DataRowPanel
     - layout_properties: {col_xs: 0, row: RSSHLL, width_xs: 12}
       name: repeating_panel_shortages
-      properties: {item_template: ShortageRecords.ItemTemplate5}
+      properties: {item_template: ShortageRecords.ShortageRecordsRow}
       type: RepeatingPanel
     layout_properties: {grid_position: 'NILFFZ,JTAACG'}
     name: grid_panel_data

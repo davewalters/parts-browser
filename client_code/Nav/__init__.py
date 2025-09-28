@@ -9,6 +9,7 @@ from .. PurchaseOrderRecords import PurchaseOrderRecords
 from .. CellRecords import CellRecords
 from .. Routes import Routes
 from .. InventoryRecords import InventoryRecords
+from .. ShortageRecords import ShortageRecords
 from .. InventoryBins import InventoryBins
 from .. InventoryStatusJournal import InventoryStatusJournal
 from .. InventoryBinsJournal import InventoryBinsJournal
@@ -25,9 +26,10 @@ class Nav(NavTemplate):
       {"title": "Customers", "form_class": CustomerRecords},
       {"title": "Vendors", "form_class": VendorRecords},
       {"title": "Purchase Orders", "form_class": PurchaseOrderRecords},
-      {"title": "Cell Records", "form_class": CellRecords},
+      {"title": "Manufacturing Cells", "form_class": CellRecords},
       {"title": "Routes", "form_class": Routes},
       {"title": "Inventory", "form_class": InventoryRecords},
+      {"title": "Inventory Shortages", "form_class": ShortageRecords},
       {"title": "Inventory Status Journal", "form_class": InventoryStatusJournal},
       {"title": "Inventory Bins Journal", "form_class": InventoryBinsJournal},
       {"title": "Picklists", "form_class": PicklistRecords},
