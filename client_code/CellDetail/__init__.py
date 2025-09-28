@@ -251,6 +251,10 @@ class CellDetail(CellDetailTemplate):
     except Exception as ex:
       Notification(f"Pick failed: {ex}", style="danger").show()
 
+  def button_back_click(self, **event_args):
+    """This method is called when the button is clicked"""
+    pass
+
 
 
 

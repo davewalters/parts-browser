@@ -16,7 +16,7 @@ class WorkOrderRecords(WorkOrderRecordsTemplate):
     self.date_to.set_event_handler('change', self.update_filter)
     self.drop_down_status.set_event_handler('change', self.update_filter)
 
-    self.repeating_panel_work_orders.item_template = WorkOrderRecords.WorkOrderRow
+    #self.repeating_panel_work_orders.item_template = WorkOrderRecords.WorkOrderRow
     self.repeating_panel_work_orders.set_event_handler("x-open-wo", self._open_wo)
     self.repeating_panel_work_orders.set_event_handler("x-refresh", self.update_filter)
 
