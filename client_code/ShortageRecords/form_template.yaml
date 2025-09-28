@@ -1,5 +1,37 @@
 components:
-- layout_properties: {slot: default}
+- components:
+  - components:
+    - layout_properties: {col_xs: 9, row: VUIEED, width_xs: 2}
+      name: button_last_7d
+      properties: {text: Last 7 days}
+      type: Button
+    layout_properties: {grid_position: 'RXAWPA,ZWXBKK'}
+    name: grid_panel_filter
+    properties: {background: 'theme:Gray 200'}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 5, row: HQEKSE, width_xs: 3}
+      name: button_bu_selected
+      properties: {text: Order Selected Items}
+      type: Button
+    layout_properties: {grid_position: 'HVBPSL,YNVDSD'}
+    name: grid_panel_buttons
+    properties: {}
+    type: GridPanel
+  - components:
+    - layout_properties: {col_xs: 0, row: ZFQCLX, width_xs: 12}
+      name: data_row_panel_hdr
+      properties: {background: 'theme:Gray 200', font_size: 12}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: RSSHLL, width_xs: 12}
+      name: repeating_panel_shortages
+      properties: {item_template: ShortageRecords.ItemTemplate5}
+      type: RepeatingPanel
+    layout_properties: {grid_position: 'NILFFZ,JTAACG'}
+    name: grid_panel_data
+    properties: {}
+    type: GridPanel
+  layout_properties: {slot: default}
   name: content_panel
   properties: {}
   type: ColumnPanel
