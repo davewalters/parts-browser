@@ -17,7 +17,7 @@ class WorkOrderRecord(WorkOrderRecordTemplate):
     self._seq_to_cell_id = {}       # {seq: cell_id}
 
     # Header widgets setup
-    self.drop_down_status.items = ["planned", "released", "complete", "closed"]
+    self.drop_down_status.items = ["planned","released","wip","complete","closed"]
     self.button_back.role = "mydefault-button"
 
     # Event wiring for update-on-change
