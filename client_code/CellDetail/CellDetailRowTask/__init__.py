@@ -52,7 +52,7 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     # 2) Material readiness (row-level; cached by parent)
     state, detail = self._compute_material_readiness(d)    # "ready"|"partial"|"short"|"na", and detail
     self.label_materials_status.text = state.title()
-    self.label_materials_detail.text = detail or ""
+    #self.label_materials_detail.text = detail or ""
     self._apply_material_led(state)
 
     # 3) Button enablement
@@ -154,6 +154,25 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
       self.parent._load_tasks()
     except Exception as e:
       alert(f"Finish failed: {e}")
+
+    def button_pick_click(self, **event_args):
+      """
+      Optional: create reservations via a picklist so this step becomes 'ready'.
+      We generate per-operation picklists (group_by='operation') for the WO;
+      that will reserve lines for all steps, but it still helps operators on this step.
+      """
+      row = dict(self.item or {})
+      wo_id = row.get("wo_id")
+      try:
+        # generate per-operation picklists for this WO
+        anvil.server.call("picklist_generate", wo_id, "operation")
+        # refresh cache & readiness
+        if hasattr(self.parent, "_wobom_cache") and wo_id in self.parent._wobom_cache:
+          del self.parent._wobom_cache[wo_id]
+        self._refresh_material_readiness()
+        Notification("Picklist generated / reservations attempted.", timeout=3).show()
+      except Exception as e:
+        alert(f"Pick failed: {e}")
 
 
 

@@ -28,11 +28,15 @@ components:
     name: label_status
     properties: {align: center, font_size: 12}
     type: Label
-  - layout_properties: {column: materials_state}
-    name: label_materials_state
+  - layout_properties: {column: led}
+    name: label_materials_led
+    properties: {}
+    type: Label
+  - layout_properties: {column: materials_status}
+    name: label_materials_status
     properties: {align: center}
     type: Label
-  - layout_properties: {column: materials_pick}
+  - layout_properties: {column: picklist}
     name: button_pick
     properties: {icon: 'fa:list', text: ''}
     type: Button
@@ -47,7 +51,7 @@ components:
     properties: {icon: 'fa:pause', text: ''}
     type: Button
   - event_bindings: {click: button_finish_click}
-    layout_properties: {column: finsih}
+    layout_properties: {column: finish}
     name: button_finish
     properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
     type: Button
@@ -59,7 +63,7 @@ components:
     name: label_next_bin
     properties: {align: center, font_size: 12}
     type: Label
-  layout_properties: {grid_position: 'WDZBNR,XQEESG'}
+  layout_properties: {full_width_row: true, grid_position: 'WDZBNR,WYUYCM'}
   name: data_row_panel_1
   properties: {}
   type: DataRowPanel

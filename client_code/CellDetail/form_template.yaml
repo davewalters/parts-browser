@@ -76,7 +76,7 @@ components:
       name: button_refresh_tasks
       properties: {icon: 'fa:refresh', text: Refresh Tasks}
       type: Button
-    - layout_properties: {col_xs: 1, row: YIODVI, width_xs: 10}
+    - layout_properties: {col_xs: 0, row: YIODVI, width_xs: 12}
       name: label_task_summary
       properties: {align: center, background: 'theme:Secondary 500', font_size: 15, foreground: 'theme:White', icon: 'fa:info-circle', italic: true}
       type: Label
@@ -114,11 +114,15 @@ components:
         name: label_status
         properties: {align: center, text: Status}
         type: Label
-      - layout_properties: {column: materials_state}
-        name: label_materials_state_hdr
-        properties: {align: center, text: Materials State}
+      - layout_properties: {column: led}
+        name: label_materials_led_hdr
+        properties: {align: center}
         type: Label
-      - layout_properties: {column: materials_picklist}
+      - layout_properties: {column: materials_status}
+        name: label_materials_state_hdr
+        properties: {align: center, text: Materials Status}
+        type: Label
+      - layout_properties: {column: picklist}
         name: label_button_pick_hdr
         properties: {align: center, text: Materials Picklist}
         type: Label
@@ -155,7 +159,7 @@ components:
       name: data_row_panel_2
       properties: {font_size: 12}
       type: DataRowPanel
-    layout_properties: {grid_position: 'XYESDY,UZLIKX'}
+    layout_properties: {full_width_row: true, grid_position: 'XYESDY,UZLIKX'}
     name: grid_panel_2
     properties: {}
     type: GridPanel
