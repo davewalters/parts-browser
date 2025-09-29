@@ -5,20 +5,20 @@ from ._anvil_designer import CellDetailRowTaskTemplate
 
 class CellDetailRowTask(CellDetailRowTaskTemplate):
   """
-  Expects self.item with keys populated by CellDetail parent:
+  self.item (populated by CellDetail) example:
     {
       "_id": "TASK-...",
       "wo_id": "...",
-      "operation_seq": int,
-      "qty": int,
+      "operation_seq": 20,
+      "qty": 5,
       "status": "queued|in_progress|paused|done",
-      "priority": int,
+      "priority": 3,
       "_scheduled_str": "YYYY-MM-DD" or "—",
-      "_next_cell_id": "...",
-      "_next_bin_id": "...",
-      "batch_run_time_min": float|None
+      "_next_cell_id": "CELL-B",
+      "_next_bin_id": "BIN-B-WIP",
+      "batch_run_time_min": 12.0
     }
-  The parent form (CellDetail) maintains _wobom_cache: dict[wo_id] -> list[WOBOM lines]
+  Parent (CellDetail) may keep: self._wobom_cache: dict[wo_id] -> list[WOBOM lines]
   """
 
   def __init__(self, **properties):
@@ -27,13 +27,16 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     self.button_start_resume.role = "mydefault-button"
     self.button_pause.role        = "delete-button"
     self.button_finish.role       = "save-button"
-    self.button_pick.role         = "secondary-button"  # Comment out if you hide Pick
+
+    # We’re hiding Pick (relying on Finish to consume)
+    if hasattr(self, "button_pick"):
+      self.button_pick.visible = False
 
   # ---------- UI bind ----------
   def form_show(self, **event_args):
     d = dict(self.item or {})
 
-    # Labels per your naming convention
+    # 1) Header/fields (priority first)
     self.label_priority.text        = str(d.get("priority", ""))
     self.label_wo_id.text           = d.get("wo_id", "—")
     self.label_op_name.text         = f"OP{d.get('operation_seq')}"
@@ -46,39 +49,31 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     brt = d.get("batch_run_time_min")
     self.label_batch_runtime.text   = f"{brt:.1f} min" if isinstance(brt, (int, float)) else "—"
 
-    # --- material readiness ---
-    state, detail = self._compute_material_readiness(d)   # returns ("ready"|"partial"|"short"|"na", "Reserved 2/3" etc.)
+    # 2) Material readiness (row-level; cached by parent)
+    state, detail = self._compute_material_readiness(d)    # "ready"|"partial"|"short"|"na", and detail
     self.label_materials_status.text = state.title()
     self.label_materials_detail.text = detail or ""
-  
     self._apply_material_led(state)
-    #self._apply_material_pill(state)
-    
-    # Compute readiness immediately
-    # self._refresh_material_readiness()
 
-    # Button enablement
+    # 3) Button enablement
     st = (d.get("status") or "queued").lower()
     self.button_start_resume.enabled = st in ("queued", "paused")
     self.button_pause.enabled        = st == "in_progress"
     self.button_finish.enabled       = st in ("in_progress", "paused")
-    # Pick is always allowed (it just creates reservations); hide if you prefer
-    self.button_pick.visible         = True   # set False to hide in UI
 
-  # ---------- Readiness (row-level, cached) ----------
-  def _refresh_material_readiness(self):
+  # ---------- Readiness helpers ----------
+  def _compute_material_readiness(self, row: dict) -> tuple[str, str]:
     """
-    Row-level readiness using parent cache:
-      - Sum qty_required for WOBOM lines where issue_seq == this op
-      - Sum reserved qty from reservations
-      - Set label_materials_status + label_materials_detail
+    Uses parent._wobom_cache (fetches once per WO) and summarizes materials
+    required at this step vs reserved.
+    Returns: (state, detail)
     """
     parent = self.parent
     if not hasattr(parent, "_wobom_cache"):
       parent._wobom_cache = {}
 
-    wo_id = (self.item or {}).get("wo_id")
-    op_seq = int((self.item or {}).get("operation_seq") or 0)
+    wo_id = row.get("wo_id")
+    op_seq = int(row.get("operation_seq") or 0)
 
     if wo_id not in parent._wobom_cache:
       try:
@@ -95,35 +90,28 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
       for r in (ln.get("reservations") or []):
         reserved += float(r.get("qty", 0) or 0.0)
 
+    # No external materials → Ready
     if not at_step or req <= 0:
-      status = "ready"
-      detail = "No external materials required"
-    elif reserved >= req - 1e-6:
-      status = "ready"
-      detail = f"Reserved {reserved:.3g}/{req:.3g}"
-    elif reserved > 0:
-      status = "partial"
-      detail = f"Reserved {reserved:.3g}/{req:.3g} (short {max(0.0, req - reserved):.3g})"
-    else:
-      status = "short"
-      detail = f"Reserved 0/{req:.3g}"
+      return "ready", "No external materials required"
 
-    # Paint the pill (very light styling here; adapt to your roles/theme)
-    self.label_materials_status.text = status.upper()
-    self.label_materials_detail.text = detail
-    self._apply_status_style(status)
+    eps = 1e-6
+    if reserved >= req - eps:
+      return "ready", f"Reserved {reserved:.3g}/{req:.3g}"
+    if reserved > 0:
+      short = max(0.0, req - reserved)
+      return "partial", f"Reserved {reserved:.3g}/{req:.3g} (short {short:.3g})"
+    return "short", f"Reserved 0/{req:.3g}"
 
-  def _apply_status_style(self, status: str):
-    st = (status or "").lower()
-    # You can swap to roles (e.g., "status-ready", "status-partial", "status-short")
-    if st == "ready":
-      self.label_materials_status.foreground = "#0a7d12"  # green
-    elif st == "partial":
-      self.label_materials_status.foreground = "#b8860b"  # dark goldenrod
-    elif st == "short":
-      self.label_materials_status.foreground = "#b00020"  # red
-    else:
-      self.label_materials_status.foreground = None
+  def _apply_material_led(self, state: str):
+    """Map readiness → LED role (requires theme.css roles: led, led-ready, led-partial, led-short, led-na)."""
+    role = "led " + {
+      "ready":   "led-ready",
+      "partial": "led-partial",
+      "short":   "led-short",
+    }.get((state or "").lower(), "led-na")
+    # Reset then apply (avoids class accumulation)
+    self.label_materials_led.role = ""
+    self.label_materials_led.role = role
 
   # ---------- Buttons ----------
   def button_start_resume_click(self, **event_args):
@@ -135,7 +123,6 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
       else:
         anvil.server.call("tasks_start", row.get("_id"))
       Notification("Started.", timeout=2).show()
-      # parent reload updates times + enables/disables
       self.parent._load_tasks()
     except Exception as e:
       alert(f"Start failed: {e}")
@@ -151,14 +138,16 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
 
   def button_finish_click(self, **event_args):
     """
-    Finish consumes external materials mapped to this op (via reservations or immediate),
-    then auto-transfers WIP to the next cell (or produces FG at last step).
+    Finish:
+      - Consumes external materials mapped to this op (using reservations if present,
+        otherwise immediate reserve+consume)
+      - Auto-transfers WIP to next cell bin, or produces FG if last step
+      - Invalidates WOBOM cache so downstream rows recalc readiness
     """
     row = dict(self.item or {})
     try:
       anvil.server.call("tasks_complete", row.get("_id"))
       Notification("Finished.", timeout=2).show()
-      # Invalidate WOBOM cache for this WO so downstream rows see the change
       wo_id = row.get("wo_id")
       if hasattr(self.parent, "_wobom_cache") and wo_id in self.parent._wobom_cache:
         del self.parent._wobom_cache[wo_id]
@@ -166,26 +155,6 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     except Exception as e:
       alert(f"Finish failed: {e}")
 
-  def button_pick_click(self, **event_args):
-    """
-    Optional: create reservations via a picklist so this step becomes 'ready'.
-    We generate per-operation picklists (group_by='operation') for the WO;
-    that will reserve lines for all steps, but it still helps operators on this step.
-    If you prefer to limit reservations strictly to this step, we can add a
-    server helper later (e.g., flow.reserve_for_step(wo_id, op_seq)).
-    """
-    row = dict(self.item or {})
-    wo_id = row.get("wo_id")
-    try:
-      # generate per-operation picklists for this WO
-      anvil.server.call("picklist_generate", wo_id, "operation")
-      # refresh cache & readiness
-      if hasattr(self.parent, "_wobom_cache") and wo_id in self.parent._wobom_cache:
-        del self.parent._wobom_cache[wo_id]
-      self._refresh_material_readiness()
-      Notification("Picklist generated / reservations attempted.", timeout=3).show()
-    except Exception as e:
-      alert(f"Pick failed: {e}")
 
 
 
