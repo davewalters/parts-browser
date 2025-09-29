@@ -46,8 +46,16 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     brt = d.get("batch_run_time_min")
     self.label_batch_runtime.text   = f"{brt:.1f} min" if isinstance(brt, (int, float)) else "—"
 
+    # --- material readiness ---
+    state, detail = self._compute_material_readiness(d)   # returns ("ready"|"partial"|"short"|"na", "Reserved 2/3" etc.)
+    self.label_materials_status.text = state.title()
+    self.label_materials_detail.text = detail or ""
+  
+    self._apply_material_led(state)
+    #self._apply_material_pill(state)
+    
     # Compute readiness immediately
-    self._refresh_material_readiness()
+    # self._refresh_material_readiness()
 
     # Button enablement
     st = (d.get("status") or "queued").lower()
