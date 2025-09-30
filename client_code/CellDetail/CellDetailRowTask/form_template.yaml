@@ -38,12 +38,12 @@ components:
     type: Label
   - layout_properties: {column: picklist}
     name: button_pick
-    properties: {icon: 'fa:list', text: ''}
+    properties: {foreground: 'theme:Secondary 500', icon: 'fa:list', text: ''}
     type: Button
   - event_bindings: {click: button_start_click}
     layout_properties: {column: start}
     name: button_start
-    properties: {font_size: 16, icon: 'fa:play-circle', text: ''}
+    properties: {font_size: 16, foreground: 'theme:Secondary 500', icon: 'fa:play-circle', text: ''}
     type: Button
   - event_bindings: {click: button_pause_click}
     layout_properties: {column: pause}
@@ -53,7 +53,7 @@ components:
   - event_bindings: {click: button_finish_click}
     layout_properties: {column: finish}
     name: button_finish
-    properties: {font_size: 16, icon: 'fa:stop-circle', text: ''}
+    properties: {font_size: 16, foreground: 'theme:Primary 500', icon: 'fa:stop-circle', text: ''}
     type: Button
   - layout_properties: {column: next_cell}
     name: label_next_cell
@@ -63,6 +63,15 @@ components:
     name: label_next_bin
     properties: {align: center, font_size: 12}
     type: Label
+  - event_bindings: {click: button_wo_status_journal_click}
+    layout_properties: {column: inv_status}
+    name: button_wo_status_journal
+    properties: {foreground: 'theme:Gray 600', icon: 'fa:list', text: ''}
+    type: Button
+  - layout_properties: {column: inv_bins}
+    name: button_wo_bins_journal
+    properties: {foreground: 'theme:Black', icon: 'fa:list', text: ''}
+    type: Button
   layout_properties: {full_width_row: true, grid_position: 'WDZBNR,WYUYCM'}
   name: data_row_panel_1
   properties: {}

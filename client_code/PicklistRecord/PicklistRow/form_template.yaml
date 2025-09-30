@@ -40,6 +40,14 @@ components:
     name: drop_down_pick_status
     properties: {font_size: 12}
     type: DropDown
+  - layout_properties: {column: inv_status}
+    name: button_status_journal
+    properties: {foreground: 'theme:Gray 600', icon: 'fa:list', text: ''}
+    type: Button
+  - layout_properties: {column: inv_bins}
+    name: button_bins_journal
+    properties: {foreground: 'theme:Black', icon: 'fa:list', text: ''}
+    type: Button
   layout_properties: {grid_position: 'SHMKVC,XGFBZH'}
   name: data_row_panel_1
   properties: {background: 'theme:Gray 200', font_size: 12}

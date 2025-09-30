@@ -18,6 +18,8 @@ class PicklistRow(PicklistRowTemplate):
     self.init_components(**properties)
     self.drop_down_pick_status.items = ["pending", "picked", "partial", "out-of-stock"]
     self.drop_down_pick_status.set_event_handler("change", self._on_status_change)
+    self.button_status_journal.set_event_handler("click", self._open_status_journal)
+    self.button_bins_journal.set_event_handler("click", self._open_bins_journal)
 
   def form_show(self, **event_args):
     r = dict(self.item or {})
@@ -45,3 +47,23 @@ class PicklistRow(PicklistRowTemplate):
       self.parent.raise_event("x-line-updated")
     except Exception as ex:
       alert(f"Update failed: {ex}")
+
+  def _open_status_journal(self, **e):
+    pid = (self.item or {}).get("part_id")
+    if not pid:
+      Notification("No part_id on this line.", style="warning").show(); return
+    try:
+      from ..InventoryStatusJournal import InventoryStatusJournal
+      open_form("InventoryStatusJournal", part_id=pid)
+    except Exception as ex:
+      alert(f"Open Status Journal failed: {ex}")
+
+  def _open_bins_journal(self, **e):
+    pid = (self.item or {}).get("part_id")
+    if not pid:
+      Notification("No part_id on this line.", style="warning").show(); return
+    try:
+      from ..InventoryBinsJournal import InventoryBinsJournal
+      open_form("InventoryBinsJournal", part_id=pid)
+    except Exception as ex:
+      alert(f"Open Bins Journal failed: {ex}")

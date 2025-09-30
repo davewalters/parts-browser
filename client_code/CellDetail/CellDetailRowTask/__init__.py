@@ -24,13 +24,13 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     # Button roles (optional)
+    self.button_pick.role = "mydefault-button"
     self.button_start_resume.role = "mydefault-button"
     self.button_pause.role        = "delete-button"
     self.button_finish.role       = "save-button"
-
-    # We’re hiding Pick (relying on Finish to consume)
-    if hasattr(self, "button_pick"):
-      self.button_pick.visible = False
+    self.button_wo_status_journal.set_event_handler("click", self._open_wo_status_journal)
+    self.button_wo_bins_journal.set_event_handler("click", self._open_wo_bins_journal)
+    
 
   # ---------- UI bind ----------
   def form_show(self, **event_args):
@@ -155,24 +155,55 @@ class CellDetailRowTask(CellDetailRowTaskTemplate):
     except Exception as e:
       alert(f"Finish failed: {e}")
 
-    def button_pick_click(self, **event_args):
-      """
-      Optional: create reservations via a picklist so this step becomes 'ready'.
-      We generate per-operation picklists (group_by='operation') for the WO;
-      that will reserve lines for all steps, but it still helps operators on this step.
-      """
-      row = dict(self.item or {})
-      wo_id = row.get("wo_id")
-      try:
-        # generate per-operation picklists for this WO
-        anvil.server.call("picklist_generate", wo_id, "operation")
-        # refresh cache & readiness
-        if hasattr(self.parent, "_wobom_cache") and wo_id in self.parent._wobom_cache:
-          del self.parent._wobom_cache[wo_id]
-        self._refresh_material_readiness()
-        Notification("Picklist generated / reservations attempted.", timeout=3).show()
-      except Exception as e:
-        alert(f"Pick failed: {e}")
+  def button_pick_click(self, **event_args):
+    """
+    Optional: create reservations via a picklist so this step becomes 'ready'.
+    We generate per-operation picklists (group_by='operation') for the WO;
+    that will reserve lines for all steps, but it still helps operators on this step.
+    """
+    row = dict(self.item or {})
+    wo_id = row.get("wo_id")
+    try:
+      # generate per-operation picklists for this WO
+      anvil.server.call("picklist_generate", wo_id, "operation")
+      # refresh cache & readiness
+      if hasattr(self.parent, "_wobom_cache") and wo_id in self.parent._wobom_cache:
+        del self.parent._wobom_cache[wo_id]
+      self._refresh_material_readiness()
+      Notification("Picklist generated / reservations attempted.", timeout=3).show()
+    except Exception as e:
+      alert(f"Pick failed: {e}")
+
+  def _open_wo_status_journal(self, **e):
+    wo_id = (self.item or {}).get("wo_id")
+    if not wo_id:
+      Notification("Missing wo_id.", style="warning").show(); return
+    try:
+      wo = anvil.server.call('wo_get', wo_id) or {}
+      pid = wo.get("part_id")
+      if not pid:
+        Notification("Work order has no part_id.", style="warning").show(); return
+      from ..InventoryStatusJournal import InventoryStatusJournal
+      open_form("InventoryStatusJournal", part_id=pid)
+    except Exception as ex:
+      alert(f"Open Status Journal failed: {ex}")
+
+  def _open_wo_bins_journal(self, **e):
+    wo_id = (self.item or {}).get("wo_id")
+    if not wo_id:
+      Notification("Missing wo_id.", style="warning").show(); return
+    try:
+      wo = anvil.server.call('wo_get', wo_id) or {}
+      pid = wo.get("part_id")
+      if not pid:
+        Notification("Work order has no part_id.", style="warning").show(); return
+      from ..InventoryBinsJournal import InventoryBinsJournal
+      open_form("InventoryBinsJournal", part_id=pid)
+    except Exception as ex:
+      alert(f"Open Bins Journal failed: {ex}")
+
+
+    
 
 
 

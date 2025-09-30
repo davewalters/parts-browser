@@ -94,6 +94,14 @@ components:
         name: label_pick_status_hdr
         properties: {align: center, text: Pick Status}
         type: Label
+      - layout_properties: {column: inv_status}
+        name: label_inv_status_hdr
+        properties: {align: center, text: Inventory Status Journal}
+        type: Label
+      - layout_properties: {column: inv_bins}
+        name: label_inv_bins_journal
+        properties: {align: center, text: Inventory Bins Journal}
+        type: Label
       layout_properties: {col_xs: 0, row: DKJNVN, width_xs: 12}
       name: data_row_panel_1
       properties: {align: center, background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}

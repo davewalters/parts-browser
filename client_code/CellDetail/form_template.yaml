@@ -116,7 +116,7 @@ components:
         type: Label
       - layout_properties: {column: led}
         name: label_materials_led_hdr
-        properties: {align: center}
+        properties: {align: center, text: Materials Status Indicator}
         type: Label
       - layout_properties: {column: materials_status}
         name: label_materials_state_hdr
@@ -145,6 +145,14 @@ components:
       - layout_properties: {column: next_bin}
         name: label_next_bin
         properties: {align: center, text: Next Bin}
+        type: Label
+      - layout_properties: {column: inventory_status}
+        name: label_inv_status_hdr
+        properties: {align: center, text: Inventory Status Journal}
+        type: Label
+      - layout_properties: {column: inventory_bins}
+        name: label_inv_bins_hdr
+        properties: {align: center, text: Inventory Bins Journal}
         type: Label
       layout_properties: {col_xs: 0, row: XRHOQI, width_xs: 12}
       name: data_row_panel_1

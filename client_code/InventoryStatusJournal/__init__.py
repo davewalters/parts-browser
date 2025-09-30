@@ -3,13 +3,14 @@ from anvil import *
 import anvil.server
 
 class InventoryStatusJournal(InventoryStatusJournalTemplate):
-  def __init__(self, **properties):
+  def __init__(self, part_id: str | None = None, **properties):
     self.init_components(**properties)
 
     self.text_box_part_id.set_event_handler("pressed_enter", self.update_filter)
     self.text_box_part_name.set_event_handler("pressed_enter", self.update_filter)
     self.check_box_kanban.set_event_handler("change", self.update_filter)
-
+    if part_id:
+      self.text_box_part_id.text = part_id
     self.update_filter()
 
   def update_filter(self, **event_args):
