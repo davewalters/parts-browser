@@ -19,18 +19,20 @@ class CellRecords(CellRecordsTemplate):
     # Load
     self._load_cells()
 
+  def form_show(self, **event_args):
+    self._load_cells()
+
   # -----------------------------
   # Data load
   # -----------------------------
   def _load_cells(self):
     try:
-      rows = anvil.server.call("cells_list") or []
-      rows.sort(key=lambda r: ((r.get("name") or "").lower(), r.get("_id") or ""))
-      self.repeating_panel_1.items = rows
-      self.label_count.text = f"{len(rows)} cells"
+      rows = anvil.server.call("cells_list", True)  # active_only=True
+      self.repeating_panel_cells.items = rows
+      self.label_summary.text = f"{len(rows)} active cells"
     except Exception as e:
-      #self.label_count.text = f"Error: {e}"
-      self.repeating_panel_1.items = []
+      self.repeating_panel_cells.items = []
+      self.label_summary.text = f"Load failed: {e}"
 
   # -----------------------------
   # Actions
@@ -52,11 +54,26 @@ class CellRecords(CellRecordsTemplate):
 
   def button_new_cell_click(self, **event_args):
     """
-    Open editor in NEW mode (no pre-create). The editor will call cells_create() on first save.
+    Pre-create a minimal cell (no default bin required), then open editor.
     """
     try:
-      # Let the record generate the id on first save
-      open_form("CellRecord", cell_id="", is_new=True)
+      new_id = anvil.server.call("generate_next_cell_id")
+      skeleton = {
+        "_id": new_id,
+        "name": "",
+        "type": "work_center",
+        "active": True,
+        "parallel_capacity": 1,
+        "minute_cost_nz": 0.00,
+        "default_wip_bin_id": None,   # allow None at create-time
+      }
+      # Create on server so auto-saves in the editor have a real record
+      anvil.server.call("cells_create", skeleton)
+  
+      # Open the record editor; when the user navigates back, we’ll reload the list
+      open_form("CellRecord", cell_id=new_id, is_new=False)
+  
     except Exception as e:
-      Notification(f"Could not open new cell editor: {e}", style="danger").show()
+      Notification(f"Could not create new cell: {e}", style="danger").show()
+
 

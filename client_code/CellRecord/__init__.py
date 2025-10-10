@@ -85,7 +85,7 @@ class CellRecord(CellRecordTemplate):
   # ---------- Save (create on first, then update) ----------
   def _save_from_ui(self, **e):
     updated = {
-      "_id": (self.label_cell_id.text or "").strip(),  # blank => new
+      "_id": (self.label_cell_id.text or "").strip(),
       "name": (self.text_name.text or "").strip(),
       "type": (self.drop_down_cell_type.selected_value or "work_center").strip(),
       "active": bool(self.check_box_active.checked),
@@ -93,22 +93,12 @@ class CellRecord(CellRecordTemplate):
       "minute_cost_nz": self._coerce_float(self.text_minute_cost_nz.text, 0.0),
       "default_wip_bin_id": (self.text_default_wip_bin_id.text or "").strip() or None,
     }
-
     try:
-      if self._is_new:
-        # Generate an id if not present
-        if not updated["_id"] or updated["_id"] == "(new)":
-          updated["_id"] = anvil.server.call("generate_next_cell_id")
-        saved = anvil.server.call("cells_create", updated) or updated
-        self._is_new = False
-      else:
-        saved = anvil.server.call("cells_update", updated["_id"], updated) or updated
-
+      saved = anvil.server.call("cells_update", updated["_id"], updated) or updated
       self._cell = saved
-      self._cell_id = saved.get("_id", updated["_id"])
+      self._cell_id = saved["_id"]
       self._bind_fields()
       Notification("Saved.", style="success", timeout=1.5).show()
-
     except Exception as e:
       Notification(f"Save failed: {e}", style="danger").show()
 
