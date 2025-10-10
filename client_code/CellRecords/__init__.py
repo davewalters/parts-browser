@@ -10,11 +10,12 @@ class CellRecords(CellRecordsTemplate):
     # Roles
     self.button_home.role = "mydefault-button"
     self.button_new_cell.role = "new-button"
-    self.repeating_panel_1.role = "scrolling-panel"
+    #self.repeating_panel_cells.role = "scrolling-panel"
 
     # Wire RP events
-    self.repeating_panel_1.set_event_handler("x-show-detail", self._show_detail)
-    self.repeating_panel_1.set_event_handler("x-show-operator", self._show_operator)
+    self.repeating_panel_cells.item_template = "CellRecords.CellRecordsRow"
+    self.repeating_panel_cells.set_event_handler("x-show-detail", self._show_detail)
+    self.repeating_panel_cells.set_event_handler("x-show-operator", self._show_operator)
 
     # Load
     self._load_cells()
@@ -28,6 +29,7 @@ class CellRecords(CellRecordsTemplate):
   def _load_cells(self):
     try:
       rows = anvil.server.call("cells_list", True)  # active_only=True
+      print(rows)
       self.repeating_panel_cells.items = rows
       self.label_summary.text = f"{len(rows)} active cells"
     except Exception as e:

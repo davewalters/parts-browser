@@ -16,6 +16,15 @@ components:
     properties: {}
     type: GridPanel
   - components:
+    - layout_properties: {col_xs: 3, row: HLJDDK, width_xs: 6}
+      name: label_summary
+      properties: {align: center, background: 'theme:Secondary 500', font_size: 12, foreground: 'theme:White', icon: 'fa:info-circle'}
+      type: Label
+    layout_properties: {grid_position: 'DPITYN,LFYMVG'}
+    name: grid_panel_1
+    properties: {background: '', foreground: ''}
+    type: GridPanel
+  - components:
     - components:
       - layout_properties: {column: cell_id}
         name: label_cell_id
@@ -58,7 +67,7 @@ components:
       properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
       type: DataRowPanel
     - layout_properties: {col_xs: 0, row: UWDSVW, width_xs: 12}
-      name: repeating_panel_1
+      name: repeating_panel_cells
       properties: {item_template: CellRecords.CellRecordsRow}
       type: RepeatingPanel
     layout_properties: {grid_position: 'ZJEJTW,PDJJZG'}
