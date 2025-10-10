@@ -10,7 +10,7 @@ class CellRecords(CellRecordsTemplate):
     # Roles
     self.button_home.role = "mydefault-button"
     self.button_new_cell.role = "new-button"
-    #self.repeating_panel_cells.role = "scrolling-panel"
+    self.repeating_panel_cells.role = "scrolling-panel"
 
     # Wire RP events
     self.repeating_panel_cells.item_template = "CellRecords.CellRecordsRow"
