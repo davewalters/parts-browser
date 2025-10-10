@@ -52,25 +52,11 @@ class CellRecords(CellRecordsTemplate):
 
   def button_new_cell_click(self, **event_args):
     """
-    Generate a new id, pre-create the record (server upsert), then open editor.
+    Open editor in NEW mode (no pre-create). The editor will call cells_create() on first save.
     """
     try:
-      new_id = anvil.server.call("generate_next_cell_id")
-      # Pre-create so on-change saves have a target
-      skeleton = {
-        "_id": new_id,
-        "name": "",
-        "type": "work_center",
-        "active": True,
-        "parallel_capacity": 1,
-        "minute_cost_nz": 0.00,
-        "default_wip_bin_id": "",
-      }
-      try:
-        anvil.server.call("cells_upsert", skeleton)
-      except Exception:
-        pass
-      open_form("CellRecord", cell_id=new_id)
+      # Let the record generate the id on first save
+      open_form("CellRecord", cell_id="", is_new=True)
     except Exception as e:
-      Notification(f"Could not create new cell id: {e}", style="danger").show()
+      Notification(f"Could not open new cell editor: {e}", style="danger").show()
 

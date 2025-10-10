@@ -1,11 +1,13 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 3, row: KLPEAE, width_xs: 3}
+    - event_bindings: {click: button_home_click}
+      layout_properties: {col_xs: 3, row: KLPEAE, width_xs: 3}
       name: button_home
       properties: {icon: 'fa:home', text: Home}
       type: Button
-    - layout_properties: {col_xs: 6, row: KLPEAE, width_xs: 3}
+    - event_bindings: {click: button_new_cell_click}
+      layout_properties: {col_xs: 6, row: KLPEAE, width_xs: 3}
       name: button_new_cell
       properties: {icon: 'fa:plus-circle', text: New Cell}
       type: Button
