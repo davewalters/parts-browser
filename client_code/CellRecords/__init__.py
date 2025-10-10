@@ -29,7 +29,6 @@ class CellRecords(CellRecordsTemplate):
   def _load_cells(self):
     try:
       rows = anvil.server.call("cells_list", True)  # active_only=True
-      print(rows)
       self.repeating_panel_cells.items = rows
       self.label_summary.text = f"{len(rows)} active cells"
     except Exception as e:
