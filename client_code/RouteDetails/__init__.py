@@ -28,35 +28,38 @@ class RouteDetails(RouteDetailsTemplate):
     )
     self.route_id = doc["_id"]
 
+  def _rebind_visible_rows(self):
+    for row in self.repeating_panel_cells.get_components():
+      if hasattr(row, "rebind"):
+        row.rebind()
+
   def _load(self):
     route = anvil.server.call("routes_get", self.route_id) or {}
     self.doc = route
-
+  
     # Header
     self.label_route_id.text = route.get("_id", "") or route.get("route_id", "")
     self.text_route_name.text = route.get("name", "") or route.get("route_name", "") or ""
     self.text_product_family.text = route.get("product_family", "") or ""
-
+  
     # Cells for dropdowns
     self._cells = anvil.server.call("cells_list_route_ui") or []
-    # Normalize to list[(name, cell_id)]
-    self._cell_items = [(str(c.get("name","")), str(c.get("cell_id",""))) for c in self._cells if c.get("cell_id")]
-    print("cells_list_route_ui returned:", len(self._cell_items))  # DEBUG
-
-    # Build items for RP
+    self._cell_items = [(c.get("name", ""), c.get("cell_id")) for c in self._cells if c.get("cell_id")]
+  
+    # Routing rows
     routing = (route.get("routing") or [])[:]
     routing.sort(key=lambda r: ((r.get("seq") if isinstance(r.get("seq"), (int, float)) else 1e9),
                                 r.get("cell_id", "")))
-    name_by_id = {str(c.get("cell_id")): str(c.get("name","")) for c in self._cells}
-
+    name_by_id = {c.get("cell_id"): c.get("name", "") for c in self._cells}
+  
     items = []
     for step in routing:
       items.append({
         "seq": step.get("seq"),
-        "cell_id": str(step.get("cell_id","")),
-        "cell_name": name_by_id.get(str(step.get("cell_id","")), ""),
+        "cell_id": step.get("cell_id", ""),
+        "cell_name": name_by_id.get(step.get("cell_id"), step.get("cell_id", "")),
         "_is_blank": False,
-        "_cell_items": list(self._cell_items),   # 👈 inject choices per row
+        "_cell_items": list(self._cell_items),
       })
     # Sentinel
     items.append({
@@ -64,10 +67,12 @@ class RouteDetails(RouteDetailsTemplate):
       "cell_id": "",
       "cell_name": "",
       "_is_blank": True,
-      "_cell_items": list(self._cell_items),
+      "_cell_items": [("— select cell —", ""), *self._cell_items],
     })
-
+  
     self.repeating_panel_cells.items = items
+    self._rebind_visible_rows()   # ← force rows to populate now
+  
     self.label_count.text = f"{max(0, len(items)-1)} steps"
 
   def _suggest_next_seq(self, items) -> int:
