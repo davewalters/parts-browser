@@ -1,3 +1,4 @@
+# client_code/Route/__init__.py
 from anvil import *
 import anvil.server
 from ._anvil_designer import RoutesTemplate
@@ -8,31 +9,30 @@ class Routes(RoutesTemplate):
     self.button_new_route.role = "new-button"
     self.button_back.role      = "mydefault-button"
     self.repeating_panel_routes.role = "scrolling-panel"
+    self.repeating_panel_routes.set_event_handler("x-row-deleted", lambda **e: self._load_routes())
 
     self.prev_filter_name = filter_name or ""
     self.text_filter_name.text = self.prev_filter_name
 
-    # Ensure the item template is the RouteRow form (string name)
-    #self.repeating_panel_routes.item_template = "Routes.RouteRow"
-
-    # Preload cell name map for previews
     self.cell_id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
-
     self._load_routes()
 
   def _load_routes(self):
     name_substring = self.text_filter_name.text or ""
-    rows = anvil.server.call(
-      "get_filtered_routes_by_name",
-      route_name_substring=name_substring,
-      limit=300
-    ) or []
-
-    # Attach the cell name map onto each row so the row can render a preview
+    rows = anvil.server.call("get_filtered_routes_by_name",
+                            route_name_substring=name_substring, limit=300) or []
     for r in rows:
       r["_cell_id_to_name"] = self.cell_id_to_name
-
     self.repeating_panel_routes.items = rows
+  
+    # Force rows to render their contents immediately
+    try:
+      for row_form in self.repeating_panel_routes.get_components():
+        if hasattr(row_form, "form_show"):
+          row_form.form_show()
+    except Exception as e:
+      print("Routes: force-refresh rows error:", e)
+
 
   def text_filter_name_pressed_enter(self, **event_args):
     self.prev_filter_name = self.text_filter_name.text or ""
@@ -43,6 +43,7 @@ class Routes(RoutesTemplate):
 
   def button_back_click(self, **e):
     open_form("Nav")
+
 
 
 

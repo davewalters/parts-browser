@@ -36,19 +36,23 @@ components:
         type: Label
       - layout_properties: {column: route_name}
         name: label_route_name
-        properties: {align: center, text: Name}
+        properties: {align: left, text: Name}
         type: Label
       - layout_properties: {column: product_family}
         name: label_product_family
-        properties: {align: center, text: Product Family}
+        properties: {align: left, text: Product Family}
         type: Label
       - layout_properties: {column: routing_preview}
         name: label_routing_preview
-        properties: {align: center, text: Routing Preview}
+        properties: {align: left, text: Routing Preview}
         type: Label
       - layout_properties: {column: details}
         name: label_details_hdr
         properties: {align: center, text: Details}
+        type: Label
+      - layout_properties: {column: delete}
+        name: label_delete_hdr
+        properties: {align: center, text: Delete Route}
         type: Label
       layout_properties: {col_xs: 1, row: DFDPDG, width_xs: 10}
       name: data_row_panel_hdr

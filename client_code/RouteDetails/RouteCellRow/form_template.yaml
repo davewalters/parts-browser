@@ -4,7 +4,7 @@ components:
     name: text_seq
     properties: {align: center, font_size: 12}
     type: TextBox
-  - event_bindings: {change: drop_down_cell_change}
+  - event_bindings: {}
     layout_properties: {column: cell}
     name: drop_down_cell
     properties: {align: center, font_size: 12}
