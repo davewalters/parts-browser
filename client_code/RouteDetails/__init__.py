@@ -3,41 +3,31 @@ import anvil.server
 from ._anvil_designer import RouteDetailsTemplate
 
 class RouteDetails(RouteDetailsTemplate):
-  """
-  Edit a Route (name, product family, ordered routing steps).
-  - If route_id is None/invalid, create a new empty route immediately
-    so text fields can auto-save on change.
-  - Routing steps: editable seq (TextBox) + cell selection (DropDown).
-  - Add via a sentinel blank row; delete per row; insert by seq.
-  - 'Resequence' renumbers 10,20,30...
-  """
-
   def __init__(self, route_id=None, **kwargs):
     self.init_components(**kwargs)
     self.button_resequence.role = "new-button"
     self.button_back.role = "mydefault-button"
     self.repeating_panel_cells.role = "scrolling-panel"
+
+    # ✅ Make sure the RepeatingPanel uses the right template
+    self.repeating_panel_cells.item_template = "RouteDetails.RouteCellRow"
+
     self.route_id = route_id or None
     self._cells = []
     self._cell_items = []
-    #self.repeating_panel_cells.item_template = "RouteCellRow"
     self._ensure_route_exists()
     self._load()
 
-  # ---------- ensure we have an _id so updates on change can persist ----------
   def _ensure_route_exists(self):
-    if self.route_id:
-      if anvil.server.call("routes_get", self.route_id):
-        return
-    # Create immediately with empty attributes (server should allow)
+    if self.route_id and anvil.server.call("routes_get", self.route_id):
+      return
     rid = anvil.server.call("routes_next_id")
     doc = anvil.server.call(
       "routes_create",
-      {"_id": rid, "name": "", "product_family": None, "routing": []}
+      {"_id": rid, "name": "", "product_family": "", "routing": []}  # product_family as empty string (model requires str)
     )
     self.route_id = doc["_id"]
 
-  # ---------- loading & binding ----------
   def _load(self):
     route = anvil.server.call("routes_get", self.route_id) or {}
     self.doc = route
@@ -49,26 +39,33 @@ class RouteDetails(RouteDetailsTemplate):
 
     # Cells for dropdowns
     self._cells = anvil.server.call("cells_list_route_ui") or []
-    self._cell_items = [(c.get("name", ""), c.get("cell_id")) for c in self._cells if c.get("cell_id")]
-    # TEMP: show how many cells we got
-    print("cells_list_route_ui returned:", len(self._cell_items))
+    # Normalize to list[(name, cell_id)]
+    self._cell_items = [(str(c.get("name","")), str(c.get("cell_id",""))) for c in self._cells if c.get("cell_id")]
+    print("cells_list_route_ui returned:", len(self._cell_items))  # DEBUG
 
-    # Routing rows
+    # Build items for RP
     routing = (route.get("routing") or [])[:]
     routing.sort(key=lambda r: ((r.get("seq") if isinstance(r.get("seq"), (int, float)) else 1e9),
                                 r.get("cell_id", "")))
-    name_by_id = {c.get("cell_id"): c.get("name", "") for c in self._cells}
+    name_by_id = {str(c.get("cell_id")): str(c.get("name","")) for c in self._cells}
 
     items = []
     for step in routing:
       items.append({
         "seq": step.get("seq"),
-        "cell_id": step.get("cell_id", ""),
-        "cell_name": name_by_id.get(step.get("cell_id"), step.get("cell_id", "")),
-        "_is_blank": False
+        "cell_id": str(step.get("cell_id","")),
+        "cell_name": name_by_id.get(str(step.get("cell_id","")), ""),
+        "_is_blank": False,
+        "_cell_items": list(self._cell_items),   # 👈 inject choices per row
       })
-    # Sentinel blank row (default next seq)
-    items.append({"seq": self._suggest_next_seq(items), "cell_id": "", "cell_name": "", "_is_blank": True})
+    # Sentinel
+    items.append({
+      "seq": self._suggest_next_seq(items),
+      "cell_id": "",
+      "cell_name": "",
+      "_is_blank": True,
+      "_cell_items": list(self._cell_items),
+    })
 
     self.repeating_panel_cells.items = items
     self.label_count.text = f"{max(0, len(items)-1)} steps"
@@ -78,22 +75,22 @@ class RouteDetails(RouteDetailsTemplate):
     seqs = [int(s) for s in seqs if isinstance(s, (int, float)) or (isinstance(s, str) and s.isdigit())]
     return (max(seqs) + 10) if seqs else 10
 
-  # ---------- header update-on-change ----------
+  # Header change
   def text_route_name_change(self, **e):
     name = (self.text_route_name.text or "").strip()
     try:
-      anvil.server.call("routes_update", self.route_id, {"name": name or ""})
+      anvil.server.call("routes_update", self.route_id, {"name": name})
     except Exception as ex:
       alert(f"Rename failed: {ex}")
 
   def text_product_family_change(self, **e):
     fam = (self.text_product_family.text or "").strip()
     try:
-      anvil.server.call("routes_update", self.route_id, {"product_family": fam or None})
+      anvil.server.call("routes_update", self.route_id, {"product_family": fam})
     except Exception as ex:
       alert(f"Update failed: {ex}")
 
-  # ---------- child rows call back after add/update/delete ----------
+  # Row callbacks
   def get_cell_dropdown_items(self):
     return list(self._cell_items)
 
@@ -104,8 +101,7 @@ class RouteDetails(RouteDetailsTemplate):
     try:
       updated = anvil.server.call("routes_resequence", self.route_id)
       if not updated:
-        alert("Route not found.")
-        return
+        alert("Route not found."); return
       self._load()
       Notification("Route resequenced to 10,20,30…").show()
     except Exception as ex:
@@ -113,6 +109,7 @@ class RouteDetails(RouteDetailsTemplate):
 
   def button_back_click(self, **e):
     open_form("Nav")
+
 
 
 
