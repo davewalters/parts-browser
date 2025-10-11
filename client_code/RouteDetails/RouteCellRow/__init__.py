@@ -5,11 +5,16 @@ import anvil.server
 class RouteCellRow(RouteCellRowTemplate):
   def __init__(self, **kwargs):
     self.init_components(**kwargs)
-    # Defer parent lookups until form_show()
-    self._parent = None           # RouteDetails (set in form_show)
-    self._route_id = None
+    self._parent = self._find_route_details_parent()
+    self._route_id = getattr(self._parent, "route_id", None)
     self._index = None
     self._is_blank = False
+
+  def _find_route_details_parent(self):
+    p = self.parent
+    while p is not None and not hasattr(p, "get_cell_dropdown_items"):
+      p = getattr(p, "parent", None)
+    return p
 
   def form_show(self, **e):
     # Wire parent & route_id now that the row is attached

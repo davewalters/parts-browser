@@ -20,7 +20,7 @@ class RouteDetails(RouteDetailsTemplate):
     self.route_id = route_id or None
     self._cells = []
     self._cell_items = []
-    #self.repeating_panel_cells.item_template = RouteCellRow
+    #self.repeating_panel_cells.item_template = "RouteCellRow"
     self._ensure_route_exists()
     self._load()
 
@@ -50,6 +50,8 @@ class RouteDetails(RouteDetailsTemplate):
     # Cells for dropdowns
     self._cells = anvil.server.call("cells_list_route_ui") or []
     self._cell_items = [(c.get("name", ""), c.get("cell_id")) for c in self._cells if c.get("cell_id")]
+    # TEMP: show how many cells we got
+    print("cells_list_route_ui returned:", len(self._cell_items))
 
     # Routing rows
     routing = (route.get("routing") or [])[:]
