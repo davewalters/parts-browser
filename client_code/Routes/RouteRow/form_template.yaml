@@ -1,6 +1,10 @@
 components:
 - components:
-  - layout_properties: {column: name}
+  - layout_properties: {column: route_id}
+    name: label_route_id
+    properties: {}
+    type: Label
+  - layout_properties: {column: details}
     name: label_route_name
     properties: {}
     type: Label

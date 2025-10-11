@@ -1,58 +1,69 @@
-from ._anvil_designer import RouteCellRowTemplate
 from anvil import *
 import anvil.server
+from ._anvil_designer import RouteCellRowTemplate
 
 class RouteCellRow(RouteCellRowTemplate):
   """
-  A row for editing a single routing step.
-  Parent (RouteDetails) injects per-row:
-    item = {
-      "seq": int|None,
-      "cell_id": str,
-      "_is_blank": bool,
-      "_cell_items": [(name, cell_id), ...]
-    }
-  """
-  def __init__(self, **kwargs):
-    self.init_components(**kwargs)
-    self._route_id = None
-    self._index = None
-    self._is_blank = False
+  A single editable routing-step row.
 
-  # Parent calls this after items are set to force-populate the row
-  def rebind(self):
+  Expects self.item with:
+    {
+      "seq": int|None,
+      "cell_id": str|"",
+      "cell_name": str|"",
+      "_is_blank": bool,
+      "_cell_items": [(name, cell_id), ...],
+      "_route_id": str
+    }
+
+  Parent (RouteDetails) listens for "x-row-changed" on the repeating panel and reloads.
+  """
+
+  def __init__(self, **properties):
+    self.init_components(**properties)
+    # Wire events explicitly
+    self.text_seq.set_event_handler("pressed_enter", self._on_seq_commit)
+    self.text_seq.set_event_handler("lost_focus",    self._on_seq_commit)
+    self.drop_down_cell.set_event_handler("change",  self._on_cell_change)
+
+    # Cache state we fill in during binding
+    self._is_blank = False
+    self._index    = None
+    self._route_id = None
+
+  # Called by Anvil whenever data bindings refresh (safe to rely on here)
+  def refreshing_data_bindings(self, **event_args):
     d = dict(self.item or {})
     self._is_blank = bool(d.get("_is_blank"))
+    self._route_id = d.get("_route_id") or None
 
-    # Derive index robustly
+    # Resolve our row index within the repeating panel (if available)
     try:
       self._index = list(self.parent.items or []).index(self.item)
     except Exception:
       self._index = None
 
-    # Seq
+    # Dropdown items
+    raw_items = d.get("_cell_items") or []
+    items_for_dd = []
+    for it in raw_items:
+      if isinstance(it, (list, tuple)) and len(it) >= 2:
+        items_for_dd.append((str(it[0] or ""), str(it[1] or "")))
+      elif isinstance(it, dict):
+        items_for_dd.append((str(it.get("name","")), str(it.get("cell_id",""))))
+    if self._is_blank:
+      items_for_dd = [("— select cell —", "")] + items_for_dd
+    self.drop_down_cell.items = items_for_dd
+
+    # Selected value
+    sel = "" if self._is_blank else (d.get("cell_id") or "")
+    self.drop_down_cell.selected_value = sel
+
+    # Seq text
     seq = d.get("seq")
     self.text_seq.text = "" if self._is_blank else (str(seq) if seq is not None else "")
 
-    # Dropdown items from row payload
-    items = d.get("_cell_items") or []
-    norm = []
-    for it in items:
-      if isinstance(it, (list, tuple)) and len(it) >= 2:
-        norm.append((str(it[0] or ""), str(it[1] or "")))
-      elif isinstance(it, dict):
-        norm.append((str(it.get("name","")), str(it.get("cell_id",""))))
-      else:
-        s = str(it)
-        norm.append((s, s))
-
-    if self._is_blank:
-      norm = [("— select cell —", "")] + norm
-
-    self.drop_down_cell.items = norm
-    self.drop_down_cell.selected_value = "" if self._is_blank else (d.get("cell_id") or "")
-
-    # Delete button only for real rows
+    # Delete visible only for non-sentinel rows
     self.button_delete.visible = not self._is_blank
 
   # ---------- helpers ----------
@@ -62,63 +73,58 @@ class RouteCellRow(RouteCellRowTemplate):
     except Exception:
       return None
 
-  def _route_id_from_parent(self):
-    # Walk up to RouteDetails once, cache
-    if self._route_id:
-      return self._route_id
-    p = self.parent
-    while p and not hasattr(p, "route_id"):
-      p = getattr(p, "parent", None)
-    self._route_id = getattr(p, "route_id", None)
-    return self._route_id
+  def _current_inputs(self):
+    seq_val = self._int_or_none(self.text_seq.text)
+    cell_id = (self.drop_down_cell.selected_value or "").strip()
+    return seq_val, cell_id
 
-  def _notify_parent_reload(self):
-    p = self.parent
-    while p and not hasattr(p, "on_row_changed"):
-      p = getattr(p, "parent", None)
-    if p:
-      p.on_row_changed()
+  def _create_if_ready(self):
+    """If this is the sentinel row and both inputs exist, create the step."""
+    if not self._is_blank or not self._route_id:
+      return
+    seq_val, cell_id = self._current_inputs()
+    if (seq_val is not None) and cell_id:
+      anvil.server.call("routes_add_cell", self._route_id, {"seq": int(seq_val), "cell_id": cell_id})
+      # Tell parent to reload & append a new sentinel
+      self.parent.raise_event("x-row-changed")
 
-  # ---------- update-on-change ----------
-  def text_seq_change(self, **e):
-    val = self._int_or_none(self.text_seq.text)
-    if val is None:
-      Notification("Seq must be an integer").show(); return
+  def _update_existing(self, patch: dict):
+    if not patch or self._index is None or self._route_id is None:
+      return
+    anvil.server.call("routes_update_cell", self._route_id, int(self._index), patch)
+    self.parent.raise_event("x-row-changed")
 
-    route_id = self._route_id_from_parent()
-    if not route_id:
-      Notification("Route not ready").show(); return
-
+  # ---------- events ----------
+  def _on_seq_commit(self, **e):
     if self._is_blank:
-      cell_id = self.drop_down_cell.selected_value or ""
-      if not cell_id:
-        Notification("Select a cell first").show(); return
-      anvil.server.call("routes_add_cell", route_id, {"seq": int(val), "cell_id": cell_id})
+      self._create_if_ready()
     else:
-      if self._index is None: return
-      anvil.server.call("routes_update_cell", route_id, self._index, {"seq": int(val)})
-    self._notify_parent_reload()
+      val = self._int_or_none(self.text_seq.text)
+      if val is None:
+        Notification("Seq must be an integer").show()
+        # Ask parent to reload to restore correct value
+        self.parent.raise_event("x-row-changed")
+        return
+      self._update_existing({"seq": val})
 
-  def drop_down_cell_change(self, **e):
-    route_id = self._route_id_from_parent()
-    if not route_id:
-      Notification("Route not ready").show(); return
-
-    cell_id = self.drop_down_cell.selected_value or ""
+  def _on_cell_change(self, **e):
     if self._is_blank:
-      seq_val = self._int_or_none(self.text_seq.text) or (self.item.get("seq") if self.item else 10) or 10
-      if not cell_id: return
-      anvil.server.call("routes_add_cell", route_id, {"seq": int(seq_val), "cell_id": cell_id})
+      self._create_if_ready()
     else:
-      if self._index is None: return
-      anvil.server.call("routes_update_cell", route_id, self._index, {"cell_id": cell_id})
-    self._notify_parent_reload()
+      cell_id = (self.drop_down_cell.selected_value or "").strip()
+      if cell_id:
+        self._update_existing({"cell_id": cell_id})
 
   def button_delete_click(self, **e):
-    route_id = self._route_id_from_parent()
-    if not route_id or self._index is None: return
-    anvil.server.call("routes_remove_cell", route_id, self._index)
-    self._notify_parent_reload()
+    if self._index is None or self._route_id is None:
+      return
+    anvil.server.call("routes_remove_cell", self._route_id, int(self._index))
+    self.parent.raise_event("x-row-changed")
+
+
+
+
+
 
 
 

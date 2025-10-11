@@ -29,9 +29,13 @@ components:
     type: GridPanel
   - components:
     - components:
-      - layout_properties: {column: name}
+      - layout_properties: {column: route_id}
+        name: label_route_id_hdr
+        properties: {text: Route ID}
+        type: Label
+      - layout_properties: {column: route_name}
         name: label_route_name
-        properties: {text: Name}
+        properties: {align: center, text: Name}
         type: Label
       - layout_properties: {column: product_family}
         name: label_product_family
@@ -42,7 +46,7 @@ components:
         properties: {align: center, text: Routing Preview}
         type: Label
       - layout_properties: {column: details}
-        name: label_details
+        name: label_details_hdr
         properties: {align: center, text: Details}
         type: Label
       layout_properties: {col_xs: 1, row: DFDPDG, width_xs: 10}
