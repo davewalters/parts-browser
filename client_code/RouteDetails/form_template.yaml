@@ -44,6 +44,15 @@ components:
     properties: {}
     type: GridPanel
   - components:
+    - layout_properties: {col_xs: 4, row: RCTUBR, width_xs: 5}
+      name: label_count
+      properties: {align: center, background: 'theme:Secondary 500', font_size: 12, foreground: 'theme:White', icon: 'fa:info-circle'}
+      type: Label
+    layout_properties: {grid_position: 'DMRRKC,RXTTYP'}
+    name: grid_panel_2
+    properties: {}
+    type: GridPanel
+  - components:
     - components:
       - layout_properties: {column: sequence}
         name: label_sequence

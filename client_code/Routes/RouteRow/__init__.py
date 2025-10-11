@@ -27,7 +27,7 @@ class RouteRow(RouteRowTemplate):
     self.label_routing_preview.text = " \u2192 ".join(parts)
 
   def button_open_details_click(self, **event_args):
-    from ..RouteDetails import RouteDetails
+    #from ..RouteDetails import RouteDetails
     parent = self.parent
     prev = ""
     try:

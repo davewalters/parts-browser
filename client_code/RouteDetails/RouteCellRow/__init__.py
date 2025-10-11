@@ -5,13 +5,19 @@ import anvil.server
 class RouteCellRow(RouteCellRowTemplate):
   def __init__(self, **kwargs):
     self.init_components(**kwargs)
-    self._parent = self.parent.parent          # repeating_panel_ops -> RouteDetails
-    self._route_id = getattr(self._parent, "route_id", None)
+    # Defer parent lookups until form_show()
+    self._parent = None           # RouteDetails (set in form_show)
+    self._route_id = None
     self._index = None
     self._is_blank = False
 
   def form_show(self, **e):
-    items = list(self.parent.items or [])
+    # Wire parent & route_id now that the row is attached
+    rp = self.parent                       # RepeatingPanel
+    self._parent = rp.parent               # RouteDetails
+    self._route_id = getattr(self._parent, "route_id", None)
+
+    items = list(rp.items or [])
     self._index = items.index(self.item)
     self._is_blank = bool(self.item.get("_is_blank"))
 
@@ -19,17 +25,16 @@ class RouteCellRow(RouteCellRowTemplate):
     seq = self.item.get("seq")
     self.text_seq.text = "" if self._is_blank else (str(seq) if seq is not None else "")
 
-    # Cell dropdown: items are (display_name, value=cell_id)
+    # Cell dropdown
     cell_items = self._parent.get_cell_dropdown_items()  # [(name, cell_id), ...]
-    # prepend a placeholder for the sentinel row
     if self._is_blank:
       cell_items = [("— select cell —", None)] + cell_items
-
     self.drop_down_cell.items = cell_items
     self.drop_down_cell.selected_value = None if self._is_blank else self.item.get("cell_id", "")
 
-    # Delete only for real rows
+    # Only real rows can be deleted
     self.button_delete.visible = not self._is_blank
+
 
   # ---------- helpers ----------
   def _int_or_none(self, v):

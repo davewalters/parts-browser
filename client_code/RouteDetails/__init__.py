@@ -1,6 +1,6 @@
-from ._anvil_designer import RouteDetailsTemplate
 from anvil import *
 import anvil.server
+from ._anvil_designer import RouteDetailsTemplate
 
 class RouteDetails(RouteDetailsTemplate):
   """
@@ -12,15 +12,15 @@ class RouteDetails(RouteDetailsTemplate):
   - 'Resequence' renumbers 10,20,30...
   """
 
-  def __init__(self, route_id: str | None, **kwargs):
+  def __init__(self, route_id=None, **kwargs):
     self.init_components(**kwargs)
-    self.button_sequence.role = "new-button"
+    self.button_resequence.role = "new-button"
     self.button_back.role = "mydefault-button"
     self.repeating_panel_cells.role = "scrolling-panel"
     self.route_id = route_id or None
     self._cells = []
     self._cell_items = []
-    self.repeating_panel_cells.item_template = RouteDetails.RouteCellRow
+    #self.repeating_panel_cells.item_template = RouteCellRow
     self._ensure_route_exists()
     self._load()
 
@@ -31,9 +31,10 @@ class RouteDetails(RouteDetailsTemplate):
         return
     # Create immediately with empty attributes (server should allow)
     rid = anvil.server.call("routes_next_id")
-    doc = anvil.server.call("routes_create",
-                            {"_id": rid, "name": "", "product_family": None, "routing": []}
-                          )
+    doc = anvil.server.call(
+      "routes_create",
+      {"_id": rid, "name": "", "product_family": None, "routing": []}
+    )
     self.route_id = doc["_id"]
 
   # ---------- loading & binding ----------
