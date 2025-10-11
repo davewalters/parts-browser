@@ -4,7 +4,7 @@ components:
     name: label_route_id
     properties: {}
     type: Label
-  - layout_properties: {column: details}
+  - layout_properties: {column: route_name}
     name: label_route_name
     properties: {}
     type: Label

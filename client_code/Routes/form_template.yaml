@@ -14,7 +14,8 @@ components:
     properties: {}
     type: GridPanel
   - components:
-    - layout_properties: {col_xs: 3, row: RUTPVV, width_xs: 2}
+    - event_bindings: {click: button_back_click}
+      layout_properties: {col_xs: 3, row: RUTPVV, width_xs: 2}
       name: button_back
       properties: {icon: 'fa:arrow-left', text: ''}
       type: Button
