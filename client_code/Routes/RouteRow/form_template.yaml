@@ -19,7 +19,7 @@ components:
   - event_bindings: {click: button_open_details_click}
     layout_properties: {column: details}
     name: button_open_details
-    properties: {icon: 'fa:arrow-right', text: ''}
+    properties: {align: center, icon: 'fa:arrow-right', text: ''}
     type: Button
   - event_bindings: {click: button_delete_click}
     layout_properties: {column: delete}

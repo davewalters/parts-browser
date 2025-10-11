@@ -7,10 +7,10 @@ class RouteRow(RouteRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     # Style the buttons
-    if hasattr(self, "button_open_details"):
-      self.button_open_details.role = "mydefault-button"
-    if hasattr(self, "button_delete"):
-      self.button_delete.role = "delete-button"
+    #if hasattr(self, "button_open_details"):
+      #self.button_open_details.role = "mydefault-button"
+    #if hasattr(self, "button_delete"):
+      #self.button_delete.role = "delete-button"
       # If you’re using icon-only buttons, set:
       # self.button_delete.icon = "trash"
 
