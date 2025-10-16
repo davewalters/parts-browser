@@ -1,42 +1,47 @@
 components:
-- event_bindings: {change: text_box_part_id_change, lost_focus: text_box_part_id_lost_focus}
-  layout_properties: {grid_position: 'KJMOVC,ZGOZLZ'}
-  name: text_box_part_id
-  properties: {font_size: 14, placeholder: Part No.}
-  type: TextBox
-- layout_properties: {grid_position: 'KJMOVC,KCGGWI'}
-  name: label_desc
-  properties: {}
-  type: Label
-- layout_properties: {grid_position: 'KJMOVC,PRPGZS'}
-  name: label_cost_nz
-  properties: {}
-  type: Label
-- layout_properties: {grid_position: 'KJMOVC,AGXINH'}
-  name: label_status
-  properties: {}
-  type: Label
-- layout_properties: {grid_position: 'KJMOVC,MCSRMZ'}
-  name: label_unit
-  properties: {}
-  type: Label
-- event_bindings: {change: text_box_qty_change, lost_focus: text_box_qty_lost_focus}
-  layout_properties: {grid_position: 'KJMOVC,RJGBAO'}
-  name: text_box_qty
-  properties: {font_size: 14, placeholder: Qty}
-  type: TextBox
-- event_bindings: {click: button_edit_vendor_click}
-  layout_properties: {grid_position: 'KJMOVC,SDRLSO'}
-  name: button_edit_vendor
-  properties: {icon: 'fa:user-circle', text: ''}
-  type: Button
-- event_bindings: {click: button_remove_row_click}
-  layout_properties: {grid_position: 'KJMOVC,PPUCVE'}
-  name: button_remove_row
-  properties: {icon: 'fa:trash-o', text: ''}
-  type: Button
+- components:
+  - event_bindings: {change: text_box_part_id_change, lost_focus: text_box_part_id_lost_focus}
+    layout_properties: {column: part_id}
+    name: text_box_part_id
+    properties: {font_size: 12, placeholder: Part No.}
+    type: TextBox
+  - layout_properties: {column: desc}
+    name: label_desc
+    properties: {}
+    type: Label
+  - layout_properties: {column: cost_nz}
+    name: label_cost_nz
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: status}
+    name: label_status
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: unit}
+    name: label_unit
+    properties: {align: center}
+    type: Label
+  - event_bindings: {change: text_box_qty_change, lost_focus: text_box_qty_lost_focus}
+    layout_properties: {column: qty}
+    name: text_box_qty
+    properties: {align: center, font_size: 12, placeholder: Qty}
+    type: TextBox
+  - event_bindings: {click: button_edit_vendor_click}
+    layout_properties: {column: edit_vendor}
+    name: button_edit_vendor
+    properties: {icon: 'fa:user-circle', text: ''}
+    type: Button
+  - event_bindings: {click: button_remove_row_click}
+    layout_properties: {column: delete_row}
+    name: button_remove_row
+    properties: {icon: 'fa:trash-o', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'EIWIPB,JVEMHO'}
+  name: data_row_panel_1
+  properties: {font_size: 12}
+  type: DataRowPanel
 container:
   event_bindings: {show: form_show}
-  properties: {background: 'theme:Gray 200', col_widths: '{"ZGOZLZ":10,"KCGGWI":17,"RJGBAO":13,"AGXINH":7,"MCSRMZ":7,"PPUCVE":6}'}
+  properties: {background: 'theme:Gray 200', col_widths: '{}'}
   type: ColumnPanel
 is_package: true

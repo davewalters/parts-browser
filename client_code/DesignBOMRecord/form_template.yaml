@@ -60,32 +60,32 @@ components:
       properties: {text: Description}
       type: Label
     - layout_properties: {column: cost_nz}
-      name: label_cost_nz
-      properties: {}
+      name: label_cost_nz_hdr
+      properties: {align: center, text: Cost NZD}
       type: Label
     - layout_properties: {column: status}
       name: label_status
-      properties: {text: Status}
+      properties: {align: center, text: Status}
       type: Label
     - layout_properties: {column: unit}
       name: label_header_unit
-      properties: {text: Unit of Issue}
+      properties: {align: center, text: Unit of Issue}
       type: Label
     - layout_properties: {column: qty}
       name: label_header_qty
-      properties: {text: Qty}
+      properties: {align: center, font_size: 12, text: Qty}
       type: Label
     - layout_properties: {column: edit_vendor}
       name: label_button_edit_vendor
-      properties: {}
+      properties: {align: center, text: Vendor}
       type: Label
     - layout_properties: {column: delete_row}
       name: label_button_delete_row
-      properties: {}
+      properties: {align: center, text: Delete Row}
       type: Label
     layout_properties: {grid_position: 'CAOBDB,VOILOM'}
     name: data_row_panel_1
-    properties: {background: 'theme:Gray 600', foreground: 'theme:White'}
+    properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
     type: DataRowPanel
   - components:
     - layout_properties: {grid_position: 'HFGMWU,FZLOHG'}
