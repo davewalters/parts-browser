@@ -51,51 +51,51 @@ components:
     properties: {}
     type: GridPanel
   - components:
-    - layout_properties: {column: part_id}
-      name: label_header_part_id
-      properties: {text: Part No.}
-      type: Label
-    - layout_properties: {column: desc}
-      name: label_header_part_desc
-      properties: {text: Description}
-      type: Label
-    - layout_properties: {column: cost_nz}
-      name: label_cost_nz_hdr
-      properties: {align: center, text: Cost NZD}
-      type: Label
-    - layout_properties: {column: status}
-      name: label_status
-      properties: {align: center, text: Status}
-      type: Label
-    - layout_properties: {column: unit}
-      name: label_header_unit
-      properties: {align: center, text: Unit of Issue}
-      type: Label
-    - layout_properties: {column: qty}
-      name: label_header_qty
-      properties: {align: center, font_size: 12, text: Qty}
-      type: Label
-    - layout_properties: {column: edit_vendor}
-      name: label_button_edit_vendor
-      properties: {align: center, text: Vendor}
-      type: Label
-    - layout_properties: {column: delete_row}
-      name: label_button_delete_row
-      properties: {align: center, text: Delete Row}
-      type: Label
-    layout_properties: {grid_position: 'CAOBDB,VOILOM'}
-    name: data_row_panel_1
-    properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
-    type: DataRowPanel
-  - components:
-    - layout_properties: {grid_position: 'HFGMWU,FZLOHG'}
+    - components:
+      - layout_properties: {column: part_id}
+        name: label_header_part_id
+        properties: {text: Part No.}
+        type: Label
+      - layout_properties: {column: desc}
+        name: label_header_part_desc
+        properties: {text: Description}
+        type: Label
+      - layout_properties: {column: cost_nz}
+        name: label_cost_nz_hdr
+        properties: {align: center, text: Cost NZD}
+        type: Label
+      - layout_properties: {column: status}
+        name: label_status
+        properties: {align: center, text: Status}
+        type: Label
+      - layout_properties: {column: unit}
+        name: label_header_unit
+        properties: {align: center, text: Unit of Issue}
+        type: Label
+      - layout_properties: {column: qty}
+        name: label_header_qty
+        properties: {align: center, font_size: 12, text: Qty}
+        type: Label
+      - layout_properties: {column: edit_vendor}
+        name: label_button_edit_vendor
+        properties: {align: center, text: Vendor}
+        type: Label
+      - layout_properties: {column: delete_row}
+        name: label_button_delete_row
+        properties: {align: center, text: Delete Row}
+        type: Label
+      layout_properties: {col_xs: 0, row: XGVCHF, width_xs: 12}
+      name: data_row_panel_1
+      properties: {background: 'theme:Gray 600', font_size: 12, foreground: 'theme:White'}
+      type: DataRowPanel
+    - layout_properties: {col_xs: 0, row: XGVCHF, width_xs: 12}
       name: repeating_panel_1
       properties: {item_template: DesignBOMRecord.DesignBOMRow}
       type: RepeatingPanel
-    layout_properties: {grid_position: 'LRZKFF,UMJPQW'}
-    name: column_panel_1
+    layout_properties: {full_width_row: true, grid_position: 'ENQZBD,QSNCDB'}
+    name: grid_panel_4
     properties: {}
-    type: ColumnPanel
+    type: GridPanel
   layout_properties: {slot: default}
   name: content_panel
   properties: {}

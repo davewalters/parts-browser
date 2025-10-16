@@ -36,7 +36,7 @@ components:
     name: button_remove_row
     properties: {icon: 'fa:trash-o', text: ''}
     type: Button
-  layout_properties: {grid_position: 'EIWIPB,JVEMHO'}
+  layout_properties: {full_width_row: true, grid_position: 'EIWIPB,JVEMHO'}
   name: data_row_panel_1
   properties: {font_size: 12}
   type: DataRowPanel

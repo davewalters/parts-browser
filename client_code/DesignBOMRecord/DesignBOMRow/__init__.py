@@ -5,8 +5,6 @@ import anvil.server
 class DesignBOMRow(DesignBOMRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
-    self.button_remove_row.role = "delete-button"
-    self.button_edit_vendor.role = "mydefault-button"
     self.label_cost_nz.visible = True
 
   def form_show(self, **event_args):

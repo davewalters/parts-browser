@@ -1,5 +1,6 @@
 from anvil import *
 import anvil.server
+from ._anvil_designer import PBOMTemplateListTemplate
 
 class PBOMTemplateList(PBOMTemplateListTemplate):
   def __init__(self,
