@@ -59,6 +59,7 @@ class PartRouteOps(PartRouteOpsTemplate):
   # -----------------------------
   # Load/refresh
   # -----------------------------
+    
   def _load(self):
     print("[PRO] _load start for route:", self._route_id)
     route = None
@@ -68,45 +69,49 @@ class PartRouteOps(PartRouteOpsTemplate):
     except Exception as e:
       print("[PRO][ERR] routes_get:", e)
       route = None
-
+  
     if not route:
       Notification("Route not found.", style="warning").show()
       self.repeating_panel_ops.items = []
-      self.label_route_preview.text = ""
+      if hasattr(self, "label_routing_preview_value"):
+        self.label_routing_preview_value.text = ""
+      elif hasattr(self, "label_routing_preview"):
+        self.label_routing_preview.text = ""
       return
-
-    # Keep preview fresh (and log)
+  
+    # refresh preview (unchanged)
     try:
       preview = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
-      self.label_route_preview.text = preview
+      if hasattr(self, "label_routing_preview_value"):
+        self.label_routing_preview_value.text = preview
+      elif hasattr(self, "label_routing_preview"):
+        self.label_routing_preview.text = preview
       print("[PRO] preview refreshed:", preview)
     except Exception as e:
       print("[PRO][ERR] refresh preview:", e)
-
-    # Routing + existing ops
+  
     try:
       routing = sorted(route.get("routing") or [], key=lambda x: x.get("seq", 10))
       print("[PRO] routing len:", len(routing), routing)
     except Exception as e:
       print("[PRO][ERR] reading routing:", e)
       routing = []
-
+  
     existing = []
     try:
       existing = anvil.server.call("part_route_ops_list", self._part_id, self._route_id) or []
       print("[PRO] part_route_ops_list len:", len(existing))
     except Exception as e:
       print("[PRO][ERR] part_route_ops_list:", e)
-
+  
     existing_by_seq = {op.get("seq"): op for op in existing}
-
+  
     rows = []
     for step in routing:
       seq     = step.get("seq")
       cell_id = step.get("cell_id", "")
       cell_nm = self._cell_id_to_name.get(cell_id, cell_id)
       op      = existing_by_seq.get(seq, {}) or {}
-
       rows.append({
         "part_id": self._part_id,
         "route_id": self._route_id,
@@ -119,10 +124,23 @@ class PartRouteOps(PartRouteOpsTemplate):
         "nc_files": op.get("nc_files", []),
         "work_docs": op.get("work_docs", []),
       })
-
+  
     print("[PRO] rows to bind:", len(rows))
     self.repeating_panel_ops.items = rows
+    self._force_row_refresh()
 
+
+  def _force_row_refresh(self):
+    """Call each row's refreshing_data_bindings manually so labels render."""
+    try:
+      rows = list(getattr(self.repeating_panel_ops, "get_components", lambda: [])())
+      print("[PRO] forcing row refresh on", len(rows), "rows")
+      for rf in rows:
+        if hasattr(rf, "refreshing_data_bindings"):
+          rf.refreshing_data_bindings()
+    except Exception as e:
+      print("[PRO][ERR] _force_row_refresh:", e)
+  
   # Row signals a save happened
   def on_row_changed(self, **event_args):
     print("[PRO] on_row_changed -> reload")
