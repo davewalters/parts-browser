@@ -1,3 +1,4 @@
+# client_code/PartRouteOpRow/__init__.py
 from anvil import *
 import anvil.server
 from ._anvil_designer import PartRouteOpRowTemplate
@@ -6,6 +7,21 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
   def __init__(self, **properties):
     self.init_components(**properties)
     print("[PRORow] __init__")
+
+    self.text_operation_name.set_event_handler("lost_focus", self.text_operation_name_lost_focus)
+    self.text_operation_name.set_event_handler("pressed_enter", self.text_operation_name_pressed_enter)
+
+    self.text_cycle_min.set_event_handler("lost_focus", self.text_cycle_min_lost_focus)
+    self.text_cycle_min.set_event_handler("pressed_enter", self.text_cycle_min_pressed_enter)
+
+    self.text_consumes.set_event_handler("lost_focus", self.text_consumes_lost_focus)
+    self.text_consumes.set_event_handler("pressed_enter", self.text_consumes_pressed_enter)
+
+    self.text_nc_files.set_event_handler("lost_focus", self.text_nc_files_lost_focus)
+    self.text_nc_files.set_event_handler("pressed_enter", self.text_nc_files_pressed_enter)
+
+    self.text_work_docs.set_event_handler("lost_focus", self.text_work_docs_lost_focus)
+    self.text_work_docs.set_event_handler("pressed_enter", self.text_work_docs_pressed_enter)
 
   def refreshing_data_bindings(self, **event_args):
     d = dict(self.item or {})
@@ -32,7 +48,7 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
     payload = {
       "part_id":  d.get("part_id"),
       "route_id": d.get("route_id"),
-      "seq":      d.get("seq"),
+      "seq":      int(d.get("seq") or 0),
       "operation_name": (self.text_operation_name.text or "").strip(),
     }
     try:
@@ -54,7 +70,7 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
     try:
       anvil.server.call("part_route_ops_upsert", payload)
       print("[PRORow] saved.")
-      # Tell parent to refresh
+      # refresh parent so changes persist visually
       self.parent.parent.raise_event("x-row-changed")
     except Exception as e:
       print("[PRORow][ERR] save:", e)
@@ -76,15 +92,14 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
   def text_work_docs_lost_focus(self, **e): self._save()
   def text_work_docs_pressed_enter(self, **e): self._save()
 
-  # ---------- delete ----------
   def button_delete_row_click(self, **event_args):
     d = self.item or {}
     try:
-      anvil.server.call("part_route_ops_delete",
-                        d.get("part_id"), d.get("route_id"), int(d.get("seq") or 0))
+      anvil.server.call("part_route_ops_delete", d.get("part_id"), d.get("route_id"), int(d.get("seq") or 0))
       self.parent.raise_event("x-row-changed")
     except Exception as e:
       alert(f"Delete failed: {e}")
+
 
 
 
