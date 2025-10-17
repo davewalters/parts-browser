@@ -3,25 +3,22 @@ import anvil.server
 from ._anvil_designer import PartRouteOpsTemplate
 
 class PartRouteOps(PartRouteOpsTemplate):
-  def __init__(self, part_id: str, route_id: str, part_name: str = "", route_name: str = "", **kwargs):
+  def __init__(self, part_id: str, route_id: str,
+               part_name: str = "", route_name: str = "", **kwargs):
+    self._part_id   = part_id
+    self._route_id  = route_id
+    self._part_name = part_name or part_id
+    self._route_name= route_name or route_id
     self.init_components(**kwargs)
 
+  def form_show(self, **event_args):
+    # bind header labels safely here
+    self.label_part_id.text   = self._part_id
+    self.label_part_name.text = self._part_name
+    self.label_route_id.text  = self._route_id
+    self.label_route_name.text= self._route_name
     self.button_back.role = "mydefault-button"
-
-    self.part_id = part_id
-    self.route_id = route_id
-    self.part_name = part_name or ""
-    self.route_name = route_name or ""
-
     self.cell_id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
-
-    # Header labels
-    self.label_part_id.text = part_id
-    self.label_part_name.text = self.part_name
-    self.label_route_id.text = route_id
-    self.label_route_name.text = self.route_name
-
-    # NEW: routing preview in header (server-side helper)
     self.label_routing_preview.text = anvil.server.call("routes_preview_string", self.route_id, 12) or ""
 
     self.repeating_panel_ops.item_template = PartRouteOps.PartRouteOpRow

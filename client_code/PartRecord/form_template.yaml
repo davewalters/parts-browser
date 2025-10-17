@@ -27,7 +27,8 @@ components:
         name: button_BOM
         properties: {icon: 'fa:list-ul', text: BOM}
         type: Button
-      - layout_properties: {col_xs: 10, row: YXOXYU, width_xs: 2}
+      - event_bindings: {click: button_part_route_ops_click}
+        layout_properties: {col_xs: 10, row: YXOXYU, width_xs: 2}
         name: button_part_route_ops
         properties: {icon: 'fa:road', text: PartOps}
         type: Button
