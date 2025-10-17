@@ -89,6 +89,10 @@ components:
         name: label_op_doc
         properties: {align: center, text: Op Doc}
         type: Label
+      - layout_properties: {column: insert_row}
+        name: label_insert_row_hdr
+        properties: {align: center, text: Insert Row Below}
+        type: Label
       - layout_properties: {column: delete}
         name: label_delete_op
         properties: {align: center, text: Delete Op}
@@ -101,7 +105,7 @@ components:
       name: repeating_panel_ops
       properties: {item_template: PartRouteOps.PartRouteOpRow}
       type: RepeatingPanel
-    layout_properties: {grid_position: 'LNOWUY,JYUBYG'}
+    layout_properties: {full_width_row: true, grid_position: 'LNOWUY,JYUBYG'}
     name: grid_panel_data
     properties: {}
     type: GridPanel
