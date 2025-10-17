@@ -85,10 +85,6 @@ components:
         name: label_op_doc
         properties: {text: Op Doc}
         type: Label
-      - layout_properties: {column: save}
-        name: label_save_row
-        properties: {align: center, text: Save Op}
-        type: Label
       - layout_properties: {column: delete}
         name: label_delete_op
         properties: {align: center, text: Delete Op}
