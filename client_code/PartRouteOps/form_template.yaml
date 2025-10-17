@@ -51,7 +51,7 @@ components:
       name: label_route_preview_hdr
       properties: {font_size: 12, text: 'Route Preview:'}
       type: Label
-    - layout_properties: {col_xs: 3, row: SKIUAI, width_xs: 8}
+    - layout_properties: {col_xs: 1, row: SKIUAI, width_xs: 8}
       name: label_route_preview
       properties: {font_size: 12}
       type: Label
@@ -71,7 +71,7 @@ components:
         type: Label
       - layout_properties: {column: op_name}
         name: label_operation_name
-        properties: {align: center, text: Op Name}
+        properties: {align: left, text: Op Name}
         type: Label
       - layout_properties: {column: op_cycle_time}
         name: label_op_cycle_time

@@ -10,7 +10,7 @@ components:
     type: DropDown
   - layout_properties: {column: op_name}
     name: text_operation_name
-    properties: {align: center, font_size: 12}
+    properties: {align: left, font_size: 12}
     type: TextBox
   - layout_properties: {column: cycle_time}
     name: text_cycle_min
