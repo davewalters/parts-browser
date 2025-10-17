@@ -67,23 +67,23 @@ components:
         type: Label
       - layout_properties: {column: cell}
         name: label_cell_name
-        properties: {text: Cell}
+        properties: {align: center, text: Cell}
         type: Label
       - layout_properties: {column: op_name}
         name: label_operation_name
-        properties: {text: Op Name}
+        properties: {align: center, text: Op Name}
         type: Label
       - layout_properties: {column: op_cycle_time}
         name: label_op_cycle_time
-        properties: {align: left, text: 'Op Cycle Time [mins/unit]'}
+        properties: {align: center, text: 'Op Cycle Time [mins/unit]'}
         type: Label
       - layout_properties: {column: nc_file}
         name: label_nc_file
-        properties: {align: left, text: NC File}
+        properties: {align: center, text: NC File}
         type: Label
       - layout_properties: {column: op_doc}
         name: label_op_doc
-        properties: {text: Op Doc}
+        properties: {align: center, text: Op Doc}
         type: Label
       - layout_properties: {column: delete}
         name: label_delete_op

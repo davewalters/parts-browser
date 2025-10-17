@@ -89,7 +89,10 @@ class PartRouteOps(PartRouteOpsTemplate):
   def button_back_click(self, **event_args):
     # If you want to return to PartRecord instead, replace with:
     # open_form("PartRecord", part_id=self._part_id)
-    open_form("PartRecord")
+    open_form("Nav")
+
+  def button_part_record_click(self, **event_args):
+    open_form("PartRecord", part_id=self._part_id)
 
       
 

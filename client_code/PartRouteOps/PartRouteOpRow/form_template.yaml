@@ -6,23 +6,23 @@ components:
     type: Label
   - layout_properties: {column: cell}
     name: label_cell_name
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: op_name}
     name: text_operation_name
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: TextBox
   - layout_properties: {column: cycle_time}
     name: text_box_cycle_min_per_unit
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: TextBox
   - layout_properties: {column: nc_files}
     name: text_nc_files
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: TextBox
   - layout_properties: {column: work_docs}
     name: text_work_docs
-    properties: {font_size: 12}
+    properties: {align: center, font_size: 12}
     type: TextBox
   - event_bindings: {click: button_delete_row_click}
     layout_properties: {column: delete}
