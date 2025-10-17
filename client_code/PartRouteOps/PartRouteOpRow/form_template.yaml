@@ -28,7 +28,8 @@ components:
     name: text_work_docs
     properties: {align: center, font_size: 12}
     type: TextBox
-  - layout_properties: {column: insert_row}
+  - event_bindings: {click: button_insert_below_click}
+    layout_properties: {column: insert_row}
     name: button_insert_below
     properties: {icon: 'fa:table', icon_align: top, text: ''}
     type: Button
