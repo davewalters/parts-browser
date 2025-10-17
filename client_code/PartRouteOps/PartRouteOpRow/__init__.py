@@ -109,32 +109,58 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
 
   # ---------- insert / delete ----------
   def button_insert_below_click(self, **event_args):
-    d = dict(self.item or {})
-    try:
-      cur_seq = int(self.text_seq.text or d.get("seq") or 10)
-    except Exception:
-      cur_seq = 10
-    new_seq = cur_seq + 1  # adjust to +5 / +10 if you want spacing
-    new_cell = self.drop_down_cell.selected_value or (d.get("cell_id") or "")
+  # DEBUG — confirm we’re running
+    print("[PRORow] insert below clicked for seq", (self.item or {}).get("seq"))
 
+    # Current row context
+    cur = dict(self.item or {})
+    part_id  = cur.get("part_id")
+    route_id = cur.get("route_id")
+    cur_seq  = int(cur.get("seq") or 0)
+    cur_cell = (cur.get("cell_id") or "")
+  
+    # Look at the next row to choose a neat seq
+    items = list(self.parent.items or [])
+    try:
+      idx = items.index(self.item)
+    except Exception:
+      idx = -1
+  
+    # Heuristic: if there is a next row with a seq gap, insert in the middle,
+    # otherwise use +10 after the current row.
+    new_seq = cur_seq + 10
+    if 0 <= idx < len(items)-1:
+      nxt = items[idx+1]
+      try:
+        nxt_seq = int(nxt.get("seq") or 0)
+        gap = nxt_seq - cur_seq
+        if gap >= 2:
+          new_seq = cur_seq + gap // 2
+      except Exception:
+        pass
+  
+    # Create an empty op row with a default cell = current cell (handy)
     payload = {
-      "part_id": d.get("part_id"),
-      "route_id": d.get("route_id"),
-      "seq": new_seq,
-      "cell_id": new_cell or None,
+      "part_id": part_id,
+      "route_id": route_id,
+      "seq": int(new_seq),
+      "cell_id": cur_cell,               # default to current row’s cell
       "operation_name": "",
       "cycle_min_per_unit": 0.0,
       "consumes": [],
       "nc_files": [],
       "work_docs": [],
     }
+    print("[PRORow] insert payload ->", payload)
+  
     try:
       anvil.server.call("part_route_ops_upsert", payload)
-      p = self._parent()
-      if p:
-        p.raise_event("x-row-changed")
+      # Tell the parent to refresh the list
+      self.parent.raise_event("x-row-changed")
     except Exception as e:
-      Notification(f"Insert failed: {e}", style="danger").show()
+      print("[PRORow][ERR] insert:", e)
+      alert(f"Insert failed: {e}")
+
 
   def button_delete_row_click(self, **event_args):
     d = dict(self.item or {})

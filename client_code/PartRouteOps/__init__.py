@@ -31,7 +31,7 @@ class PartRouteOps(PartRouteOpsTemplate):
     self.button_part_record.role       = "mydefault-button"
     
     # Parent listens for row changes -> reload
-    self.set_event_handler("x-row-changed", self._on_row_changed)
+    self.repeating_panel_ops.set_event_handler("x-row-changed", self._on_row_changed)
 
     # Preload cell dropdown choices
     try:
