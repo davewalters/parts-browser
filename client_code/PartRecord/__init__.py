@@ -316,11 +316,9 @@ class PartRecord(PartRecordTemplate):
       open_form(frm)
   
     except Exception as e:
-      import traceback
       print("💥 PartRouteOps open failed:", e)
-      print(traceback.format_exc())
       alert(f"Couldn't open Part Operations:\n{e}")
-      # optional: open_form("Nav")
+      open_form("Nav")
 
 
   # ---------------------- Helpers ----------------------

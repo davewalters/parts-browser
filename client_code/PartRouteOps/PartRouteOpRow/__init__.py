@@ -3,82 +3,78 @@ import anvil.server
 from ._anvil_designer import PartRouteOpRowTemplate
 
 class PartRouteOpRow(PartRouteOpRowTemplate):
-  """
-  One editable operation row for a given route step (seq, cell).
-  Saves via upsert on blur/Enter; delete clears the override for this seq.
-  """
-
   def __init__(self, **properties):
     self.init_components(**properties)
+    print("[PRORow] __init__")
 
-    # Optional roles
-    try:
-      self.button_delete.role = "delete-button"
-    except Exception:
-      pass
-
-  # Anvil calls this when item changes or needs rebinding
   def refreshing_data_bindings(self, **event_args):
-    d = self.item or {}
+    d = dict(self.item or {})
+    print("[PRORow] refreshing_data_bindings item:", d)
 
-    # Display-only columns
-    self.label_seq.text       = str(d.get("seq", ""))
-    self.label_cell_name.text = d.get("cell_name", "")
+    # Read-only context
+    self.label_seq.text  = str(d.get("seq", ""))
+    self.label_cell.text = d.get("cell_name", d.get("cell_id",""))
 
     # Editable fields
     self.text_operation_name.text = d.get("operation_name", "")
     try:
-      self.text_cycle_min_per_unit.text = f"{float(d.get('cycle_min_per_unit', 0.0)):.3f}"
+      self.text_cycle_min.text = f"{float(d.get('cycle_min_per_unit', 0.0) or 0.0):.2f}"
     except Exception:
-      self.text_cycle_min_per_unit.text = "0.000"
+      self.text_cycle_min.text = "0.00"
 
-    # Delete visible only when we actually have an override doc
-    self.button_delete.visible = bool(d.get("_has_op", False))
+    self.text_consumes.text  = ", ".join(d.get("consumes", []) or [])
+    self.text_nc_files.text  = ", ".join(d.get("nc_files", []) or [])
+    self.text_work_docs.text = ", ".join(d.get("work_docs", []) or [])
 
-  # ---------- save helpers ----------
-  def _collect_payload(self) -> dict:
-    d = self.item or {}
-    # Coerce number
-    try:
-      cycle = float(self.text_cycle_min_per_unit.text or 0.0)
-    except Exception:
-      cycle = 0.0
-    return {
-      "part_id": str(d.get("part_id") or ""),
-      "route_id": str(d.get("route_id") or ""),
-      "seq": int(d.get("seq") or 0),
+  # ---------- helpers ----------
+  def _collect(self) -> dict:
+    d = dict(self.item or {})
+    payload = {
+      "part_id":  d.get("part_id"),
+      "route_id": d.get("route_id"),
+      "seq":      d.get("seq"),
       "operation_name": (self.text_operation_name.text or "").strip(),
-      "cycle_min_per_unit": cycle,
-      # Keep existing lists unless you add editors for them
-      "consumes": list(d.get("consumes") or []),
-      "nc_files": list(d.get("nc_files") or []),
-      "work_docs": list(d.get("work_docs") or []),
     }
+    try:
+      payload["cycle_min_per_unit"] = float(self.text_cycle_min.text or 0.0)
+    except Exception:
+      payload["cycle_min_per_unit"] = 0.0
+
+    def _split_csv(s):
+      return [t.strip() for t in (s or "").split(",") if t.strip()]
+
+    payload["consumes"]  = _split_csv(self.text_consumes.text)
+    payload["nc_files"]  = _split_csv(self.text_nc_files.text)
+    payload["work_docs"] = _split_csv(self.text_work_docs.text)
+    print("[PRORow] _collect ->", payload)
+    return payload
 
   def _save(self):
-    payload = self._collect_payload()
-    if not payload["part_id"] or not payload["route_id"] or payload["seq"] <= 0:
-      Notification("Row is missing identifiers; cannot save.", style="warning").show()
-      return
+    payload = self._collect()
     try:
       anvil.server.call("part_route_ops_upsert", payload)
-      # Tell parent we changed, so it can refresh rows (and toggle delete visibility etc.)
-      self.parent.raise_event("x-row-changed")
+      print("[PRORow] saved.")
+      # Tell parent to refresh
+      self.parent.parent.raise_event("x-row-changed")
     except Exception as e:
-      alert(f"Save failed: {e}")
+      print("[PRORow][ERR] save:", e)
+      Notification(f"Save failed: {e}", style="danger").show()
 
-  # ---------- events: save on blur / Enter ----------
-  def text_operation_name_lost_focus(self, **event_args):
-    self._save()
+  # ---------- autosave on blur / Enter ----------
+  def text_operation_name_lost_focus(self, **e): self._save()
+  def text_operation_name_pressed_enter(self, **e): self._save()
 
-  def text_operation_name_pressed_enter(self, **event_args):
-    self._save()
+  def text_cycle_min_lost_focus(self, **e): self._save()
+  def text_cycle_min_pressed_enter(self, **e): self._save()
 
-  def text_cycle_min_per_unit_lost_focus(self, **event_args):
-    self._save()
+  def text_consumes_lost_focus(self, **e): self._save()
+  def text_consumes_pressed_enter(self, **e): self._save()
 
-  def text_cycle_min_per_unit_pressed_enter(self, **event_args):
-    self._save()
+  def text_nc_files_lost_focus(self, **e): self._save()
+  def text_nc_files_pressed_enter(self, **e): self._save()
+
+  def text_work_docs_lost_focus(self, **e): self._save()
+  def text_work_docs_pressed_enter(self, **e): self._save()
 
   # ---------- delete ----------
   def button_delete_row_click(self, **event_args):
@@ -89,5 +85,7 @@ class PartRouteOpRow(PartRouteOpRowTemplate):
       self.parent.raise_event("x-row-changed")
     except Exception as e:
       alert(f"Delete failed: {e}")
+
+
 
 

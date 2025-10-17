@@ -3,92 +3,133 @@ import anvil.server
 from ._anvil_designer import PartRouteOpsTemplate
 
 class PartRouteOps(PartRouteOpsTemplate):
-  """
-  Edit per-part overrides for a given route:
-    - One row per routing step (seq, cell from the route)
-    - Editable: operation_name, cycle_min_per_unit (and extendable fields)
-    - Saves per row (upsert); delete clears the override for that seq
-  """
-
   def __init__(self, part_id: str, route_id: str,
                part_name: str = "", route_name: str = "", **kwargs):
-    # --- stable state first (so Designer preview won't break) ---
+    # Store args early so we can log them even if init blows up
     self._part_id    = part_id
     self._route_id   = route_id
     self._part_name  = part_name or part_id
     self._route_name = route_name or route_id
 
+    print("[PRO] __init__ start",
+          "part_id=", self._part_id,
+          "route_id=", self._route_id,
+          "part_name=", self._part_name,
+          "route_name=", self._route_name)
+
     self.init_components(**kwargs)
 
-    # Roles / basic wiring
-    self.button_back.role = "mydefault-button"
-
-  def form_show(self, **event_args):
-    # Header labels
-    self.label_part_id.text    = self._part_id
-    self.label_part_name.text  = self._part_name
-    self.label_route_id.text   = self._route_id
-    self.label_route_name.text = self._route_name
-
-    # Preload map for readable cell names & preview
-    self.cell_id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
+    # Optional roles
+    self.button_home.role = "mydefault-button"
+    self.button_part_record.role = "mydefault-button"
+    
+    # Bind header IMMEDIATELY (no form_show dependency)
     try:
-      self.label_routing_preview.text = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
-    except Exception:
-      self.label_routing_preview.text = ""
+      self.label_part_id.text    = self._part_id
+      self.label_part_name.text  = self._part_name
+      self.label_route_id.text   = self._route_id
+      self.label_route_name.text = self._route_name
+      print("[PRO] Header bound")
+    except Exception as e:
+      print("[PRO][ERR] binding header:", e)
 
-    # Bubble child events up to here
-    self.repeating_panel_ops.set_event_handler("x-row-changed", self._on_row_changed)
+    # Parent listens for row-save callback
+    self.repeating_panel_ops.set_event_handler("x-row-changed", self.on_row_changed)
 
-    # Load rows
+    # Preload the cell map (with logging)
+    self._cell_id_to_name = {}
+    try:
+      self._cell_id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
+      print("[PRO] cell_id_to_name loaded:", len(self._cell_id_to_name))
+    except Exception as e:
+      print("[PRO][ERR] get_cell_id_to_name_map:", e)
+
+    # Route preview (support either label name)
+    try:
+      preview = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
+      self.label_route_preview.text = preview
+      print("[PRO] preview ok:", preview)
+    except Exception as e:
+      print("[PRO][ERR] routes_preview_string:", e)
+
+    # Initial load
     self._load()
+    print("[PRO] __init__ done")
 
-  # ---------- data load ----------
+  # -----------------------------
+  # Load/refresh
+  # -----------------------------
   def _load(self):
-    route = anvil.server.call("routes_get", self._route_id) or {}
-    routing = sorted(route.get("routing") or [], key=lambda x: x.get("seq", 10))
+    print("[PRO] _load start for route:", self._route_id)
+    route = None
+    try:
+      route = anvil.server.call("routes_get", self._route_id)
+      print("[PRO] routes_get ok. route keys:", list((route or {}).keys()))
+    except Exception as e:
+      print("[PRO][ERR] routes_get:", e)
+      route = None
 
-    # Existing per-part overrides keyed by seq
-    existing = anvil.server.call("part_route_ops_list", self._part_id, self._route_id) or []
+    if not route:
+      Notification("Route not found.", style="warning").show()
+      self.repeating_panel_ops.items = []
+      self.label_route_preview.text = ""
+      return
+
+    # Keep preview fresh (and log)
+    try:
+      preview = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
+      self.label_route_preview.text = preview
+      print("[PRO] preview refreshed:", preview)
+    except Exception as e:
+      print("[PRO][ERR] refresh preview:", e)
+
+    # Routing + existing ops
+    try:
+      routing = sorted(route.get("routing") or [], key=lambda x: x.get("seq", 10))
+      print("[PRO] routing len:", len(routing), routing)
+    except Exception as e:
+      print("[PRO][ERR] reading routing:", e)
+      routing = []
+
+    existing = []
+    try:
+      existing = anvil.server.call("part_route_ops_list", self._part_id, self._route_id) or []
+      print("[PRO] part_route_ops_list len:", len(existing))
+    except Exception as e:
+      print("[PRO][ERR] part_route_ops_list:", e)
+
     existing_by_seq = {op.get("seq"): op for op in existing}
 
     rows = []
     for step in routing:
-      seq = step.get("seq")
+      seq     = step.get("seq")
       cell_id = step.get("cell_id", "")
-      cell_name = self.cell_id_to_name.get(cell_id, cell_id)
-      op = existing_by_seq.get(seq, {}) or {}
+      cell_nm = self._cell_id_to_name.get(cell_id, cell_id)
+      op      = existing_by_seq.get(seq, {}) or {}
 
       rows.append({
-        # keep payload flat—row form will read keys directly
         "part_id": self._part_id,
         "route_id": self._route_id,
         "seq": seq,
         "cell_id": cell_id,
-        "cell_name": cell_name,
+        "cell_name": cell_nm,
         "operation_name": op.get("operation_name", ""),
-        "cycle_min_per_unit": op.get("cycle_min_per_unit", 0.0),
+        "cycle_min_per_unit": float(op.get("cycle_min_per_unit", 0.0) or 0.0),
         "consumes": op.get("consumes", []),
         "nc_files": op.get("nc_files", []),
         "work_docs": op.get("work_docs", []),
-        "_has_op": bool(op),  # whether there is currently an override doc
       })
 
+    print("[PRO] rows to bind:", len(rows))
     self.repeating_panel_ops.items = rows
 
-  # Child row says it saved or deleted → reload
-  def _on_row_changed(self, **event_args):
-    # Refresh preview (in case routing changed elsewhere)
-    try:
-      self.label_routing_preview.text = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
-    except Exception:
-      pass
+  # Row signals a save happened
+  def on_row_changed(self, **event_args):
+    print("[PRO] on_row_changed -> reload")
     self._load()
 
   # ---------- nav ----------
-  def button_back_click(self, **event_args):
-    # If you want to return to PartRecord instead, replace with:
-    # open_form("PartRecord", part_id=self._part_id)
+  def button_home_click(self, **event_args):
     open_form("Nav")
 
   def button_part_record_click(self, **event_args):
