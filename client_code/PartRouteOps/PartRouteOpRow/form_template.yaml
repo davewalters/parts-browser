@@ -22,11 +22,11 @@ components:
     type: TextBox
   - layout_properties: {column: nc_files}
     name: text_nc_files
-    properties: {align: center, font_size: 12}
+    properties: {align: left, font_size: 12}
     type: TextBox
   - layout_properties: {column: work_docs}
     name: text_work_docs
-    properties: {align: center, font_size: 12}
+    properties: {align: left, font_size: 12}
     type: TextBox
   - event_bindings: {click: button_insert_below_click}
     layout_properties: {column: insert_row}

@@ -84,11 +84,11 @@ components:
         type: Label
       - layout_properties: {column: nc_files}
         name: label_nc_file
-        properties: {align: center, text: NC File}
+        properties: {align: left, text: NC File}
         type: Label
       - layout_properties: {column: work_docs}
         name: label_op_doc
-        properties: {align: center, text: Op Doc}
+        properties: {align: left, text: Op Doc}
         type: Label
       - layout_properties: {column: insert_row}
         name: label_insert_row_hdr
