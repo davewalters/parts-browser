@@ -1,7 +1,8 @@
 components:
 - components:
   - components:
-    - layout_properties: {col_xs: 3, row: FBKPYX, width_xs: 2}
+    - event_bindings: {click: button_home_click}
+      layout_properties: {col_xs: 3, row: FBKPYX, width_xs: 2}
       name: button_home
       properties: {icon: 'fa:home', text: Home}
       type: Button
