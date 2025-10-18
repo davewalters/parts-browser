@@ -1,3 +1,4 @@
+from ._anvil_designer import PBOMTemplateLineRowTemplate
 from anvil import *
 
 class PBOMTemplateLineRow(PBOMTemplateLineRowTemplate):

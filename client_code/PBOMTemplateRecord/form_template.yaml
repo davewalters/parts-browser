@@ -5,6 +5,10 @@ components:
       name: button_home
       properties: {icon: 'fa:home', text: Home}
       type: Button
+    - layout_properties: {col_xs: 5, row: DIFPOO, width_xs: 2}
+      name: button_create
+      properties: {font_size: 14, icon: 'fa:save', text: Save}
+      type: Button
     - event_bindings: {click: button_regenerate_click}
       layout_properties: {col_xs: 7, row: DIFPOO, width_xs: 4}
       name: button_regenerate
@@ -15,6 +19,22 @@ components:
     properties: {}
     type: GridPanel
   - components:
+    - layout_properties: {col_xs: 0, row: GQCJTK, width_xs: 2}
+      name: label_part_no_title
+      properties: {font_size: 12, text: 'Assembly No.:'}
+      type: Label
+    - layout_properties: {col_xs: 2, row: GQCJTK, width_xs: 3}
+      name: text_parent_id
+      properties: {font_size: 12}
+      type: TextBox
+    - layout_properties: {col_xs: 5, row: GQCJTK, width_xs: 2}
+      name: label_description_title
+      properties: {font_size: 12, text: 'Description:'}
+      type: Label
+    - layout_properties: {col_xs: 7, row: GQCJTK, width_xs: 4}
+      name: label_parent_desc
+      properties: {font_size: 12}
+      type: Label
     - layout_properties: {col_xs: 0, row: IYDVUX, width_xs: 2}
       name: label_id_title
       properties: {font_size: 12, text: 'Prod. BOM ID:'}
@@ -55,22 +75,6 @@ components:
       name: text_variant
       properties: {font_size: 12}
       type: TextBox
-    - layout_properties: {col_xs: 0, row: SDXEXQ, width_xs: 2}
-      name: label_part_no_title
-      properties: {font_size: 12, text: 'Assembly No.:'}
-      type: Label
-    - layout_properties: {col_xs: 2, row: SDXEXQ, width_xs: 2}
-      name: label_parent_id
-      properties: {font_size: 12}
-      type: Label
-    - layout_properties: {col_xs: 5, row: SDXEXQ, width_xs: 2}
-      name: label_description_title
-      properties: {font_size: 12, text: 'Description:'}
-      type: Label
-    - layout_properties: {col_xs: 7, row: SDXEXQ, width_xs: 4}
-      name: label_parent_desc
-      properties: {font_size: 12}
-      type: Label
     - layout_properties: {col_xs: 1, row: MLJYSE, width_xs: 1}
       name: label_notes
       properties: {font_size: 12, text: 'Notes:'}
