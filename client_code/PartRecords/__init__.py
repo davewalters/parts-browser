@@ -90,7 +90,7 @@ class PartRecords(PartRecordsTemplate):
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
                 prev_filter_designbom=self.prev_filter_designbom)
-      print(f"opening PartRecord: prev_filter_designbom = {self.prev_filter_designbom}")
+      #print(f"opening PartRecord: prev_filter_designbom = {self.prev_filter_designbom}")
     except Exception as e:
       alert(f"Error loading part detail: {e}")
 

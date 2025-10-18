@@ -42,6 +42,7 @@ class PartRouteOps(PartRouteOpsTemplate):
     # [(display, value)]
     self._cell_items = [(name, cid) for cid, name in self._cell_id_to_name.items()]
 
+    self.repeating_panel_ops.role = "scrolling-panel"
     # Child rows will call back here
     self.set_event_handler("x-row-changed", self._on_row_changed)
 

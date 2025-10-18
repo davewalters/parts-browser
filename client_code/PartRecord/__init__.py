@@ -283,18 +283,18 @@ class PartRecord(PartRecordTemplate):
 
   def button_part_route_ops_click(self, **event_args):
     part_id = self.ensure_part_saved()
-    print("PartRecord: part_id:", part_id)
+    #print("PartRecord: part_id:", part_id)
     if not part_id:
       return
   
     selected_route_name = self.drop_down_route_name.selected_value
-    print("PartRecord: selected_route_name:", selected_route_name)
+    #print("PartRecord: selected_route_name:", selected_route_name)
     if not selected_route_name:
       Notification("Select a Route before opening Part Operations.", style="warning").show()
       return
   
     route_id = self._route_id_by_name.get(selected_route_name or "", "")
-    print("PartRecord: route_id:", route_id)
+    #print("PartRecord: route_id:", route_id)
     if not route_id:
       Notification("Selected Route name could not be resolved to an ID.", style="warning").show()
       return
@@ -302,10 +302,10 @@ class PartRecord(PartRecordTemplate):
     try:
       # IMPORTANT: import the class, construct it, then open it.
       from ..PartRouteOps import PartRouteOps
-      print("PartRecord: opening PartRouteOps with",
-            dict(part_id=part_id, route_id=route_id,
-                part_name=self.text_box_desc.text or part_id,
-                route_name=selected_route_name))
+      #print("PartRecord: opening PartRouteOps with",
+      #      dict(part_id=part_id, route_id=route_id,
+      #          part_name=self.text_box_desc.text or part_id,
+      #          route_name=selected_route_name))
   
       frm = PartRouteOps(
         part_id=part_id,
@@ -316,7 +316,7 @@ class PartRecord(PartRecordTemplate):
       open_form(frm)
   
     except Exception as e:
-      print("💥 PartRouteOps open failed:", e)
+      #print("💥 PartRouteOps open failed:", e)
       alert(f"Couldn't open Part Operations:\n{e}")
       open_form("Nav")
 
