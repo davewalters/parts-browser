@@ -10,8 +10,13 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
                filter_plant="",
                **kwargs):
     self.init_components(**kwargs)
+
+    # Roles
     self.button_home.role = "mydefault-button"
     self.button_new_pbom.role = "new-button"
+
+    # Debug: show which template Anvil thinks it is using
+    print("RP template ->", self.repeating_panel_pbomtpl.item_template)
 
     # Persisted filter state
     self.prev_filter_parent_prefix = filter_parent_prefix or ""
@@ -26,19 +31,42 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
     self.text_rev.text = self.prev_filter_rev
     self.text_plant.text = self.prev_filter_plant
 
-    # Update-on-enter / change (as per project convention)
+    # Events (update-on-enter / change)
     self.text_parent_prefix.set_event_handler("pressed_enter", self.update_filter)
     self.text_rev.set_event_handler("pressed_enter", self.update_filter)
     self.text_plant.set_event_handler("pressed_enter", self.update_filter)
     self.drop_down_status.set_event_handler("change", self.update_filter)
 
-    # Row open-detail event
+    # Row “open detail” event (the row bubbles x-open-detail on select)
     self.repeating_panel_pbomtpl.set_event_handler("x-open-detail", self.open_detail)
 
     self._last = None
     self.update_filter()
 
+  # ---- Helpers ----
+  def _normalize_rows(self, raw_rows):
+    """Make every field a string and add display_id for row rendering."""
+    rows = []
+    for r in (raw_rows or []):
+      d = dict(r) if isinstance(r, dict) else {}
+      _id = d.get("_id") or ""
+      display_id = d.get("id") or _id  # prefer human code if present
+      rows.append({
+        "_id": str(_id) if _id is not None else "",
+        "display_id": str(display_id or ""),
+        "parent_part_id": str(d.get("parent_part_id") or ""),
+        "parent_desc": str(d.get("parent_desc") or ""),
+        "rev": str(d.get("rev") or ""),
+        "plant_id": str(d.get("plant_id") or ""),
+        "variant": str(d.get("variant") or ""),
+        "status": str(d.get("status") or ""),
+      })
+    print("rows: ", rows)
+    return rows
+
+  # ---- Filtering / Loading ----
   def update_filter(self, **event_args):
+    # Cache filters
     self.prev_filter_parent_prefix = self.text_parent_prefix.text or ""
     self.prev_filter_status = self.drop_down_status.selected_value or ""
     self.prev_filter_rev = self.text_rev.text or ""
@@ -54,7 +82,7 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
     self._last = q
 
     try:
-      rows = anvil.server.call(
+      raw = anvil.server.call(
         "pbomtpl_search",
         parent_prefix=self.prev_filter_parent_prefix,
         status=self.prev_filter_status,
@@ -62,18 +90,25 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
         plant_id=self.prev_filter_plant,
         limit=300
       ) or []
+
+      rows = self._normalize_rows(raw)
+
+      # Force the RP to rebuild its children (clear -> assign)
+      self.repeating_panel_pbomtpl.items = []
       self.repeating_panel_pbomtpl.items = rows
+
       self.label_count.text = f"{len(rows)} PBOM templates"
+      print("Assigned", len(rows), "rows to RP")
+      print("Repeating Panel items: ", self.repeating_panel_pbomtpl.items)
+
     except Exception as e:
       self.label_count.text = f"Error: {e}"
       self.repeating_panel_pbomtpl.items = []
+      print("PBOMTemplateList update_filter error:", e)
 
+  # ---- New PBOM ----
   def button_new_pbom_click(self, **event_args):
-    """
-    New flow:
-    - Simply open PBOMTemplateRecord with no pbom_id (blank header).
-    - User enters parent_id in the record form; dependent fields populate on enter.
-    """
+    # Open record form in "new" mode; user types parent_id and saves
     open_form("PBOMTemplateRecord",
               pbom_id=None,
               parent_prefix=self.prev_filter_parent_prefix,
@@ -81,17 +116,25 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
               rev=self.prev_filter_rev,
               plant=self.prev_filter_plant)
 
+  # ---- Open Detail ----
   def open_detail(self, row, **event_args):
+    if not isinstance(row, dict):
+      return
+    rid = row.get("_id")
+    if not rid:
+      Notification("Missing PBOM _id on row.").show()
+      return
     open_form("PBOMTemplateRecord",
-              pbom_id=row["_id"],
+              pbom_id=rid,
               parent_prefix=self.prev_filter_parent_prefix,
               status=self.prev_filter_status,
               rev=self.prev_filter_rev,
               plant=self.prev_filter_plant)
 
-  # --------- Navigation --------
+  # ---- Navigation ----
   def button_home_click(self, **event_args):
     open_form("Nav")
+
 
 
 
