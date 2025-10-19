@@ -7,7 +7,7 @@ components:
       type: Button
     - event_bindings: {click: button_create_click}
       layout_properties: {col_xs: 5, row: DIFPOO, width_xs: 2}
-      name: button_create
+      name: button_save
       properties: {font_size: 14, icon: 'fa:save', text: Save}
       type: Button
     - event_bindings: {click: button_regenerate_click}
