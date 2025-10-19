@@ -5,7 +5,7 @@ components:
       name: button_home
       properties: {icon: 'fa:home', text: Home}
       type: Button
-    - event_bindings: {click: button_create_click}
+    - event_bindings: {click: button_save_click}
       layout_properties: {col_xs: 5, row: DIFPOO, width_xs: 2}
       name: button_save
       properties: {font_size: 14, icon: 'fa:save', text: Save}

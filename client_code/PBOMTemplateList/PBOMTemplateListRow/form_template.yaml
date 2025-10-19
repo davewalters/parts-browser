@@ -6,7 +6,7 @@ components:
     type: Label
   - layout_properties: {column: rev}
     name: label_rev
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: designbom_id}
     name: label_parent_id
@@ -18,18 +18,19 @@ components:
     type: Label
   - layout_properties: {column: status}
     name: label_status
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: variant}
     name: label_variant
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: facility}
     name: label_plant
     properties: {}
     type: Label
-  - layout_properties: {column: details}
-    name: button_1
+  - event_bindings: {click: button_select_click}
+    layout_properties: {column: details}
+    name: button_select
     properties: {align: center, icon: 'fa:arrow-right', text: ''}
     type: Button
   layout_properties: {grid_position: 'FQIMWC,USSTJI'}
