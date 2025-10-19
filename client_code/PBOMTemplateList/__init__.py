@@ -89,5 +89,9 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
               rev=self.prev_filter_rev,
               plant=self.prev_filter_plant)
 
+  # --------- Navigation --------
+  def button_home_click(self, **event_args):
+    open_form("Nav")
+
 
 

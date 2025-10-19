@@ -76,6 +76,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       c.enabled = True
 
   def _resolve_parent_on_enter(self, **e):
+    print("_resolve_parent_on_enter triggered")
     pid = (self.text_parent_id.text or "").strip()
     if not pid:
       Notification("Enter a valid parent_id.").show()
@@ -94,6 +95,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
 
     self.label_parent_desc.text = part.get("description") or part.get("part_name") or ""
     self.button_create.enabled = True
+    print("button_create enabled")
 
   def button_create_click(self, **e):
     pid = (self.text_parent_id.text or "").strip()
@@ -114,43 +116,25 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       alert(f"Create failed: {ex}")
       return
 
-    if not created:
-      alert("Create failed (no document returned).")
+    # Defensive: extract an id robustly
+    created_id = None
+    if isinstance(created, dict):
+      created_id = created.get("_id") or created.get("id") or created.get("pbom_id")
+
+    if not created_id:
+      # Helpful debug output if the server ever returns an unexpected shape
+      alert(f"Create succeeded but no _id was returned.\nReturned: {created!r}")
       return
 
-    open_form("PBOMTemplateRecord", pbom_id=created["_id"])
+    open_form("PBOMTemplateRecord", pbom_id=created_id)
+
 
   # ---------- Existing-record mode ----------
 
   def _load(self):
     d = anvil.server.call("pbomtpl_get", self.pbom_id) or {}
-    self.doc = d
-
-    # Header bindings
-    self.label_id.text          = d.get("_id", "")
-    self.text_parent_id.text    = d.get("parent_part_id", "") or ""
-    self.label_parent_desc.text = d.get("parent_desc", "") or ""
-    self._status                = d.get("status", "draft")
-    self._rev                   = d.get("rev") or ""
-    self.text_plant.text        = d.get("plant_id") or ""
-    self.text_variant.text      = d.get("variant") or ""
-    self.text_notes.text        = d.get("notes") or ""
-
-    is_draft = (self._status == "draft")
-    for c in [self.text_parent_id, self.text_plant, self.text_variant, self.text_notes]:
-      c.enabled = is_draft
-
-    self.button_create.visible = False
-    self.button_regenerate.visible = True
-    self.button_regenerate.enabled = is_draft
-
-    # Status & Rev dropdowns
-    self._bind_status_dropdown(self._status)
-    is_archived = (self._status == "archived")
-    self._bind_rev_dropdown(self._rev, is_archived)
-
-    # Lines
-    self.repeating_panel_lines.items = d.get("lines", [])
+    self._bind_header_from_doc(d)
+    self.repeating_panel_lines.items = (d.get("lines") or [])
 
   # ---------- Header autosave (existing + draft) ----------
 
@@ -161,10 +145,38 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       Notification("Header is read-only (status ≠ draft).").show()
       return
     try:
-      self.doc = anvil.server.call("pbomtpl_update", self.pbom_id, patch)
-      self._load()
+      updated = anvil.server.call("pbomtpl_update", self.pbom_id, patch) or {}
+      self._bind_header_from_doc(updated)
     except Exception as e:
       alert(f"Save failed: {e}")
+
+  def _bind_header_from_doc(self, d):
+  # Cache first (single source of truth)
+    self.doc = d or {}
+    self._status = (self.doc.get("status") or "draft")
+    self._rev    = (self.doc.get("rev") or "")
+  
+    # Header controls
+    self.label_id.text          = self.doc.get("_id", "") or ""
+    self.text_parent_id.text    = self.doc.get("parent_part_id", "") or ""
+    self.label_parent_desc.text = self.doc.get("parent_desc", "") or ""
+    self.text_plant.text        = self.doc.get("plant_id", "") or ""
+    self.text_variant.text      = self.doc.get("variant", "") or ""
+    self.text_notes.text        = self.doc.get("notes", "") or ""
+  
+    # Enable/disable header fields by status
+    is_draft = (self._status == "draft")
+    for c in [self.text_parent_id, self.text_plant, self.text_variant, self.text_notes]:
+      c.enabled = is_draft
+  
+    # Status & Rev dropdowns
+    self._bind_status_dropdown(self._status)
+    self._bind_rev_dropdown(self._rev, is_archived=(self._status == "archived"))
+  
+    # Buttons
+    self.button_create.visible = False  # once a doc exists
+    self.button_regenerate.visible = True
+    self.button_regenerate.enabled = is_draft
 
   def text_parent_id_change(self, **e):
     if not self.pbom_id:
@@ -282,8 +294,37 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       return f"{head}{int(digits)+1:0{len(digits)}d}"
     return cur + "A"
 
+  # ------------- On Save ------------------
+  def button_create_click(self, **e):
+    pid = (self.text_parent_id.text or "").strip()
+    if not pid:
+      Notification("Enter a valid parent_id first.").show()
+      return
+  
+    payload = {
+      "parent_part_id": pid,
+      "rev": (self.drop_down_rev.selected_value or "A"),
+      "plant_id": (self.text_plant.text or None) or None,
+      "variant": (self.text_variant.text or None) or None,
+      "notes": (self.text_notes.text or None) or None,
+    }
+    try:
+      created = anvil.server.call("pbomtpl_create_draft", payload) or {}
+    except Exception as ex:
+      alert(f"Create failed: {ex}")
+      return
+  
+    created_id = created.get("_id") or created.get("id") or created.get("pbom_id")
+    if not created_id:
+      alert(f"Create succeeded but no _id was returned.\nReturned: {created!r}")
+      return
+  
+    # In-place transition to 'existing' mode
+    self.pbom_id = created_id
+    self._bind_header_from_doc(created)    # bind immediately
+    self.repeating_panel_lines.items = (created.get("lines") or [])
+  
   # ---------- Lines ----------
-
   def button_regenerate_click(self, **e):
     if self._status != "draft":
       Notification("Can only regenerate lines while in draft.").show()
@@ -291,3 +332,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     if confirm("Rebuild lines from DesignBOM? This will replace current lines."):
       anvil.server.call("pbomtpl_regenerate_from_design", self.pbom_id)
       self._load()
+
+  # --------- Navigation --------
+  def button_home_click(self, **event_args):
+    open_form("Nav")
