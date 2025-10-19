@@ -15,7 +15,7 @@ class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
     self.label_plant.data_bindings = [{"property": "text", "code": "(self.item or {}).get('plant_id') or ''"}]
     self.label_variant.data_bindings = [{"property": "text", "code": "(self.item or {}).get('variant') or ''"}]
     self.label_status.data_bindings = [{"property": "text", "code": "(self.item or {}).get('status') or ''"}]
-
+    print("Row: label_id: ", self.label_id.data_bindings)
   def button_select_click(self, **event_args):
     # Bubble up to the list to handle navigation
     self.parent.raise_event("x-open-detail", row=self.item)
