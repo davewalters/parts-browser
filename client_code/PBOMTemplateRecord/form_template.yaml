@@ -110,6 +110,10 @@ components:
         name: label_unit
         properties: {align: center, text: Unit of Issue}
         type: Label
+      - layout_properties: {column: cut_info}
+        name: label_cut_info_hdr
+        properties: {align: center, text: Cut Spec}
+        type: Label
       - layout_properties: {column: lot_traced}
         name: label_lot_traced
         properties: {align: center, text: Lot Traced}

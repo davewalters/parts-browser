@@ -14,19 +14,23 @@ components:
     type: Label
   - layout_properties: {column: qty}
     name: label_qty_per
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: unit}
     name: label_unit
-    properties: {}
+    properties: {align: center}
+    type: Label
+  - layout_properties: {column: cut_info}
+    name: label_cut_info
+    properties: {align: center}
     type: Label
   - layout_properties: {column: lot_traced}
     name: label_lot_traced
-    properties: {}
+    properties: {align: center}
     type: Label
   - layout_properties: {column: serial}
     name: label_serial_required
-    properties: {}
+    properties: {align: center}
     type: Label
   layout_properties: {grid_position: 'EGZIMY,NIEPVT'}
   name: data_row_panel_1
