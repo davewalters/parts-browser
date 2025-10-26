@@ -5,6 +5,8 @@ from datetime import datetime
 from .. import config
 from .. PartRecords import PartRecords   # keep as-is if this is your working import
 
+_NON_MATERIAL_UNITS = ["each", "per hr", "multiple"]
+
 class PartRecord(PartRecordTemplate):
   def __init__(self, part_id,
                prev_filter_part="",
@@ -53,6 +55,7 @@ class PartRecord(PartRecordTemplate):
     # Dropdowns (static lists)
     self.drop_down_status.items = ["active", "obsolete"]
     self.drop_down_type.items = ["part", "assembly", "phantom", "material", "service", "documentation"]
+    # Start with something harmless; _reload_unit_dropdown_for_type() will adjust properly.
     self.drop_down_unit.items = ["each", "per m", "per hr", "multiple"]
     self.drop_down_process.items = ["machine", "3DP", "assemble", "laser-cut", "weld", "cut-bend", "waterjet-cut", "-"]
 
@@ -65,6 +68,11 @@ class PartRecord(PartRecordTemplate):
     self.drop_down_process.selected_value = self.part.get("process", "-")
     self.text_box_material.text = self.part.get("material_spec", "")
     self.drop_down_unit.selected_value = self.part.get("unit", "each")
+
+    # Wire type-change to refresh units and BOM button
+    self.drop_down_type.set_event_handler("change", self.drop_down_type_change)
+    # Ensure the Unit dropdown matches the current Type selection
+    self._reload_unit_dropdown_for_type()
 
     # Load routes and select current one (by id -> name)
     self._load_routes_dropdown()
@@ -109,12 +117,37 @@ class PartRecord(PartRecordTemplate):
     self.text_box_sell_price_nzd.text = self._format_price_field(sell_price_val)
     self.text_box_sell_price_nzd.set_event_handler("lost_focus", self._format_price_on_blur)
 
-    # Buttons visibility
+    # Buttons visibility (keep this behavior)
     self.button_delete.visible = bool(self.part)
     self.button_BOM.visible = self.drop_down_type.selected_value == "assembly"
 
-  # ---------------------- Route dropdown loader ----------------------
+  # ---------------------- Type change -> refresh units + BOM visibility ----------------------
+  def drop_down_type_change(self, **event_args):
+    self._reload_unit_dropdown_for_type()
+    self.button_BOM.visible = (self.drop_down_type.selected_value == "assembly")
 
+  # ---------------------- Unit of Measure dropdown loader ----------------------
+  def _reload_unit_dropdown_for_type(self):
+    part_type = (self.drop_down_type.selected_value or "").strip().lower()
+    current_unit = (self.drop_down_unit.selected_value or "").strip()
+    if part_type == "material":
+      try:
+        uoms = anvil.server.call("uom_list") or []
+      except Exception as e:
+        Notification(f"Could not load material UOMs: {e}", style="warning").show()
+        uoms = []
+      items = [u.get("_id") for u in uoms] or ["per mm", "per m"]  # sensible fallback
+      self.drop_down_unit.items = items
+      # Preserve current if valid; else default to per mm
+      if current_unit in items:
+        self.drop_down_unit.selected_value = current_unit
+      else:
+        self.drop_down_unit.selected_value = "per mm" if "per mm" in items else items[0]
+    else:
+      self.drop_down_unit.items = _NON_MATERIAL_UNITS
+      self.drop_down_unit.selected_value = current_unit if current_unit in _NON_MATERIAL_UNITS else "each"
+
+  # ---------------------- Route dropdown loader ----------------------
   def _load_routes_dropdown(self):
     """
     Populate route name dropdown. We show names, but will save the corresponding route_id.
@@ -141,7 +174,6 @@ class PartRecord(PartRecordTemplate):
       Notification(f"⚠️ Failed to load routes: {e}", style="warning").show()
 
   # ---------------------- Save ----------------------
-
   def button_save_click(self, **event_args):
     try:
       latest_cost = {
@@ -182,7 +214,6 @@ class PartRecord(PartRecordTemplate):
       Notification(f"❌ Save failed: {e}", style="danger").show()
 
   # ---------------------- Route dropdown change (auto-save + preview) ----------------------
-
   def drop_down_route_name_change(self, **event_args):
     """
     Project pattern: auto-save on change, then refresh preview and button state.
@@ -237,7 +268,6 @@ class PartRecord(PartRecordTemplate):
       # Keep previous state; user can retry/select again
 
   # ---------------------- Navigation ----------------------
-
   def button_back_click(self, **event_args):
     open_form("PartRecords",
               filter_part=self.prev_filter_part,
@@ -283,30 +313,21 @@ class PartRecord(PartRecordTemplate):
 
   def button_part_route_ops_click(self, **event_args):
     part_id = self.ensure_part_saved()
-    #print("PartRecord: part_id:", part_id)
     if not part_id:
       return
-  
+
     selected_route_name = self.drop_down_route_name.selected_value
-    #print("PartRecord: selected_route_name:", selected_route_name)
     if not selected_route_name:
       Notification("Select a Route before opening Part Operations.", style="warning").show()
       return
-  
+
     route_id = self._route_id_by_name.get(selected_route_name or "", "")
-    #print("PartRecord: route_id:", route_id)
     if not route_id:
       Notification("Selected Route name could not be resolved to an ID.", style="warning").show()
       return
-  
+
     try:
-      # IMPORTANT: import the class, construct it, then open it.
       from ..PartRouteOps import PartRouteOps
-      #print("PartRecord: opening PartRouteOps with",
-      #      dict(part_id=part_id, route_id=route_id,
-      #          part_name=self.text_box_desc.text or part_id,
-      #          route_name=selected_route_name))
-  
       frm = PartRouteOps(
         part_id=part_id,
         route_id=route_id,
@@ -314,15 +335,11 @@ class PartRecord(PartRecordTemplate):
         route_name=selected_route_name,
       )
       open_form(frm)
-  
     except Exception as e:
-      #print("💥 PartRouteOps open failed:", e)
       alert(f"Couldn't open Part Operations:\n{e}")
       open_form("Nav")
 
-
   # ---------------------- Helpers ----------------------
-
   def _update_part_ops_button_enabled_state(self):
     selected_route_name = self.drop_down_route_name.selected_value
     route_id = self._route_id_by_name.get(selected_route_name or "", "")
@@ -360,6 +377,7 @@ class PartRecord(PartRecordTemplate):
       self.button_save_click()
       part_id = self.part.get("_id")
     return part_id
+
 
 
 
