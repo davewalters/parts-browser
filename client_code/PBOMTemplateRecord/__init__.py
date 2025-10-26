@@ -16,11 +16,11 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
 
   Behaviour:
     - New (pbom_id is None): enter parent_id, press Enter to resolve; choose initial rev; click Save to create.
-    - Existing: header auto-saves on change while status == 'draft'; Save button performs an explicit update of header fields.
+    - Existing: header auto-saves on change (status does NOT block header edits).
     - Rev changes:
         * New: choosing a value just sets the initial rev for creation.
         * Existing: selecting "next" rev clones a new PBOM via pbomtpl_revise_from and opens it in-place.
-    - Status changes follow draft→active→obsolete→archived transitions.
+    - Regenerate can be clicked in any status; server may auto-revise if needed.
   """
 
   def __init__(self, pbom_id=None, parent_prefix="", status="", rev="", plant="", **kwargs):
@@ -33,6 +33,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     # Roles
     self.repeating_panel_lines.role = "scrolling-panel"
     self.button_home.role = "mydefault-button"
+    self.button_back.role = "mydefault-button"
     self.button_regenerate.role = "new-button"
     self.button_save.role = "save-button"
 
@@ -66,7 +67,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     self.button_save.enabled = False           # enabled after valid parent resolve
     self.button_regenerate.visible = False     # cannot regenerate until created
 
-    # Status dropdown: force 'draft', disabled until created
+    # Status dropdown: force 'draft' initial display; disabled until created
     self._status = "draft"
     self._bind_status_dropdown(self._status)
     self.drop_down_status.enabled = False
@@ -123,10 +124,9 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     self.text_variant.text      = (self.doc.get("variant") or "") or ""
     self.text_notes.text        = (self.doc.get("notes") or "") or ""
 
-    # Enable/disable header fields by status
-    is_draft = (self._status == "draft")
+    # Header fields are editable regardless of status (per your preference)
     for c in [self.text_parent_id, self.text_plant, self.text_variant, self.text_notes]:
-      c.enabled = is_draft
+      c.enabled = True
 
     # Status & Rev dropdowns
     self._bind_status_dropdown(self._status)
@@ -134,16 +134,14 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
 
     # Buttons
     self.button_save.visible = True
-    self.button_save.enabled = True if is_draft else False
+    self.button_save.enabled = True
     self.button_regenerate.visible = True
-    self.button_regenerate.enabled = is_draft
+    self.button_regenerate.enabled = True
 
   def _save_header(self, patch):
     if not patch or not self.pbom_id:
       return
-    if self._status != "draft":
-      Notification("Header is read-only (status ≠ draft).").show()
-      return
+    # No status guard — header is always editable
     try:
       updated = anvil.server.call("pbomtpl_update", self.pbom_id, patch) or {}
       self._bind_header_from_doc(updated)
@@ -151,9 +149,8 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       alert(f"Save failed: {e}")
 
   def text_parent_id_change(self, **e):
-    # Only allowed for existing drafts; in new mode, parent resolves via Enter before Save
     if not self.pbom_id:
-      return
+      return  # in new mode, resolve via Enter then Save
     pid = (self.text_parent_id.text or "").strip()
     try:
       part = anvil.server.call("get_part_brief", pid) if pid else None
@@ -184,7 +181,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     items = allowed_map.get(current, [current])
     self.drop_down_status.items = items
     self.drop_down_status.selected_value = current
-    # Enabled only if next state exists and doc exists
+    # Enabled if a next state exists and the doc exists
     self.drop_down_status.enabled = (len(items) > 1) and bool(self.pbom_id)
 
   def drop_down_status_change(self, **e):
@@ -241,7 +238,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       clone = anvil.server.call("pbomtpl_revise_from", self.pbom_id, selected_rev)
       if clone:
         # In-place open of the cloned record
-        self.pbom_id = clone.get("_id")
+        self.pbom_id = clone.get("_id") or clone.get("id") or self.pbom_id
         self._bind_header_from_doc(clone)
         self.repeating_panel_lines.items = (clone.get("lines") or [])
     except Exception as ex:
@@ -273,7 +270,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
   def button_save_click(self, **e):
     """
     - If pbom_id is None: validate parent, create draft via pbomtpl_create_draft, bind in-place.
-    - Else (existing): push current editable header fields via pbomtpl_update (draft only).
+    - Else (existing): push current editable header fields via pbomtpl_update.
     """
     pid = (self.text_parent_id.text or "").strip()
 
@@ -304,46 +301,53 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       self.pbom_id = created_id
       self._bind_header_from_doc(created)
       self.repeating_panel_lines.items = (created.get("lines") or [])
-      Notification("Production BOM created.").show()
+      Notification("Production BOM created.", style="success").show()
       return
 
     # UPDATE (existing)
-    if self._status != "draft":
-      Notification("This Production BOM is not editable (status ≠ draft).").show()
-      return
-
     patch = {
       "parent_part_id": pid or None,
       "plant_id": (self.text_plant.text or None) or None,
       "variant": (self.text_variant.text or None) or None,
       "notes": (self.text_notes.text or None) or None,
     }
-    # Remove keys that are None to avoid unintentional nulling (optional)
+    # Keep parent_part_id even if blank (to allow user correction); drop other Nones
     patch = {k: v for k, v in patch.items() if v is not None or k == "parent_part_id"}
 
     try:
       updated = anvil.server.call("pbomtpl_update", self.pbom_id, patch) or {}
       self._bind_header_from_doc(updated)
-      Notification("Saved.").show()
+      Notification("Saved.", style="success").show()
     except Exception as ex:
       alert(f"Save failed: {ex}")
 
   # ---------- Lines ----------
   def button_regenerate_click(self, **e):
-    if self._status != "draft":
-      Notification("Can only regenerate lines while in draft.").show()
+    """
+    Server is responsible for:
+      - regenerating in place if draft,
+      - or auto-revising and returning the new doc if not draft (per your server flags).
+    """
+    try:
+      d = anvil.server.call("pbomtpl_regenerate_from_design", self.pbom_id) or {}
+    except Exception as ex:
+      alert(f"Regenerate failed: {ex}")
       return
-    if confirm("Rebuild lines from DesignBOM? This will replace current lines."):
-      try:
-        d = anvil.server.call("pbomtpl_regenerate_from_design", self.pbom_id) or {}
-      except Exception as ex:
-        alert(f"Regenerate failed: {ex}")
-        return
-      # Reload/bind after regenerate
-      self._bind_header_from_doc(d or self.doc)
-      self.repeating_panel_lines.items = (d.get("lines") if d else self.doc.get("lines") or [])
+
+    # If a new revision was spawned, the _id may change; keep in sync
+    new_id = d.get("_id") or d.get("id")
+    if new_id and new_id != self.pbom_id:
+      Notification(f"Opened regenerated revision {d.get('rev','')}.", style="info").show()
+      self.pbom_id = new_id
+
+    self._bind_header_from_doc(d or self.doc)
+    self.repeating_panel_lines.items = (d.get("lines") if d else self.doc.get("lines") or [])
 
   # ---------- Navigation ----------
   def button_home_click(self, **event_args):
     open_form("Nav")
+
+  def button_back_click(self, **event_args):
+    open_form("PBOMTemplateList")
+
 
