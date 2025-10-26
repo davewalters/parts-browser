@@ -32,13 +32,12 @@ class PBOMTemplateLineRow(PBOMTemplateLineRowTemplate):
   def _render(self, i: dict):
     # Compute line number from the parent RepeatingPanel's items (robust even with DataRowPanel inside)
     try:
-      rp = self.parent               # the row Form's parent is the RepeatingPanel
-      items = list(getattr(rp, "items", []) or [])
-      idx = items.index(self.item) if self.item in items else -1
-      line_no = (idx + 1) if idx >= 0 else ""
+      rp = self.parent  # the row template's parent is the RepeatingPanel
+      comps = list(rp.get_components())
+      idx = comps.index(self)  # <-- index the component, not the dict item
+      self.label_line_no.text = str(idx + 1)
     except Exception:
-      line_no = ""
-    self.label_line_no.text = str(line_no) if line_no != "" else ""
+      self.label_line_no.text = ""
 
     # Bind read-only labels (with safe defaults)
     part_id = (i.get("part_id") or "").strip()
