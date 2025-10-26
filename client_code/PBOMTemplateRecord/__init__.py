@@ -116,7 +116,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     self._rev    = (self.doc.get("rev") or "")
 
     # Header controls
-    self.label_id.text          = (self.doc.get("_id") or "") or ""
+    self.label_id.text          = (self.doc.get("display_id") or "") or ""
     self.text_parent_id.text    = (self.doc.get("parent_part_id") or "") or ""
     self.label_parent_desc.text = (self.doc.get("parent_desc") or "") or ""
     self.text_plant.text        = (self.doc.get("plant_id") or "") or ""

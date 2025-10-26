@@ -39,14 +39,17 @@ class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
     self.label_status.text      = i.get("status") or ""
  
   def button_select_click(self, **event_args):
-    print("item contents: ", self.item)
+    i = self.item or {}
+    db_id = i.get("_id")
+    if not db_id:
+      Notification("Missing PBOM _id on row.").show()
+      return
     open_form("PBOMTemplateRecord",
-              pbom_id=self.item.get("display_id"),
+              pbom_id=db_id,
               parent_prefix="",
               status="",
               rev="",
-              plant="",
-             )
+              plant="")
 
 
 
