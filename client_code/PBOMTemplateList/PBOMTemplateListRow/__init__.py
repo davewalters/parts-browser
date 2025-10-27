@@ -38,6 +38,15 @@ class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
     self.label_plant.text       = i.get("plant_id") or ""
     self.label_variant.text     = i.get("variant") or ""
     self.label_status.text      = i.get("status") or ""
+
+  def _ancestor_rp(self):
+    # Row template may be wrapped by a DataRowPanel inside the RP
+    p = getattr(self, "parent", None)
+    if p and hasattr(p, "items"):         # row's parent IS the RP
+      return p
+    if p and getattr(p, "parent", None) and hasattr(p.parent, "items"):
+      return p.parent                      # row's parent is DRP; its parent is the RP
+    return None
  
   def button_select_click(self, **event_args):
     i = self.item or {}
@@ -61,16 +70,39 @@ class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
       return
     if not confirm(f"Delete PBOM {disp}? This cannot be undone."):
       return
+
     try:
       res = anvil.server.call("pbomtpl_delete", db_id) or {}
-      if res.get("deleted_count", 0) == 1:
-        Notification("PBOM deleted.", style="danger").show()
-        # tell the list to refresh
-        self.parent.parent.raise_event("x-refresh-list")
-      else:
-        Notification("Delete failed or not found.", style="warning").show()
     except Exception as e:
       alert(f"Delete failed: {e}")
+      return
+
+    if res.get("deleted_count", 0) != 1:
+      Notification("Delete failed or not found.", style="warning").show()
+      return
+
+    Notification("PBOM deleted.", style="danger").show()
+
+    # Prefer immediate in-place removal from the RP items (fast, no requery)
+    rp = self._ancestor_rp()
+    if rp:
+      cur = list(rp.items or [])
+      # remove by matching any of the known ids
+      def _same(x):
+        return (x.get("_id") == db_id) or (x.get("id") == db_id) or (x.get("display_id") == disp)
+      new_items = [x for x in cur if not _same(x)]
+      rp.items = new_items
+      # also try to let the list update its count label (if it listens)
+      try:
+        rp.raise_event("x-items-changed", count=len(new_items))
+      except Exception:
+        pass
+    else:
+      # Fallback: ask the parent list form to reload
+      try:
+        self.raise_event("x-refresh-list")
+      except Exception:
+        pass
 
 
 

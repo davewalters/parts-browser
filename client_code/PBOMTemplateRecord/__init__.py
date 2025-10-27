@@ -101,12 +101,21 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
     self.label_parent_desc.text = part.get("description") or part.get("part_name") or ""
     self.button_save.enabled = True
 
+  def _with_row_numbers(self, items):
+    out = []
+    for idx, ln in enumerate(items or [], start=1):
+      d = dict(ln) if isinstance(ln, dict) else {}
+      d["_row_no"] = idx
+      out.append(d)
+    return out
+
+
   # ---------- Existing-record mode ----------
 
   def _load(self):
     d = anvil.server.call("pbomtpl_get", self.pbom_id) or {}
     self._bind_header_from_doc(d)
-    self.repeating_panel_lines.items = (d.get("lines") or [])
+    self.repeating_panel_lines.items = self._with_row_numbers(d.get("lines") or [])
 
   # ---------- Header binding & autosave ----------
 
@@ -300,7 +309,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       # In-place transition to existing
       self.pbom_id = created_id
       self._bind_header_from_doc(created)
-      self.repeating_panel_lines.items = (created.get("lines") or [])
+      self.repeating_panel_lines.items = self._with_row_numbers(created.get("lines") or [])
       Notification("Production BOM created.", style="success").show()
       return
 
@@ -341,7 +350,7 @@ class PBOMTemplateRecord(PBOMTemplateRecordTemplate):
       self.pbom_id = new_id
 
     self._bind_header_from_doc(d or self.doc)
-    self.repeating_panel_lines.items = (d.get("lines") if d else self.doc.get("lines") or [])
+    self.repeating_panel_lines.items = self._with_row_numbers((d or {}).get("lines") or self.doc.get("lines") or [])
 
   # ---------- Navigation ----------
   def button_home_click(self, **event_args):

@@ -42,8 +42,8 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
 
     # Row -> List bubble event
     self.repeating_panel_pbomtpl.set_event_handler("x-open-detail", self.open_detail)
-    self.repeating_panel_pbomtpl.set_event_handler("x-refresh-list", self.update_filter)
-
+    self.repeating_panel_pbomtpl.set_event_handler("x-refresh-list", lambda **ea: self.update_filter())
+    self.repeating_panel_pbomtpl.set_event_handler("x-items-changed", self._on_items_changed)
     self._last = None
     self.update_filter()
 
@@ -119,6 +119,10 @@ class PBOMTemplateList(PBOMTemplateListTemplate):
           by_parent[p] = r
     # Stable-ish order: by parent_part_id then rev
     return sorted(by_parent.values(), key=lambda x: (x.get("parent_part_id",""), x.get("rev","")))
+
+  def _on_items_changed(self, count=None, **event_args):
+    if isinstance(count, int):
+      self.label_count.text = f"{count} PBOM templates"
     
   # ---- New PBOM ----
   def button_new_pbom_click(self, **event_args):
