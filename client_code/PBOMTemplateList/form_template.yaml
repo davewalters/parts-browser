@@ -15,7 +15,7 @@ components:
       type: TextBox
     - layout_properties: {col_xs: 8, row: DKIKOI, width_xs: 1}
       name: label_rev_title
-      properties: {font_size: 12, text: 'Rev:'}
+      properties: {align: right, font_size: 12, text: 'Rev:'}
       type: Label
     - layout_properties: {col_xs: 9, row: DKIKOI, width_xs: 1}
       name: text_rev
@@ -25,15 +25,23 @@ components:
       name: label_status_title
       properties: {font_size: 12, text: 'Status:'}
       type: Label
-    - layout_properties: {col_xs: 4, row: HRWAMV, width_xs: 3}
+    - layout_properties: {col_xs: 4, row: HRWAMV, width_xs: 2}
       name: drop_down_status
       properties: {font_size: 12}
       type: DropDown
-    - layout_properties: {col_xs: 8, row: HRWAMV, width_xs: 1}
+    - layout_properties: {col_xs: 7, row: HRWAMV, width_xs: 2}
+      name: label_latest_rev
+      properties: {align: right, font_size: 12, text: 'Latest Rev:'}
+      type: Label
+    - layout_properties: {col_xs: 9, row: HRWAMV, width_xs: 2}
+      name: check_latest_only
+      properties: {font_size: 12, text: ''}
+      type: CheckBox
+    - layout_properties: {col_xs: 2, row: RWINEJ, width_xs: 1}
       name: label_plant_title
       properties: {font_size: 12, text: 'Facility:'}
       type: Label
-    - layout_properties: {col_xs: 9, row: HRWAMV, width_xs: 2}
+    - layout_properties: {col_xs: 4, row: RWINEJ, width_xs: 2}
       name: text_plant
       properties: {font_size: 12}
       type: TextBox
@@ -98,6 +106,10 @@ components:
       - layout_properties: {column: details}
         name: label_details
         properties: {align: center, text: Details}
+        type: Label
+      - layout_properties: {column: delete}
+        name: label_delete_hdr
+        properties: {text: Delete PBOM}
         type: Label
       layout_properties: {col_xs: 0, row: XGIIPW, width_xs: 12}
       name: data_row_panel_1

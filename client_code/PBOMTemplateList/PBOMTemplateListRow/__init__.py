@@ -1,5 +1,6 @@
 from ._anvil_designer import PBOMTemplateListRowTemplate
 from anvil import *
+import anvil.server
 
 class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
   def __init__(self, **kwargs):
@@ -50,6 +51,26 @@ class PBOMTemplateListRow(PBOMTemplateListRowTemplate):
               status="",
               rev="",
               plant="")
+
+  def button_delete_click(self, **event_args):
+    i = self.item or {}
+    db_id = i.get("_id") or i.get("id")
+    disp  = i.get("display_id") or db_id or ""
+    if not db_id:
+      Notification("Missing PBOM _id on row.", style="warning").show()
+      return
+    if not confirm(f"Delete PBOM {disp}? This cannot be undone."):
+      return
+    try:
+      res = anvil.server.call("pbomtpl_delete", db_id) or {}
+      if res.get("deleted_count", 0) == 1:
+        Notification("PBOM deleted.", style="danger").show()
+        # tell the list to refresh
+        self.parent.parent.raise_event("x-refresh-list")
+      else:
+        Notification("Delete failed or not found.", style="warning").show()
+    except Exception as e:
+      alert(f"Delete failed: {e}")
 
 
 
