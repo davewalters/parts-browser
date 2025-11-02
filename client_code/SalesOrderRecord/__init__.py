@@ -185,11 +185,18 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       alert("No Sales Order open.")
       return
     try:
-      result = anvil.server.call("so_plan_to_wos", so_id) or {}
+      result = anvil.server.call("so_plan_to_wos_debug", so_id)  # <- debug version
       created = len(result.get("created", []))
       updated = len(result.get("updated", []))
       skipped = len(result.get("skipped", []))
+      notes   = result.get("notes", [])
+      logs    = result.get("logs", [])
       Notification(f"WOs → created:{created}, updated:{updated}, skipped:{skipped}", style="success").show()
+      if notes:
+        alert("\n".join(notes))
+      # Optional: show logs in a scrollable alert for now
+      if logs:
+        alert(TextArea(text="\n".join(logs), height=300, width=700, enabled=False))
     except Exception as ex:
       alert(f"WO planning failed: {ex}")
 
