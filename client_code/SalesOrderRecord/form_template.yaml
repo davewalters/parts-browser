@@ -255,11 +255,11 @@ components:
         name: repeating_panel_lines
         properties: {item_template: SalesOrderRecord.SalesOrderLineRow}
         type: RepeatingPanel
-      layout_properties: {col_xs: 1, row: GKUILA, width_xs: 10}
+      layout_properties: {col_xs: 0, row: GKUILA, width_xs: 12}
       name: grid_panel_hdr_lines
       properties: {background: '', foreground: ''}
       type: GridPanel
-    layout_properties: {grid_position: 'NDMZKQ,QKLQUV'}
+    layout_properties: {grid_position: 'NDMZKQ,XEBMBT'}
     name: grid_panel_container
     properties: {}
     type: GridPanel
