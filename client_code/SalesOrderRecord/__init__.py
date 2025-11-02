@@ -180,6 +180,8 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
   # ---------- work orders ----------
   def button_create_wos_click(self, **event_args):
+    if not self._preflight_missing_routes_or_block():
+      return
     so_id = (self.label_so_id.text or "").strip()  # however you store it
     if not so_id:
       alert("No Sales Order open.")
