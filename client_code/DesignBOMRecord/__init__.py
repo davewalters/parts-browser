@@ -11,9 +11,11 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
                prev_filter_desc="",
                prev_filter_type="",
                prev_filter_status="",
-               prev_filter_designbom=False, 
+               prev_filter_designbom=False,
+               return_to: dict | None = None,
                **kwargs):
     self.init_components(**kwargs)
+    self._return_to = return_to or None
     self.part_cache = {}
     self.assembly_part_id = assembly_part_id
     self.label_assembly_id.text = self.assembly_part_id
@@ -129,13 +131,27 @@ class DesignBOMRecord(DesignBOMRecordTemplate):
     self.bom_rows = updated_bom
     self.repeating_panel_1.items = self.bom_rows
 
-  def button_back_click(self, **event_args):
+  def _go_back(self):
+    if self._return_to:
+      try:
+        form_name = self._return_to.get("form") or "PartRecords"
+        kwargs = dict(self._return_to.get("kwargs") or {})
+        return_filters = self._return_to.get("filters")
+        open_form(form_name, **kwargs, return_filters=return_filters)
+        return
+      except Exception as ex:
+        Notification(f"Back navigation failed: {ex}", style="warning").show()
+
+    # Fallback to PartRecords with your preserved filters
     open_form("PartRecords",
               filter_part=self.prev_filter_part,
               filter_desc=self.prev_filter_desc,
               filter_type=self.prev_filter_type,
               filter_status=self.prev_filter_status,
               filter_designbom=self.prev_filter_designbom)
+  
+  def button_back_click(self, **event_args):
+    self._go_back()
 
   def format_currency(self, value):
     """Format a float as NZ currency, or return '–' if invalid."""

@@ -15,11 +15,15 @@ class PartVendorRecord(PartVendorRecordTemplate):
                back_to_po=False,
                purchase_order_id=None,
                assembly_part_id=None,
+               return_to: dict | None = None,   # <<< NEW
                **kwargs):
     self.init_components(**kwargs)
     self.button_save.role = "save-button"
     self.button_back.role = "mydefault-button"
     self.button_delete_vendor.role = "delete-button"
+
+    # NEW: unified return target
+    self._return_to = return_to or None
 
     # Load part and initial vendor_data
     self.part = anvil.server.call("get_part", part_id)
@@ -46,7 +50,6 @@ class PartVendorRecord(PartVendorRecordTemplate):
     # Build dropdown: (company_name, vendor_id)
     try:
       vendor_list = anvil.server.call("get_all_vendors") or []
-      # Keep a map for toasts/labels
       self._vendor_name_by_id = {
         v.get("vendor_id"): (v.get("company_name") or v.get("vendor_id"))
         for v in vendor_list if v.get("vendor_id")
@@ -70,7 +73,6 @@ class PartVendorRecord(PartVendorRecordTemplate):
     self.label_id.text = self.part.get("_id", "")
     self.label_id.role = "label-border"
 
-    # Select vendor in dropdown (if present), else leave blank
     self.drop_down_vendor_id.selected_value = self.vendor_data.get("vendor_id") or None
     self.text_box_vendor_part_no.text = str(self.vendor_data.get("vendor_part_no", ""))
     self.drop_down_vendor_currency.selected_value = self.vendor_data.get("vendor_currency", "NZD")
@@ -100,12 +102,10 @@ class PartVendorRecord(PartVendorRecordTemplate):
       price = float((self.text_box_vendor_price.text or "").replace("$", "").replace(",", "").strip() or 0.0)
       rate = self._get_exchange_rate(self.drop_down_vendor_currency.selected_value)
       cost_nz = round(price * rate, 2)
-      # Persist in working copy
       self.vendor_data["vendor_price"] = price
       self.vendor_data["vendor_currency"] = self.drop_down_vendor_currency.selected_value or "NZD"
       self.vendor_data["cost_$NZ"] = cost_nz
       self.vendor_data["cost_date"] = datetime.today().date().isoformat()
-      # Display
       self.label_cost_nz.text = self._fmt_money(cost_nz)
       self.label_cost_date.text = self._fmt_date(self.vendor_data["cost_date"])
     except Exception:
@@ -113,38 +113,32 @@ class PartVendorRecord(PartVendorRecordTemplate):
 
   # ---------- Save/Delete ----------
   def button_save_click(self, **event_args):
-    # Update working copy from UI
     self.vendor_data.update({
       "vendor_id": self.drop_down_vendor_id.selected_value or "",
       "vendor_part_no": (self.text_box_vendor_part_no.text or "").strip(),
       "vendor_currency": self.drop_down_vendor_currency.selected_value or "NZD",
       "vendor_price": self._parse_num(self.text_box_vendor_price.text),
-      # cost_$NZ and cost_date already set by _update_cost_nz()
     })
 
-    # Make selected vendor the default vendor for this part (per your rules)
     if self.part.get("default_vendor") != self.vendor_data["vendor_id"]:
       self.part["default_vendor"] = self.vendor_data["vendor_id"]
 
-    # Merge/Upsert into part.vendor_part_numbers by vendor_id
     updated = False
     vpns = list(self.part.get("vendor_part_numbers", []))
     for idx, v in enumerate(vpns):
       if v.get("vendor_id") == self.vendor_data["vendor_id"]:
-        vpns[idx] = dict(self.vendor_data)  # replace
+        vpns[idx] = dict(self.vendor_data)
         updated = True
         break
     if not updated:
       vpns.append(dict(self.vendor_data))
     self.part["vendor_part_numbers"] = vpns
 
-    # Update part.latest_cost to reflect this row
     self.part["latest_cost"] = {
       "cost_nz": self.vendor_data.get("cost_$NZ", 0.0),
       "cost_date": self.vendor_data.get("cost_date", datetime.today().date().isoformat()),
     }
 
-    # Persist (strip UI-only keys just in case)
     try:
       for v in self.part["vendor_part_numbers"]:
         v.pop("vendor_company_name", None)
@@ -177,10 +171,24 @@ class PartVendorRecord(PartVendorRecordTemplate):
     except Exception as e:
       Notification(f"❌ Failed to delete vendor: {e}", style="danger").show()
 
-    self.button_back_click()
+    self._go_back()   # <<< use unified back
 
   # ---------- Navigation ----------
-  def button_back_click(self, **event_args):
+  def _go_back(self):
+    """
+    Preferred: use return_to payload if present.
+    Fallbacks: PO → BOM → PartVendorRecords (your existing behavior).
+    """
+    if self._return_to:
+      try:
+        form_name = self._return_to.get("form") or "PartRecords"
+        kwargs = dict(self._return_to.get("kwargs") or {})
+        return_filters = self._return_to.get("filters")
+        open_form(form_name, **kwargs, return_filters=return_filters)
+        return
+      except Exception as ex:
+        Notification(f"Back navigation failed: {ex}", style="warning").show()
+
     if self.back_to_po:
       open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
     elif self.back_to_bom:
@@ -198,7 +206,11 @@ class PartVendorRecord(PartVendorRecordTemplate):
                 prev_filter_desc=self.prev_filter_desc,
                 prev_filter_type=self.prev_filter_type,
                 prev_filter_status=self.prev_filter_status,
-                prev_filter_designbom=self.prev_filter_designbom)
+                prev_filter_designbom=self.prev_filter_designbom,
+                return_to=self._return_to)  # <<< propagate return path
+
+  def button_back_click(self, **event_args):
+    self._go_back()
 
   # ---------- Formatting helpers ----------
   def _fmt_date(self, date_input):
@@ -227,6 +239,7 @@ class PartVendorRecord(PartVendorRecordTemplate):
       return float((s or "").replace("$", "").replace(",", "").strip() or 0.0)
     except Exception:
       return 0.0
+
 
 
 

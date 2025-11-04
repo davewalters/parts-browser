@@ -11,13 +11,18 @@ class PartRouteOps(PartRouteOpsTemplate):
     • No Designer data bindings on row controls
   """
 
-  def __init__(self, part_id: str, route_id: str,
-               part_name: str = "", route_name: str = "", **kwargs):
+  def __init__(self, part_id: str,
+               route_id: str,
+               part_name: str = "",
+               route_name: str = "",
+               return_to: dict | None = None,
+               **kwargs):
     self._part_id    = part_id
     self._route_id   = route_id
     self._part_name  = part_name or part_id
     self._route_name = route_name or route_id
-    self._seed_attempted = False  # guard to seed only once
+    self._return_to  = return_to or None
+    self._seed_attempted = False
     super().__init__(**kwargs)
 
     # Header
@@ -28,25 +33,21 @@ class PartRouteOps(PartRouteOpsTemplate):
 
     # Buttons
     self.button_home.role = "mydefault-button"
+    self.button_back.role = "mydefault-button"
     self.button_part_record.role = "mydefault-button"
 
     # Preview + cell map
     try:
-      self.label_route_preview.text = anvil.server.call(
-        "routes_preview_string", self._route_id, 12
-      ) or ""
+      self.label_route_preview.text = anvil.server.call("routes_preview_string", self._route_id, 12) or ""
     except Exception:
       self.label_route_preview.text = ""
 
     self._cell_id_to_name = anvil.server.call("get_cell_id_to_name_map") or {}
-    # [(display, value)]
     self._cell_items = [(name, cid) for cid, name in self._cell_id_to_name.items()]
 
     self.repeating_panel_ops.role = "scrolling-panel"
-    # Child rows will call back here
     self.set_event_handler("x-row-changed", self._on_row_changed)
 
-    # Initial load
     self.reload()
 
   # ---------- data load ----------
@@ -54,16 +55,14 @@ class PartRouteOps(PartRouteOpsTemplate):
     try:
       rows = anvil.server.call("part_route_ops_list", self._part_id, self._route_id) or []
       if not rows and not self._seed_attempted:
-        # Seed once from route template, then reload
         self._seed_attempted = True
         anvil.server.call("part_route_ops_seed_from_route", self._part_id, self._route_id)
         rows = anvil.server.call("part_route_ops_list", self._part_id, self._route_id) or []
 
-      # Enrich with cell_name + dropdown items
       for r in rows:
         cid = r.get("cell_id") or ""
         r["cell_name"]   = self._cell_id_to_name.get(cid, cid)
-        r["_cell_items"] = list(self._cell_items)  # give each row its own copy
+        r["_cell_items"] = list(self._cell_items)
 
       self.repeating_panel_ops.items = rows
       self._force_bind_rows()
@@ -73,9 +72,13 @@ class PartRouteOps(PartRouteOpsTemplate):
       Notification(f"Load failed: {e}", style="danger").show()
 
   def _force_bind_rows(self):
-    # Nudge visible rows to bind now (works with DataRowPanel item templates)
     try:
-      for row in getattr(self.repeating_panel_ops, "get_components", lambda: [])():
+      comps = []
+      if hasattr(self.repeating_panel_ops, "get_components"):
+        comps = self.repeating_panel_ops.get_components()
+      elif hasattr(self.repeating_panel_ops, "components"):
+        comps = self.repeating_panel_ops.components
+      for row in comps or []:
         if hasattr(row, "_bind_from_item"):
           row._bind_from_item()
     except Exception:
@@ -90,7 +93,21 @@ class PartRouteOps(PartRouteOpsTemplate):
     open_form("Nav")
 
   def button_part_record_click(self, **event_args):
-    open_form("PartRecord", part_id=self._part_id)
+    open_form("PartRecord", part_id=self._part_id, return_to=self._return_to)
+
+  def button_back_click(self, **event_args):
+    if self._return_to:
+      try:
+        form_name = self._return_to.get("form") or "PartRecords"
+        kwargs = dict(self._return_to.get("kwargs") or {})
+        return_filters = self._return_to.get("filters")
+        open_form(form_name, **kwargs, return_filters=return_filters)
+        return
+      except Exception as ex:
+        Notification(f"Back navigation failed: {ex}", style="warning").show()
+    # Safe fallback if no return_to:
+    open_form("PartRecords")
+
 
 
       

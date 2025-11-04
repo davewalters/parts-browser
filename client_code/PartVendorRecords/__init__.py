@@ -15,14 +15,16 @@ class PartVendorRecords(PartVendorRecordsTemplate):
                back_to_po=False,
                assembly_part_id=None,
                purchase_order_id=None,
+               return_to: dict | None = None,
                **kwargs):
 
     self.init_components(**kwargs)
+    self._return_to = return_to or None
     self.button_new_vendor.role = "new-button"
     self.button_cancel.role = "mydefault-button"
     self.button_back_to_bom.role = "mydefault-button"
     self.button_back_to_po.role = "mydefault-button"
-
+    
     # Load the part
     self.part = anvil.server.call("get_part", part_id)
     self.prev_filter_part = prev_filter_part
@@ -72,7 +74,38 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self._load_vendor_rows()
 
   # --- helpers ---
+  def _go_back(self):
+    if self._return_to:
+      try:
+        form_name = self._return_to.get("form") or "PartRecords"
+        kwargs = dict(self._return_to.get("kwargs") or {})
+        return_filters = self._return_to.get("filters")
+        open_form(form_name, **kwargs, return_filters=return_filters)
+        return
+      except Exception as ex:
+        Notification(f"Back navigation failed: {ex}", style="warning").show()
+    
+    if self.back_to_po:
+      open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
+      return
 
+    if self.back_to_bom:
+      open_form("DesignBOMRecord",
+                assembly_part_id=self.assembly_part_id,
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
+    else:
+      open_form("PartRecord",
+                part_id=self.part.get("_id", ""),
+                prev_filter_part=self.prev_filter_part,
+                prev_filter_desc=self.prev_filter_desc,
+                prev_filter_type=self.prev_filter_type,
+                prev_filter_status=self.prev_filter_status,
+                prev_filter_designbom=self.prev_filter_designbom)
+        
   def _build_vendor_lookup(self) -> dict:
     """
     Returns { vendor_id: company_name }
@@ -106,34 +139,33 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     self.repeating_panel_1.set_event_handler("x-edit-vendor", self.edit_vendor)
 
   # --- navigation ---
+  def _make_child_return_to(self):
+  # Prefer returning to THIS list view, otherwise fall back to upstream
+    return self._return_to or {
+    "form": "PartVendorRecords",
+    "kwargs": {
+      "part_id": self.part.get("_id", ""),
+      "prev_filter_part": self.prev_filter_part,
+      "prev_filter_desc": self.prev_filter_desc,
+      "prev_filter_type": self.prev_filter_type,
+      "prev_filter_status": self.prev_filter_status,
+      "prev_filter_designbom": self.prev_filter_designbom,
+      "back_to_bom": self.back_to_bom,
+      "back_to_po": self.back_to_po,
+      "assembly_part_id": self.assembly_part_id,
+      "purchase_order_id": self.purchase_order_id,
+      "return_to": self._return_to,   # keep the upstream chain intact
+    }
+  }
 
   def button_cancel_click(self, **event_args):
-    if self.back_to_po:
-      open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
-      return
-
-    if self.back_to_bom:
-      open_form("DesignBOMRecord",
-                assembly_part_id=self.assembly_part_id,
-                prev_filter_part=self.prev_filter_part,
-                prev_filter_desc=self.prev_filter_desc,
-                prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status,
-                prev_filter_designbom=self.prev_filter_designbom)
-    else:
-      open_form("PartRecord",
-                part_id=self.part.get("_id", ""),
-                prev_filter_part=self.prev_filter_part,
-                prev_filter_desc=self.prev_filter_desc,
-                prev_filter_type=self.prev_filter_type,
-                prev_filter_status=self.prev_filter_status,
-                prev_filter_designbom=self.prev_filter_designbom)
+    self._go_back()
 
   def button_back_to_bom_click(self, **event_args):
-    self.button_cancel_click()
+    self._go_back()
 
   def button_back_to_po_click(self, **event_args):
-    open_form("PurchaseOrderRecord", purchase_order_id=self.purchase_order_id)
+    self._go_back()
 
   def button_new_vendor_click(self, **event_args):
     open_form("PartVendorRecord",
@@ -145,9 +177,21 @@ class PartVendorRecords(PartVendorRecordsTemplate):
               prev_filter_status=self.prev_filter_status,
               prev_filter_designbom=self.prev_filter_designbom,
               back_to_bom=self.back_to_bom,
-              assembly_part_id=self.assembly_part_id)
+              assembly_part_id=self.assembly_part_id,
+              return_to=self._return_to)
 
-  # --- actions ---
+  def edit_vendor(self, vendor_data, **event_args):
+    open_form("PartVendorRecord",
+              part_id=self.part.get("_id", ""),
+              vendor_data=vendor_data,
+              prev_filter_part=self.prev_filter_part,
+              prev_filter_desc=self.prev_filter_desc,
+              prev_filter_type=self.prev_filter_type,
+              prev_filter_status=self.prev_filter_status,
+              prev_filter_designbom=self.prev_filter_designbom,
+              back_to_bom=self.back_to_bom,
+              assembly_part_id=self.assembly_part_id,
+              return_to=self._return_to)
 
   def set_active_vendor(self, vendor_id, **event_args):
     # Update model
@@ -166,17 +210,7 @@ class PartVendorRecords(PartVendorRecordsTemplate):
     except Exception as e:
       Notification(f"❌ Failed to update default vendor: {e}", style="danger").show()
 
-  def edit_vendor(self, vendor_data, **event_args):
-    open_form("PartVendorRecord",
-              part_id=self.part.get("_id", ""),
-              vendor_data=vendor_data,
-              prev_filter_part=self.prev_filter_part,
-              prev_filter_desc=self.prev_filter_desc,
-              prev_filter_type=self.prev_filter_type,
-              prev_filter_status=self.prev_filter_status,
-              prev_filter_designbom=self.prev_filter_designbom,
-              back_to_bom=self.back_to_bom,
-              assembly_part_id=self.assembly_part_id)
+  
 
 
 
