@@ -155,7 +155,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
     # NEW: refresh the permanent issues region (if present)
     try:
-      issues = self._call("svc_missing_routes_for_so", self.order_id) or []
+      issues = self._call("svc_list_open_route_gaps_for_so", self.order_id) or []
     except Exception:
       issues = []
     self._bind_missing_routes_panel(issues)
@@ -232,58 +232,43 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
   # ---------- NEW: preflight check ----------
   def _preflight_missing_routes_or_block(self) -> bool:
-    """
-    Returns True if OK to proceed; False if blocked.
-    Calls server: svc_missing_routes_for_so(order_id) -> [{part_id, reason}]
-    """
     try:
-      issues = self._call("svc_missing_routes_for_so", self.order_id) or []
+      res = self._call("svc_preflight_and_persist_route_gaps_for_so", self.order_id) or {}
+      issues = self._call("svc_list_open_route_gaps_for_so", self.order_id) or []
     except Exception as ex:
-      # Prefer to fail closed (block) if the check itself failed
       alert(f"Route pre-check failed: {ex}")
       return False
-
-    if not issues:
-      # keep panel hidden / cleared if present
-      self._bind_missing_routes_panel([])
-      return True
-
-    # Update the permanent panel (if present)
+    
     self._bind_missing_routes_panel(issues)
+    return len(issues) == 0
 
-    # Also provide a durable alert (copyable)
-    #lines = ["Errors:"] + [f"Part {i.get('part_id','(unknown)')} has no route defined."
-    #                       if (i.get('reason') in [None, '', 'no route'])
-    #                       else f"Part {i.get('part_id','(unknown)')}: {i.get('reason')}"
-    #                       for i in issues]
-    #alert(TextArea(text="\n".join(lines), height=240, width=640, enabled=False))
-    return False
 
-  # ---------- work orders ----------
-  def button_create_wos_click(self, **event_args):
-    # PRE-FLIGHT: block if any missing routes; region also updates
-    if not self._preflight_missing_routes_or_block():
-      return
 
-    so_id = (self.label_so_id.text or "").strip()
-    if not so_id:
-      alert("No Sales Order open.")
-      return
-    try:
-      # Keep your existing debug call
-      result = anvil.server.call("so_plan_to_wos_debug", so_id)
-      created = len(result.get("created", []))
-      updated = len(result.get("updated", []))
-      skipped = len(result.get("skipped", []))
-      notes   = result.get("notes", [])
-      logs    = result.get("logs", [])
-      Notification(f"WOs → created:{created}, updated:{updated}, skipped:{skipped}", style="success").show()
-      if notes:
-        alert("\n".join(notes))
-      if logs:
-        alert(TextArea(text="\n".join(logs), height=300, width=700, enabled=False))
-    except Exception as ex:
-      alert(f"WO planning failed: {ex}")
+# ---------- work orders ----------
+def button_create_wos_click(self, **event_args):
+  # PRE-FLIGHT: block if any missing routes; region also updates
+  if not self._preflight_missing_routes_or_block():
+    return
+
+  so_id = (self.label_so_id.text or "").strip()
+  if not so_id:
+    alert("No Sales Order open.")
+    return
+  try:
+    # Keep your existing debug call
+    result = anvil.server.call("so_plan_to_wos_debug", so_id)
+    created = len(result.get("created", []))
+    updated = len(result.get("updated", []))
+    skipped = len(result.get("skipped", []))
+    notes   = result.get("notes", [])
+    logs    = result.get("logs", [])
+    Notification(f"WOs → created:{created}, updated:{updated}, skipped:{skipped}", style="success").show()
+    if notes:
+      alert("\n".join(notes))
+    if logs:
+      alert(TextArea(text="\n".join(logs), height=300, width=700, enabled=False))
+  except Exception as ex:
+    alert(f"WO planning failed: {ex}")
 
   def button_view_work_orders_click(self, **event_args):
     so_id = (self.label_so_id.text or "").strip()
@@ -294,19 +279,19 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     except Exception:
       open_form("WorkOrderRecords")
 
-  def _delete_so_line(self, row_index=None, line_id=None, **e):
-    try:
-      items = list(self.repeating_panel_lines.items or [])
-      if line_id:
-        self._call("sales_order_delete_line", line_id)
-        self._load()
-        Notification("Line deleted.", style="success").show()
-        return
-      if 0 <= (row_index or -1) < len(items):
-        del items[row_index]
-        self.repeating_panel_lines.items = items
-    except Exception as ex:
-      Notification(f"Delete failed: {ex}", style="warning").show()
+def _delete_so_line(self, row_index=None, line_id=None, **e):
+  try:
+    items = list(self.repeating_panel_lines.items or [])
+    if line_id:
+      self._call("sales_order_delete_line", line_id)
+      self._load()
+      Notification("Line deleted.", style="success").show()
+      return
+    if 0 <= (row_index or -1) < len(items):
+      del items[row_index]
+      self.repeating_panel_lines.items = items
+  except Exception as ex:
+    Notification(f"Delete failed: {ex}", style="warning").show()
 
   def _persist_all_rows(self):
     items = list(self.repeating_panel_lines.items or [])
@@ -327,36 +312,36 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         it["_id"] = new_line.get("_id")
     self.repeating_panel_lines.items = items
 
-  def _refresh_so_line(self, row_index, part_id, qty_ordered, line_no=None, line_id=None, **e):
-    try:
-      items = list(self.repeating_panel_lines.items or [])
-      if not (0 <= row_index < len(items)):
-        return
-      if line_id:
-        updated_line = self._call("sales_order_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
-      else:
-        updated_line = self._call("sales_order_add_line", self.order_id, {
-          "part_id": (part_id or "").strip(),
-          "qty_ordered": float(qty_ordered or 0),
-        })
-      row = dict(items[row_index])
-      editable = row.get("_editable", False)
-      line_no_fallback = row.get("line_no")
-      row.update(updated_line or {})
-      row["_editable"] = editable
-      if line_no_fallback is not None and row.get("line_no") in [None, ""]:
-        row["line_no"] = line_no_fallback
-      items[row_index] = row
-      self.repeating_panel_lines.items = items
+def _refresh_so_line(self, row_index, part_id, qty_ordered, line_no=None, line_id=None, **e):
+  try:
+    items = list(self.repeating_panel_lines.items or [])
+    if not (0 <= row_index < len(items)):
+      return
+    if line_id:
+      updated_line = self._call("sales_order_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
+    else:
+      updated_line = self._call("sales_order_add_line", self.order_id, {
+        "part_id": (part_id or "").strip(),
+        "qty_ordered": float(qty_ordered or 0),
+      })
+    row = dict(items[row_index])
+    editable = row.get("_editable", False)
+    line_no_fallback = row.get("line_no")
+    row.update(updated_line or {})
+    row["_editable"] = editable
+    if line_no_fallback is not None and row.get("line_no") in [None, ""]:
+      row["line_no"] = line_no_fallback
+    items[row_index] = row
+    self.repeating_panel_lines.items = items
 
-      self.order = self._call("sales_order_get", self.order_id) or {}
-      a = self.order.get("amounts", {}) or {}
-      self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
-      self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
-      self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
-      self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
-    except Exception as ex:
-      Notification(f"Update line failed: {ex}", style="warning").show()
+    self.order = self._call("sales_order_get", self.order_id) or {}
+    a = self.order.get("amounts", {}) or {}
+    self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
+    self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
+    self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
+    self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
+  except Exception as ex:
+    Notification(f"Update line failed: {ex}", style="warning").show()
 
 
 
