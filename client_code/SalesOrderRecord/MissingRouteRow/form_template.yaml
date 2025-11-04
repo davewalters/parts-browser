@@ -1,0 +1,28 @@
+components:
+- components:
+  - layout_properties: {column: issues_part_id}
+    name: label_part_id
+    properties: {font_size: 12}
+    type: Label
+  - layout_properties: {column: issues_reason}
+    name: label_reason
+    properties: {font_size: 12}
+    type: Label
+  - event_bindings: {click: button_open_part_click}
+    layout_properties: {column: issues_edit_part}
+    name: button_open_part
+    properties: {font_size: 12, icon: 'fa:arrow-right', text: ''}
+    type: Button
+  - event_bindings: {click: button_open_ops_click}
+    layout_properties: {column: issues_edit_route}
+    name: button_open_ops
+    properties: {font_size: 12, icon: 'fa:list', text: ''}
+    type: Button
+  layout_properties: {grid_position: 'PLFFIV,MKHUCN'}
+  name: data_row_panel_1
+  properties: {}
+  type: DataRowPanel
+container:
+  properties: {background: 'theme:Gray 200'}
+  type: ColumnPanel
+is_package: true

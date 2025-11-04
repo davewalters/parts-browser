@@ -8,10 +8,9 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.init_components(**props)
     self.order_id = order_id
     self.order = {}
-    # name -> business customer_id (e.g., "C0001")
     self._cust_map = {}
 
-    # Button roles (optional)
+    # Button roles (as you had)
     self.button_back.role = "mydefault-button"
     self.button_save.role = "save-button"
     self.button_confirm.role = "new-button"
@@ -24,7 +23,56 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     self.repeating_panel_lines.set_event_handler("x-refresh-so-line", self._refresh_so_line)
     self.repeating_panel_lines.set_event_handler("x-delete-so-line", self._delete_so_line)
 
+    # NEW: optional, safe setup of the missing-routes region
+    self._init_issues_ui()
+
     self._load()
+
+  # ---------- NEW: missing routes UI bootstrapping ----------
+  def _init_issues_ui(self):
+    """
+    If you've added a GridPanel named `grid_panel_issues` in the designer,
+    containing:
+      - Label `label_issues_title`
+      - Label `label_issues_hint`
+      - RepeatingPanel `repeating_panel_missing_routes`
+        (item_template = MissingRouteRow; optional)
+    we'll bind to them. If not present, we degrade gracefully to alerts.
+    """
+    self._issues_region = hasattr(self, "grid_panel_issues")
+    if self._issues_region:
+      # Hide initially
+      try:
+        self.grid_panel_issues.visible = False
+      except Exception:
+        pass
+      # Optional hint label
+      if hasattr(self, "label_issues_hint"):
+        self.label_issues_hint.visible = False
+
+  def _bind_missing_routes_panel(self, items):
+    """
+    Bind the permanent issues region if present; otherwise do nothing here
+    (caller may alert()). Items is a list of dicts: {"part_id": "...", "reason": "..."}.
+    """
+    has_issues = bool(items)
+    if not self._issues_region:
+      return
+    try:
+      self.grid_panel_issues.visible = has_issues
+      if hasattr(self, "label_issues_title"):
+        self.label_issues_title.text = f"Missing routes: {len(items)}"
+      if hasattr(self, "label_issues_hint"):
+        self.label_issues_hint.visible = has_issues
+      if hasattr(self, "repeating_panel_missing_routes"):
+        # If you set its item_template to MissingRouteRow, rows render nicely
+        self.repeating_panel_missing_routes.items = items or []
+        # Force each row to render explicitly (no designer data-bindings)
+        for r in self.repeating_panel_missing_routes.get_components():
+          if hasattr(r, "set_item"):
+            r.set_item(r.item)
+    except Exception as ex:
+      print(f"bind_missing_routes_panel failed: {ex}")
 
   # ---------- helpers ----------
   def _fmt_date(self, d):
@@ -36,7 +84,7 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     except Exception:
       pass
     return "–"
-  
+
   def _call(self, name, *args, **kwargs):
     resp = anvil.server.call(name, *args, **kwargs)
     if resp is None:
@@ -68,12 +116,11 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       print(f"ship_to load failed: {ex}")
       self.label_ship_to.text = ""
 
-
   # ---------- load & bind ----------
   def _load(self):
     self.order = self._call("sales_order_get", self.order_id) or {}
 
-    # Build dropdown: name -> business customer_id (needs server to return it; see server patch below)
+    # Build dropdown: name -> customer_id
     choices = self._call("customer_list_choices") or []  # [{"customer_id","customer_name"}]
     self._cust_map = {c.get("customer_name",""): c.get("customer_id","") for c in choices}
     self.drop_down_customer.items = list(self._cust_map.keys())
@@ -106,20 +153,26 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
 
     self._set_editable(is_draft)
 
+    # NEW: refresh the permanent issues region (if present)
+    try:
+      issues = self._call("svc_missing_routes_for_so", self.order_id) or []
+    except Exception:
+      issues = []
+    self._bind_missing_routes_panel(issues)
+
   # ---------- header events ----------
   def drop_down_customer_change(self, **e):
     name = self.drop_down_customer.selected_value or ""
     cust_id = self._cust_map.get(name, "")
     self.label_customer_id.text = cust_id
     self._refresh_ship_to(cust_id)
-  
+
     if name and cust_id:
       try:
         self._call("sales_order_update", self.order_id, {"customer_name": name, "customer_id": cust_id})
         self._load()  # reload to show any re-priced taxes/totals
       except Exception as ex:
         Notification(f"Failed to set customer: {ex}", style="warning").show()
-
 
   def _save_header(self):
     payload = {"notes": self.text_area_notes.text or ""}
@@ -165,7 +218,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     next_line_no = (max([int(x.get("line_no", 0) or 0) for x in items], default=0) + 1)
     is_draft = ((self.order.get("status") or "").strip().lower() == "draft")
     items.insert(0, {
-      # no _id yet (it's created by server on first add)
       "line_no": next_line_no,
       "part_id": "",
       "description": "",
@@ -178,16 +230,48 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     })
     self.repeating_panel_lines.items = items
 
+  # ---------- NEW: preflight check ----------
+  def _preflight_missing_routes_or_block(self) -> bool:
+    """
+    Returns True if OK to proceed; False if blocked.
+    Calls server: svc_missing_routes_for_so(order_id) -> [{part_id, reason}]
+    """
+    try:
+      issues = self._call("svc_missing_routes_for_so", self.order_id) or []
+    except Exception as ex:
+      # Prefer to fail closed (block) if the check itself failed
+      alert(f"Route pre-check failed: {ex}")
+      return False
+
+    if not issues:
+      # keep panel hidden / cleared if present
+      self._bind_missing_routes_panel([])
+      return True
+
+    # Update the permanent panel (if present)
+    self._bind_missing_routes_panel(issues)
+
+    # Also provide a durable alert (copyable)
+    #lines = ["Errors:"] + [f"Part {i.get('part_id','(unknown)')} has no route defined."
+    #                       if (i.get('reason') in [None, '', 'no route'])
+    #                       else f"Part {i.get('part_id','(unknown)')}: {i.get('reason')}"
+    #                       for i in issues]
+    #alert(TextArea(text="\n".join(lines), height=240, width=640, enabled=False))
+    return False
+
   # ---------- work orders ----------
   def button_create_wos_click(self, **event_args):
+    # PRE-FLIGHT: block if any missing routes; region also updates
     if not self._preflight_missing_routes_or_block():
       return
-    so_id = (self.label_so_id.text or "").strip()  # however you store it
+
+    so_id = (self.label_so_id.text or "").strip()
     if not so_id:
       alert("No Sales Order open.")
       return
     try:
-      result = anvil.server.call("so_plan_to_wos_debug", so_id)  # <- debug version
+      # Keep your existing debug call
+      result = anvil.server.call("so_plan_to_wos_debug", so_id)
       created = len(result.get("created", []))
       updated = len(result.get("updated", []))
       skipped = len(result.get("skipped", []))
@@ -196,7 +280,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       Notification(f"WOs → created:{created}, updated:{updated}, skipped:{skipped}", style="success").show()
       if notes:
         alert("\n".join(notes))
-      # Optional: show logs in a scrollable alert for now
       if logs:
         alert(TextArea(text="\n".join(logs), height=300, width=700, enabled=False))
     except Exception as ex:
@@ -211,7 +294,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
     except Exception:
       open_form("WorkOrderRecords")
 
-  
   def _delete_so_line(self, row_index=None, line_id=None, **e):
     try:
       items = list(self.repeating_panel_lines.items or [])
@@ -220,12 +302,9 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         self._load()
         Notification("Line deleted.", style="success").show()
         return
-  
-      # No _id yet → it was never persisted; just remove from the panel
       if 0 <= (row_index or -1) < len(items):
         del items[row_index]
         self.repeating_panel_lines.items = items
-  
     except Exception as ex:
       Notification(f"Delete failed: {ex}", style="warning").show()
 
@@ -241,13 +320,11 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         qty = 0.0
       if not part_id or qty <= 0:
         continue
-  
       if it.get("_id"):
         self._call("sales_order_update_line", it["_id"], {"qty_ordered": qty})
       else:
         new_line = self._call("sales_order_add_line", self.order_id, {"part_id": part_id, "qty_ordered": qty})
-        it["_id"] = new_line.get("_id")   # keep it from disappearing
-    # Optional: write back updated items so rows remember _id without waiting for reload
+        it["_id"] = new_line.get("_id")
     self.repeating_panel_lines.items = items
 
   def _refresh_so_line(self, row_index, part_id, qty_ordered, line_no=None, line_id=None, **e):
@@ -255,7 +332,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
       items = list(self.repeating_panel_lines.items or [])
       if not (0 <= row_index < len(items)):
         return
-  
       if line_id:
         updated_line = self._call("sales_order_update_line", line_id, {"qty_ordered": float(qty_ordered or 0)})
       else:
@@ -263,8 +339,6 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
           "part_id": (part_id or "").strip(),
           "qty_ordered": float(qty_ordered or 0),
         })
-  
-      # Replace only this row with authoritative server values (unit_price, line_price, line_tax)
       row = dict(items[row_index])
       editable = row.get("_editable", False)
       line_no_fallback = row.get("line_no")
@@ -274,17 +348,16 @@ class SalesOrderRecord(SalesOrderRecordTemplate):
         row["line_no"] = line_no_fallback
       items[row_index] = row
       self.repeating_panel_lines.items = items
-  
-      # Refresh header totals (amounts)
+
       self.order = self._call("sales_order_get", self.order_id) or {}
       a = self.order.get("amounts", {}) or {}
       self.label_subtotal.text = f"{float(a.get('subtotal', 0.0) or 0.0):.2f}"
       self.label_tax.text      = f"{float(a.get('tax', 0.0) or 0.0):.2f}"
       self.label_shipping.text = f"{float(a.get('shipping', 0.0) or 0.0):.2f}"
       self.label_grand.text    = f"{float(a.get('grand_total', 0.0) or 0.0):.2f}"
-  
     except Exception as ex:
       Notification(f"Update line failed: {ex}", style="warning").show()
+
 
 
 

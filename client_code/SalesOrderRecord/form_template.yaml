@@ -202,6 +202,44 @@ components:
       properties: {}
       type: GridPanel
     - components:
+      - layout_properties: {col_xs: 0, row: FVQZHW, width_xs: 5}
+        name: label_issues_title
+        properties: {background: 'theme:Secondary 500', font_size: 12, foreground: 'theme:White', icon: 'fa:exclamation-circle'}
+        type: Label
+      - layout_properties: {col_xs: 5, row: FVQZHW, width_xs: 7}
+        name: label_issues_hint
+        properties: {font_size: 12}
+        type: Label
+      - components:
+        - layout_properties: {column: issues_part_id}
+          name: label_issues_part_id_hdr
+          properties: {text: Part No.}
+          type: Label
+        - layout_properties: {column: issues_reason}
+          name: label_issues_reason_hdr
+          properties: {text: Reason}
+          type: Label
+        - layout_properties: {column: issues_edit_part}
+          name: label_issues_edit_part
+          properties: {align: center, text: Edit Part}
+          type: Label
+        - layout_properties: {column: issues_edit_route}
+          name: label_issues_edit_route
+          properties: {align: center, text: Edit Ops}
+          type: Label
+        layout_properties: {col_xs: 0, row: HRKCAY, width_xs: 12}
+        name: data_row_panel_issues
+        properties: {background: 'theme:Secondary 500', font_size: 12, foreground: 'theme:White'}
+        type: DataRowPanel
+      - layout_properties: {col_xs: 0, row: ZUIFFA, width_xs: 12}
+        name: repeating_panel_missing_routes
+        properties: {item_template: SalesOrderRecord.MissingRouteRow}
+        type: RepeatingPanel
+      layout_properties: {col_xs: 0, row: JVGPRD, width_xs: 12}
+      name: grid_panel_issues
+      properties: {}
+      type: GridPanel
+    - components:
       - components:
         - layout_properties: {column: line_no}
           name: label_hdr_line_no
